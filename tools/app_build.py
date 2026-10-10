@@ -10,6 +10,7 @@ HUB_URL = "https://claude.ai/artifact/3MqyaRKgJG7ufb65fwrnoF"
 DECKS = {  # published artifact URL -> local file in the app
     "https://claude.ai/artifact/AC3snqSYwMhtcpnhAYTv98": ("deck-econ-ch1.html", "econ-ch1.html"),
     "https://claude.ai/artifact/HdT6C7aKQLs4S4wVd3Pp4f": ("deck-econ-ch2.html", "econ-ch2.html"),
+    "https://claude.ai/code/artifact/31acac57-ce47-4e2f-9fb6-be4a409e475c": ("deck-econ-essays.html", "econ-essays.html"),
 }
 
 TIMER = SRC / "data/timer-source.html"
@@ -51,11 +52,11 @@ def make_icon(size, path):
 
 
 def main(mathjax):
-    shutil.copy(mathjax, SRC / "data/tex-svg.js") if pathlib.Path(mathjax).resolve() != (SRC / "data/tex-svg.js").resolve() else None
+    mj = pathlib.Path(SRC / "revision-app.mathjax.tmp"); shutil.copy(mathjax, mj)
     if OUT.exists():
         shutil.rmtree(OUT)
     (OUT / "mathjax").mkdir(parents=True)
-    shutil.copy(mathjax, OUT / "mathjax" / "tex-svg.js")
+    shutil.move(mj, OUT / "mathjax" / "tex-svg.js")
 
     # hub: deck links stay inside the app; drop the "add to home screen" box (it's already installed)
     hub = (SRC / "revision-hub.html").read_text(encoding="utf8")
@@ -134,4 +135,4 @@ self.addEventListener('fetch', e => {{
 
 
 if __name__ == "__main__":
-    main(sys.argv[1] if len(sys.argv) > 1 else SRC / "data/tex-svg.js")
+    main(sys.argv[1] if len(sys.argv) > 1 else SRC.parent / "mathjax/tex-svg.js")

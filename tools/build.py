@@ -27,6 +27,8 @@ def build_bei():
 
 if __name__ == "__main__":
     build_bei()
+    import essay
+    essay.write()
     try:
         import price
         price.write(SCRATCH, js_array)

@@ -1,6 +1,6 @@
 // Offline cache: everything in the app is stored on first open; fonts are cached as they load.
-const CACHE = 'revision-af7dc64e0f';
-const FILES = ["./", "econ-ch1.html", "econ-ch2.html", "icon-180.png", "icon-192.png", "icon-512.png", "index.html", "manifest.webmanifest", "mathjax/tex-svg.js", "timer.html"];
+const CACHE = 'revision-1a65c9fea4';
+const FILES = ["./", "econ-ch1.html", "econ-ch2.html", "econ-essays.html", "icon-180.png", "icon-192.png", "icon-512.png", "index.html", "manifest.webmanifest", "mathjax/tex-svg.js", "timer.html"];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())); });
 self.addEventListener('fetch', e => {

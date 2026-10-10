@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
+</head><body>
+<title>Essay Technique Deck</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Econ Essays">
+<meta name="theme-color" content="#11151C">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@500;600;700&display=swap">
+<style>
+/* Layout: one-card-per-screen swipe track (CSS scroll-snap) between a slim top bar and a bottom progress bar.
+   Each card scrolls vertically on its own; content column caps at ~680px so iPad landscape still reads like a page. */
+:root{
+  --bg:#11151C; --surface:#191E28; --surface2:#222937; --line:#2D3544;
+  --fg:#E7EAF0; --muted:#98A1B0; --accent:#F0B44A; --accent-soft:#3A2D12; --on-accent:#1B1404;
+  --teal:#5CC6BF; --teal-soft:#14302F; --good:#6FD39A; --good-soft:#15301F; --bad:#F2897F; --bad-soft:#3A1C1A;
+  --fill-a:rgba(240,180,74,.28); --fill-b:rgba(92,198,191,.26); --fill-c:rgba(242,137,127,.32);
+  --f-disp:"Bricolage Grotesque","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible","Segoe UI",system-ui,-apple-system,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){
+  --bg:#F4F5F8; --surface:#FFFFFF; --surface2:#ECEEF3; --line:#D7DBE3;
+  --fg:#171B23; --muted:#576070; --accent:#A66F07; --accent-soft:#FBEFD6; --on-accent:#FFFFFF;
+  --teal:#13807A; --teal-soft:#DDF2F0; --good:#1E7A47; --good-soft:#DDF1E5; --bad:#B23A30; --bad-soft:#F9E1DE;
+  --fill-a:rgba(214,150,30,.25); --fill-b:rgba(19,128,122,.20); --fill-c:rgba(178,58,48,.22);
+  color-scheme:light}}
+:root[data-theme="light"]{
+  --bg:#F4F5F8; --surface:#FFFFFF; --surface2:#ECEEF3; --line:#D7DBE3;
+  --fg:#171B23; --muted:#576070; --accent:#A66F07; --accent-soft:#FBEFD6; --on-accent:#FFFFFF;
+  --teal:#13807A; --teal-soft:#DDF2F0; --good:#1E7A47; --good-soft:#DDF1E5; --bad:#B23A30; --bad-soft:#F9E1DE;
+  --fill-a:rgba(214,150,30,.25); --fill-b:rgba(19,128,122,.20); --fill-c:rgba(178,58,48,.22);
+  color-scheme:light}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%;background:var(--bg);overscroll-behavior:none}
+body{margin:0;color:var(--fg);font:17px/1.55 var(--f-body);display:grid;grid-template-rows:auto 1fr auto;overflow:hidden;-webkit-text-size-adjust:100%}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* top bar */
+.top{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--line);background:var(--bg);min-width:0}
+.ib{all:unset;cursor:pointer;display:inline-grid;place-items:center;min-width:44px;height:44px;border-radius:10px;color:var(--fg)}
+.ib:hover{background:var(--surface2)}
+.ib svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.ttl{flex:1;min-width:0;line-height:1.15}
+.ttl b{display:block;font:700 15px/1.2 var(--f-disp);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ttl small{display:block;font:500 11.5px/1.3 var(--f-mono);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mode{all:unset;cursor:pointer;height:36px;padding:0 12px;border-radius:999px;border:1px solid var(--line);font:600 13.5px/36px var(--f-body);white-space:nowrap}
+.mode:hover{border-color:var(--accent)}
+@media (max-width:430px){.mode .lg{display:none}.mode{padding:0 10px}}
+
+/* track */
+.track{display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;min-height:0;overscroll-behavior-x:contain}
+.track::-webkit-scrollbar{display:none}
+.card{flex:0 0 100%;width:100%;scroll-snap-align:start;scroll-snap-stop:always;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-inline:16px}
+.ci{max-width:680px;margin:0 auto;padding-block:20px 48px;min-width:0}
+.ch{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px}
+.sec{font:600 11.5px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.kind{font:600 10.5px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:5px 8px}
+h1{font:800 clamp(34px,9vw,52px)/1.02 var(--f-disp);letter-spacing:-.02em;margin:.2em 0 .3em;text-wrap:balance}
+h2{font:750 clamp(25px,6.4vw,32px)/1.12 var(--f-disp);letter-spacing:-.01em;margin:0 0 .5em;text-wrap:balance}
+h3{font:700 19px/1.25 var(--f-disp);margin:1.4em 0 .45em;text-wrap:balance}
+p{margin:.5em 0} ul,ol{margin:.4em 0 .8em;padding-left:1.25em} li{margin:.28em 0}
+b,strong{font-weight:700}
+.lede{color:var(--muted);font-size:17.5px}
+.mono{font-family:var(--f-mono);font-size:.88em}
+.def{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 15px;margin:12px 0}
+.def .lab{display:flex;justify-content:space-between;gap:8px;font:600 11px/1.3 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+.def .lab i{font-style:normal;color:var(--muted)}
+.def p{margin:.2em 0}
+.note{border-radius:12px;padding:11px 14px;margin:12px 0;font-size:16px}
+.note>b:first-child{display:block;font:600 11px/1.3 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px}
+.note.trap{background:var(--bad-soft)} .note.trap>b:first-child{color:var(--bad)}
+.note.tip{background:var(--good-soft)} .note.tip>b:first-child{color:var(--good)}
+.note.link{background:var(--teal-soft)} .note.link>b:first-child{color:var(--teal)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:10px;margin:12px 0}
+.two>div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:11px 14px;min-width:0}
+.two h4{font:700 12px/1.3 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin:0 0 4px}
+.two h4.t{color:var(--teal)} .two h4.g{color:var(--good)} .two h4.r{color:var(--bad)}
+.two p,.two ul{margin:.2em 0;font-size:16px}
+.chain{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0;font:600 14.5px/1.3 var(--f-body)}
+.chain span{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 9px}
+.chain i{font-style:normal;color:var(--accent);font-weight:800}
+.formula{font:600 15px/1.5 var(--f-mono);background:var(--surface);border:1px dashed var(--muted);border-radius:10px;padding:9px 12px;margin:10px 0;overflow-x:auto}
+.tw{overflow-x:auto;margin:12px 0;border:1px solid var(--line);border-radius:12px;overscroll-behavior-x:contain}
+table{border-collapse:collapse;width:100%;font-size:15px;line-height:1.4;background:var(--surface)}
+.tw.wide table{min-width:560px}
+th,td{padding:8px 10px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+tr:last-child td{border-bottom:0}
+th{font:600 10.5px/1.3 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--surface2)}
+td.n,th.n{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-size:14px}
+td.k{font-weight:700}
+.tag{display:inline-block;font:600 10.5px/1 var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:4px 7px;border-radius:6px;margin-right:6px;vertical-align:2px}
+
+/* diagrams */
+figure.dg{margin:14px 0;display:grid;gap:10px}
+figure.dg.multi{grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr))}
+.pnl{min-width:0}
+.ptitle{font:600 11px/1.3 var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+figure.dg svg{width:100%;height:auto;display:block;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+figcaption{font-size:14.5px;color:var(--muted);grid-column:1/-1}
+svg text{font-family:var(--f-body);fill:var(--fg)}
+svg .ax{stroke:var(--fg);stroke-width:1.5;fill:none}
+svg .k{fill:none;stroke-width:2.6;stroke-linecap:round}
+svg .d{stroke:var(--accent)} svg .s{stroke:var(--teal)} svg .o{stroke:var(--muted);stroke-dasharray:6 4;stroke-width:2}
+svg .b{stroke:var(--bad)} svg .gr{stroke:var(--good)}
+svg .g{stroke:var(--muted);stroke-width:1;stroke-dasharray:3 3;fill:none}
+svg .ar{stroke:var(--fg);stroke-width:1.8} svg .arh{fill:var(--fg)}
+svg .pt{fill:var(--fg)} svg .pto{fill:var(--surface);stroke:var(--fg);stroke-width:1.6}
+svg .fa{fill:var(--fill-a)} svg .fb{fill:var(--fill-b)} svg .fc{fill:var(--fill-c)}
+svg .t-ax{font-size:12px;font-weight:700;fill:var(--muted)}
+svg .t-axl{font-size:12px;font-weight:700;fill:var(--fg)}
+svg .t-pt{font-size:13px;font-weight:700}
+svg .t-sm{font-size:11.5px;fill:var(--muted)}
+svg .t-d{fill:var(--accent);font-size:12.5px;font-weight:700} svg .t-s{fill:var(--teal);font-size:12.5px;font-weight:700}
+svg .t-o{fill:var(--muted);font-size:12.5px;font-weight:700} svg .t-b{fill:var(--bad);font-size:12.5px;font-weight:700}
+svg .t-gr{fill:var(--good);font-size:12.5px;font-weight:700}
+
+/* reveal: worked-example steps and practice answers */
+ol.steps{list-style:none;padding:0;margin:12px 0;counter-reset:st;display:grid;gap:8px}
+ol.steps>li{counter-increment:st;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 14px 10px 46px;position:relative;margin:0}
+ol.steps>li::before{content:counter(st);position:absolute;left:12px;top:10px;width:24px;height:24px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font:700 13px/24px var(--f-mono);text-align:center}
+.rvbar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.btn{all:unset;cursor:pointer;min-height:44px;padding:0 16px;border-radius:12px;display:inline-flex;align-items:center;gap:8px;font:700 15px/1 var(--f-body);border:1px solid var(--line);background:var(--surface)}
+.btn.pri{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.btn[disabled]{opacity:.45;cursor:default}
+.btn.good{border-color:var(--good);color:var(--good)} .btn.bad{border-color:var(--bad);color:var(--bad)}
+.pq{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:12px 0}
+.pq .qh{display:flex;justify-content:space-between;gap:8px;font:600 11px/1.3 var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.pq .qh .mk{color:var(--accent)}
+.pq .qt{margin:.35em 0 .5em}
+.pq .ans{border-top:1px dashed var(--line);margin-top:8px;padding-top:8px}
+.pq .ans>b:first-child{font:600 11px/1 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--good);margin-right:6px}
+.swipehint{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:14.5px;margin-top:22px}
+.toc-mini{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:8px;margin:14px 0}
+.toc-mini button{all:unset;cursor:pointer;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.toc-mini button:hover{border-color:var(--accent)}
+.toc-mini b{display:block;font:800 20px/1 var(--f-disp);color:var(--accent);margin-bottom:4px}
+.toc-mini span{font-size:14.5px;color:var(--muted)}
+.cover-k{font:800 clamp(80px,26vw,150px)/.85 var(--f-disp);color:var(--accent);letter-spacing:-.04em;margin:8px 0 0}
+.stat{display:flex;gap:18px;flex-wrap:wrap;margin:16px 0;font:600 14px/1.3 var(--f-mono);color:var(--muted)}
+.stat b{display:block;font:800 26px/1 var(--f-disp);color:var(--fg)}
+a{color:var(--accent)}
+
+/* bottom bar */
+.bot{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;padding:8px 12px;border-top:1px solid var(--line);background:var(--bg)}
+.prog{display:grid;gap:5px;min-width:0}
+.bar{height:4px;background:var(--surface2);border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+.cnt{font:600 12.5px/1 var(--f-mono);color:var(--muted);text-align:center;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* sheets (contents, flashcards, quiz) */
+.sheet{position:fixed;inset:0;z-index:20;background:var(--bg);display:grid;grid-template-rows:auto 1fr;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.sheet .top{border-bottom:1px solid var(--line)}
+.sbody{overflow-y:auto;padding-inline:16px;-webkit-overflow-scrolling:touch}
+.sbody>.in{max-width:680px;margin:0 auto;padding-block:14px 40px}
+.tocgrp{font:600 11px/1.3 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--accent);margin:18px 0 6px}
+.tocitem{all:unset;cursor:pointer;display:grid;grid-template-columns:32px 1fr auto;gap:8px;align-items:baseline;width:100%;box-sizing:border-box;padding:10px 8px;border-radius:10px}
+.tocitem:hover,.tocitem.cur{background:var(--surface)}
+.tocitem .no{font:600 12px/1 var(--f-mono);color:var(--muted)}
+.tocitem .kd{font:600 10px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 12px}
+.chip{all:unset;cursor:pointer;min-height:34px;padding:0 12px;border-radius:999px;border:1px solid var(--line);font:600 13.5px/34px var(--f-body)}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.fc{perspective:1200px;height:min(56vh,380px);cursor:pointer;margin:6px 0 12px}
+.fc-in{position:relative;width:100%;height:100%;transition:transform .45s;transform-style:preserve-3d}
+.fc.flip .fc-in{transform:rotateY(180deg)}
+.fc-f{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:18px;border:1px solid var(--line);background:var(--surface);padding:42px 22px 30px;display:flex;flex-direction:column;justify-content:center;overflow:auto;font-size:19px;line-height:1.45}
+.fc-f.back{transform:rotateY(180deg);background:var(--accent-soft);font-size:17.5px}
+.fc-f .ft{position:absolute;top:14px;left:18px;right:18px;display:flex;justify-content:space-between;font:600 11px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.fc-f.front .q{font:700 21px/1.3 var(--f-disp)}
+.fcrow{display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between}
+.mcq{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}
+.mcq .qh{display:flex;justify-content:space-between;gap:8px;font:600 11px/1.3 var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.mcq .qt{margin:.4em 0 .7em;font-weight:700}
+.opts{display:grid;gap:6px}
+.opt{all:unset;cursor:pointer;display:grid;grid-template-columns:26px 1fr;gap:8px;align-items:baseline;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font-size:16px;line-height:1.4}
+.opt b{font:700 13px/1 var(--f-mono);color:var(--accent)}
+.opt.right{background:var(--good-soft);border-color:var(--good)} .opt.wrong{background:var(--bad-soft);border-color:var(--bad)}
+.mcq.done .opt{cursor:default}
+.mcq .ex{margin-top:10px;font-size:15.5px;border-top:1px dashed var(--line);padding-top:10px}
+.score{position:sticky;top:0;z-index:2;background:var(--bg);padding-block:10px;display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px solid var(--line);font:600 14px var(--f-body)}
+.score .num{font:700 16px var(--f-mono);color:var(--accent);font-variant-numeric:tabular-nums}
+mjx-container{max-width:100%;overflow-x:auto;overflow-y:hidden}
+@media (prefers-reduced-motion:reduce){.fc-in,.bar i{transition:none}.track{scroll-behavior:auto}}
+</style>
+
+<header class="top">
+  <a class="ib" href="index.html" aria-label="Revision Hub"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7M6 9.5V20h12V9.5"/></svg></a><button class="ib" id="tocBtn" type="button" aria-label="Contents"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/></svg></button>
+  <div class="ttl"><b>Essay technique</b><small>9708 · Paper 2 Section B</small></div>
+  <button class="mode" id="fcBtn" type="button">Cards<span class="lg"> · 24</span></button>
+  <button class="mode" id="qBtn" type="button">Quiz<span class="lg"> · 12</span></button>
+  <button class="ib" id="themeBtn" type="button" aria-label="Switch light or dark"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4L6 18M18 6l1.4-1.4"/></svg></button>
+</header>
+<main class="track" id="track"><section class="card" data-id="cover" data-group="Start" data-title="Essay technique" data-kind="Cover"><div class="ci"><div class="ch"><span class="sec">Start</span><span class="kind">Cover</span></div>
+<p class="sec" style="margin:0">CAIE 9708 · AS Level · Paper 2 Section B</p>
+<p class="cover-k">8+12</p>
+<h1>Writing Economics essays that score</h1>
+<p class="lede">Your Essay Framework as a deck: structure, the paragraph unit, evaluation, conclusions and the exam checklist.</p>
+<div class="stat"><div><b>20</b>marks per essay</div><div><b>3</b>worked examples</div><div><b>24</b>flashcards</div><div><b>12</b>quiz questions</div></div>
+<p class="swipehint">Swipe left to start. Tap ☰ for contents.</p>
+<p><a href="index.html">Open Revision Hub</a></p></div></section><section class="card" data-id="format" data-group="Start" data-title="What you&#x27;re writing" data-kind="Overview"><div class="ci"><div class="ch"><span class="sec">Overview</span><span class="kind">Overview</span></div>
+<h2>AS essays are 8 + 12, not 25</h2>
+<p>Section B: choose one essay. Every essay has two parts, and everything in this deck is built for that length.</p>
+<div class="tw"><table><tr><th>Part</th><th>Command words</th><th class="n">AO1</th><th class="n">AO2</th><th class="n">AO3</th><th>Marking</th></tr>
+<tr><td class="k">(a) 8</td><td>Explain… and consider…</td><td class="n">3</td><td class="n">3</td><td class="n">2</td><td>Point-based</td></tr>
+<tr><td class="k">(b) 12</td><td>Assess… (older papers: Discuss)</td><td class="n" colspan="2">8, levels</td><td class="n">4</td><td>Levels-based</td></tr></table></div>
+<div class="two">
+<div><h4>AO1 · Knowledge</h4><p>Precise definitions, correct terms, an accurate labelled diagram.</p></div>
+<div><h4 class="t">AO2 · Analysis</h4><p>Developed chains of reasoning from cause to effect, using the diagram.</p></div>
+<div><h4 class="g">AO3 · Evaluation</h4><p>What the answer depends on and why, then a justified conclusion to the exact question.</p></div>
+</div>
+<div class="note tip"><b>Timing</b>Paper 2 is 1 h 45 min for 40 marks: about 2.5 minutes per mark. Roughly 18–20 minutes for (a) and 28–30 for (b), with planning time inside that.</div></div></section><section class="card" data-id="mark8" data-group="Marking" data-title="How (a) 8 is marked" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">Marking · Part (a)</span><span class="kind">Concept</span></div>
+<h2>Part (a): 8 marks, point-based</h2>
+<p>Each valid point earns a mark, up to the limit for each objective.</p>
+<div class="tw"><table><tr><th>AO</th><th>Typical marks (PPC example)</th></tr>
+<tr><td class="k">AO1 · 3</td><td>1 accurate diagram · 1 correctly labelled named axes · 1 definition</td></tr>
+<tr><td class="k">AO2 · 3</td><td>Explain the reallocation · the sacrifice · how it is measured</td></tr>
+<tr><td class="k">AO3 · 2</td><td>1 reasoned "however / it depends" · <b>1 reserved for a justified conclusion</b></td></tr></table></div>
+<h3>Structure: "Explain… and consider whether…"</h3>
+<ol><li>Define or distinguish A, with an example.</li><li>Define or distinguish B, with an example (or draw the diagram and explain it).</li><li><b>Consider:</b> what the market alone does, what government adds, then one limit ("depends on funding / efficiency").</li><li>One-line conclusion answering the question.</li></ol>
+<div class="note trap"><b>Don't lose the easy mark</b>The conclusion mark is reserved. Even one sentence that answers the question earns it.</div></div></section><section class="card" data-id="mark12" data-group="Marking" data-title="How (b) 12 is marked" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">Marking · Part (b)</span><span class="kind">Concept</span></div>
+<h2>Part (b): 12 marks, levels-based</h2>
+<div class="tw"><table><tr><th>AO1 + AO2 /8</th><th>What it looks like</th></tr>
+<tr><td class="k">L3 · 6–8</td><td>Detailed, accurate, balanced, fully explained</td></tr>
+<tr><td class="k">L2 · 3–5</td><td>Some accuracy; may be one-sided or partly explained</td></tr>
+<tr><td class="k">L1 · 1–2</td><td>Assertive, descriptive, little relevance</td></tr></table></div>
+<div class="tw"><table><tr><th>AO3 /4</th><th>What it looks like</th></tr>
+<tr><td class="k">L2 · 3–4</td><td>Justified conclusion to the specific question + developed evaluative comments</td></tr>
+<tr><td class="k">L1 · 1–2</td><td>Vague or general judgement</td></tr></table></div>
+<div class="note trap"><b>One-sided = 0 for AO3</b>A one-sided answer is capped at Level 2 for AO1/AO2 and gets no evaluation marks at all.</div></div></section><section class="card" data-id="struct12" data-group="Structure" data-title="The 12-mark structure" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">Structure · Part (b)</span><span class="kind">Concept</span></div>
+<h2>12 marks: "Assess / Evaluate / Discuss"</h2>
+<div class="tw"><table><tr><th>Part</th><th>Job</th><th>Length</th></tr>
+<tr><td class="k">Intro</td><td>Define the key term; say what the answer depends on</td><td>1–2 lines</td></tr>
+<tr><td class="k">Case FOR</td><td>Point → explain → example</td><td>1–3 paras</td></tr>
+<tr><td class="k">Case AGAINST</td><td>"However…" with the same chain</td><td>1–3 paras</td></tr>
+<tr><td class="k">Evaluation</td><td>Limits, or "it depends on…"</td><td>1–2 paras</td></tr>
+<tr><td class="k">Conclusion</td><td>Direct judgement plus one reason</td><td>2–3 lines</td></tr></table></div>
+<div class="note tip"><b>Evaluate throughout</b>Don't save all evaluation for the last line. A "however" or "this depends on" inside each side lifts the whole answer.</div></div></section><section class="card" data-id="cmd" data-group="Structure" data-title="Command words" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">Structure · Command words</span><span class="kind">Concept</span></div>
+<h2>Circle the command word first</h2>
+<div class="tw wide"><table><tr><th>Word</th><th>CAIE meaning</th><th>What to do</th></tr>
+<tr><td class="k">Define</td><td>Give precise meaning</td><td>One exact sentence</td></tr>
+<tr><td class="k">Explain</td><td>Set out reasons; make relationships evident</td><td>Definition + chain + diagram. Not a list</td></tr>
+<tr><td class="k">Analyse</td><td>Examine in detail to show relationships</td><td>"because… which leads to… therefore…"</td></tr>
+<tr><td class="k">Consider</td><td>Review and respond to given information</td><td>One reasoned "however" + a one-line judgement</td></tr>
+<tr><td class="k">Assess</td><td>Make an informed judgement</td><td>Both sides, weighed, then a conclusion</td></tr>
+<tr><td class="k">Discuss</td><td>Write about issues in depth</td><td>Same as assess (older papers)</td></tr>
+<tr><td class="k">Evaluate</td><td>Judge quality, importance or value</td><td>Weigh significance, don't just list</td></tr>
+<tr><td class="k">Compare</td><td>Similarities and/or differences</td><td>Point by point, "whereas"</td></tr></table></div>
+<p>"Assess" and "evaluate" need a judgement; "explain" doesn't.</p></div></section><section class="card" data-id="para" data-group="Paragraphs" data-title="The paragraph unit" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">Paragraphs</span><span class="kind">Concept</span></div>
+<h2>Point → Explain → Example → Link</h2>
+<div class="chain"><span>Point</span><i>→</i><span>Explain (chain of reasoning)</span><i>→</i><span>Example</span><i>→</i><span>Link to the question</span></div>
+<p><b>Q:</b> "Are producers the only ones to benefit from more investment?"</p>
+<div class="two">
+<div><h4>Point</h4><p>Consumers gain in the long run.</p></div>
+<div><h4>Explain</h4><p>Investment shifts the PPC outward, so more goods are available at lower cost.</p></div>
+<div><h4>Example</h4><p>Factory automation lowers car prices.</p></div>
+<div><h4>Link</h4><p>So producers are <i>not</i> the only beneficiaries.</p></div>
+</div>
+<div class="note tip"><b>One real example per paragraph</b>Malaysian examples work well: targeted RON95 subsidies, PLUS tolls, Klinik Kesihatan, the sugar tax, Penang semiconductors.</div></div></section><section class="card" data-id="chain" data-group="Paragraphs" data-title="Assertion vs chain" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">Paragraphs · AO2</span><span class="kind">Concept</span></div>
+<h2>From L1 assertion to L3 chain</h2>
+<div class="two">
+<div><h4 class="r">Weak · L1</h4><p>"Free markets cause pollution."</p></div>
+<div><h4 class="g">Strong · L3</h4><p>Firms maximise profit, so they minimise private costs and ignore costs imposed on third parties, such as river pollution from palm oil mills. Because these external costs aren't in the price, output is above the social optimum, so resources are over-allocated.</p></div>
+<div><h4 class="r">Weak · L1</h4><p>"Planned economies are inefficient."</p></div>
+<div><h4 class="g">Strong · L3</h4><p>Without prices, planners have no signal of what consumers want, so they forecast demand; errors cause shortages and surpluses. Managers aren't rewarded with profit, so they have little incentive to cut costs, so the economy may produce inside its PPC.</p></div>
+</div>
+<div class="note tip"><b>Connective words carry the marks</b><b>because · so · which leads to · therefore · as a result</b>. If a sentence has none, it's probably an assertion.</div></div></section><section class="card" data-id="eval" data-group="Evaluation" data-title="It depends on…" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">Evaluation · AO3</span><span class="kind">Concept</span></div>
+<h2>Evaluation: "it depends on…"</h2>
+<p>Generic "it depends" earns little. Say <b>on what</b> and <b>why</b>.</p>
+<div class="tw wide"><table><tr><th>Lever</th><th>Sentence starter</th></tr>
+<tr><td class="k">Time period</td><td>"In the short run… but in the long run…"</td></tr>
+<tr><td class="k">Elasticity</td><td>"How far price rises depends on PED: with inelastic demand, as for rice, most of the cost is passed on…"</td></tr>
+<tr><td class="k">Development level</td><td>"In a low-income economy with weak institutions…"</td></tr>
+<tr><td class="k">Type of good / investment</td><td>"Public investment in education differs from export machinery because…"</td></tr>
+<tr><td class="k">Quality of government</td><td>"Only if the government has the funding, information and efficiency to… otherwise government failure…"</td></tr>
+<tr><td class="k">Size of shift</td><td>"If the fall in supply is larger than the rise in demand…"</td></tr>
+<tr><td class="k">Who is affected</td><td>"Low-income households spend a larger share of income on food, so…"</td></tr>
+<tr><td class="k">Value judgement</td><td>"Whether this is desirable depends on whether society prioritises equity or efficiency."</td></tr></table></div></div></section><section class="card" data-id="concl" data-group="Evaluation" data-title="Conclusion template" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">Evaluation · Conclusion</span><span class="kind">Concept</span></div>
+<h2>A conclusion that picks a side</h2>
+<div class="formula">Overall, [answer to the question] because [strongest reason]. However, this depends on [key factor], so [qualified final judgement].</div>
+<div class="def"><span class="lab">Example</span><p>"Overall, a pure market economy is not always best because it fails to provide merit and public goods. However, planned systems lack efficiency, so a mixed economy is the more defensible answer."</p></div>
+<ul><li>Answer the <b>exact words</b>: "always" → "not always, because… unless…"; "only" → "not only…".</li><li>Never just summarise the essay.</li><li>Never sit on the fence ("both have pros and cons").</li><li>Give the condition under which the other side would win.</li></ul></div></section><section class="card" data-id="bad" data-group="Evaluation" data-title="What sample essays get wrong" data-kind="Mistakes"><div class="ci"><div class="ch"><span class="sec">Mistakes</span><span class="kind">Mistakes</span></div>
+<h2>Don't copy these mistakes</h2>
+<div class="two">
+<div><h4 class="r">Weak conclusions</h4><p>"A more inclusive growth model" doesn't answer "only producers?". Say: <i>No, because X, though producers gain most in the short run because Y.</i></p></div>
+<div><h4 class="r">Loose logic</h4><p>"Investment → higher taxes → higher prices → shortages" skips steps. Use <b>opportunity cost</b>: resources move from consumer to capital goods, so short-run consumption falls (a movement along the PPC).</p></div>
+<div><h4 class="r">Imprecise terms</h4><p>Public goods are underprovided because of the <b>free-rider problem</b>, not just "no profit".</p></div>
+<div><h4 class="r">No diagrams</h4><p>A PPC shift would earn marks in investment questions. Use a diagram wherever one fits.</p></div>
+</div>
+<h3>Common examiner-report errors</h3>
+<ul><li>Axes labelled X and Y when the question names the goods.</li><li>Listing advantages and disadvantages without explaining any (stuck at L1–L2).</li><li>"Price rises so demand falls": write <b>quantity demanded</b>.</li><li>One-sided 12-markers: AO3 = 0.</li></ul></div></section><section class="card" data-id="diag" data-group="Evaluation" data-title="Diagrams that earn marks" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">AO1 · Diagrams</span><span class="kind">Concept</span></div>
+<h2>Diagram checklist</h2>
+<ul><li>Axes labelled with the question's goods or Price / Quantity; origin O.</li>
+<li>Curves labelled (PPC, D0, D1, S0, S1) with a shift arrow.</li>
+<li>Equilibria dashed to both axes: P0, Q0, P1, Q1.</li>
+<li>Shade and name any area you discuss (CS, PS, tax revenue).</li>
+<li>Refer to it: "as shown in Figure 1, price rises from P0 to P1".</li></ul>
+<div class="tw"><table><tr><th>Question about…</th><th>Draw</th></tr>
+<tr><td class="k">Scarcity, opportunity cost, growth, investment</td><td>PPC (movement or shift)</td></tr>
+<tr><td class="k">Prices, shocks, taxes, subsidies</td><td>Demand and supply</td></tr>
+<tr><td class="k">Price controls, buffer stocks</td><td>D/S with a target or maximum price</td></tr>
+<tr><td class="k">Revenue and PED</td><td>TR gain/loss rectangles</td></tr></table></div></div></section><section class="card" data-id="check" data-group="Exam day" data-title="Exam checklist" data-kind="Checklist"><div class="ci"><div class="ch"><span class="sec">Exam day</span><span class="kind">Checklist</span></div>
+<h2>Exam checklist</h2>
+<ol class="steps">
+<li>Circle the <b>command word</b>. "Assess" and "evaluate" need a judgement.</li>
+<li><b>Plan for 2 minutes:</b> 2 points for, 2 against, 1 "depends on" factor, and your verdict.</li>
+<li>Use <b>precise key terms</b>: opportunity cost, allocative efficiency, externality, free-rider, consumer sovereignty.</li>
+<li><b>One real example per paragraph.</b></li>
+<li><b>Evaluate throughout</b>, not only in the last line.</li>
+<li><b>Add a diagram</b> where one fits, and refer to it.</li>
+<li><b>Finish with a conclusion that picks a side</b> and gives a reason.</li>
+</ol></div></section><section class="card" data-id="we1" data-group="Worked examples" data-title="Plan a 12-marker in 2 min" data-kind="Worked example"><div class="ci"><div class="ch"><span class="sec">Worked example 1 · Planning</span><span class="kind">Worked example</span></div>
+<h2>Plan a 12-marker in two minutes</h2>
+<p><b>Q:</b> Assess whether the allocation of resources by the free market is always desirable for an economy. [12]</p>
+<ol class="steps">
+<li><b>Command word:</b> "Assess" + "always" → two sides, then a judgement that says "not always" and when.</li>
+<li><b>Define:</b> free market = allocation by the price mechanism, private ownership, minimal intervention.</li>
+<li><b>For (2):</b> efficiency from competition and the profit motive; consumer sovereignty (e-commerce growth after 2020).</li>
+<li><b>Against (2):</b> negative externalities (haze, river pollution); public goods not provided and merit goods under-provided.</li>
+<li><b>Depends on:</b> type of good and degree of market failure; risk of government failure if we intervene instead.</li>
+<li><b>Verdict:</b> not always; desirable for private goods in competitive markets, a mixed economy is better where market failure is significant.</li>
+</ol></div></section><section class="card" data-id="we2" data-group="Worked examples" data-title="Build one paragraph" data-kind="Worked example"><div class="ci"><div class="ch"><span class="sec">Worked example 2 · Paragraph</span><span class="kind">Worked example</span></div>
+<h2>Build a paragraph with PEEL</h2>
+<p><b>Q:</b> Assess whether governments should provide merit goods free of charge. [12] Write one "for" paragraph.</p>
+<ol class="steps">
+<li><b>Point:</b> Free provision raises consumption towards the socially optimal level.</li>
+<li><b>Explain:</b> Consumers underestimate the benefits of merit goods (information failure) and ignore external benefits, so in a free market consumption is below the social optimum. A zero price removes the cost barrier, so consumption rises.</li>
+<li><b>Example:</b> Free childhood vaccinations at Klinik Kesihatan raise coverage, protecting others too.</li>
+<li><b>Link:</b> Therefore free provision corrects under-consumption, which supports the view, especially for low-income households.</li>
+<li><b>Evaluate inside the paragraph:</b> however, this depends on the cause: if under-consumption is due to information failure, an information campaign may be cheaper than free provision.</li>
+</ol></div></section><section class="card" data-id="we3" data-group="Worked examples" data-title="Fix a weak conclusion" data-kind="Worked example"><div class="ci"><div class="ch"><span class="sec">Worked example 3 · Conclusion</span><span class="kind">Worked example</span></div>
+<h2>Fix a weak conclusion</h2>
+<p><b>Q:</b> Discuss the view that the only goods a government should produce are public goods. [12]</p>
+<p><b>Weak:</b> "In conclusion, there are arguments on both sides and the government should consider them carefully."</p>
+<ol class="steps">
+<li><b>Problem:</b> it sits on the fence and never answers "only". AO3 L1 at best.</li>
+<li><b>Answer the exact word:</b> "The view is too narrow: governments should not produce <i>only</i> public goods."</li>
+<li><b>Strongest reason:</b> "because merit goods and essential natural monopolies are under-provided or overpriced by markets."</li>
+<li><b>Depends on:</b> "However, this depends on government efficiency: where corruption or poor information is significant, subsidising private producers may be better than producing directly."</li>
+<li><b>Full version:</b> "Overall, the view is too narrow because markets under-provide merit goods as well as public goods. However, this depends on the government's efficiency, so where government failure is likely, funding private providers is the better route."</li>
+</ol></div></section><section class="card" data-id="pr1" data-group="Practice" data-title="Practice: upgrade these" data-kind="Practice"><div class="ci"><div class="ch"><span class="sec">Practice</span><span class="kind">Practice</span></div>
+<h2>Practice · Upgrade each sentence</h2>
+<button class="btn" type="button" data-revealall>Reveal all answers</button>
+<div class="pq"><div class="qh"><span>Q1 · AO2</span><span class="mk">Chain</span></div>
+<p class="qt">"A tax on sugary drinks reduces consumption." Turn it into an analysis chain.</p>
+<div class="ans"><b>Model</b>The tax raises firms' costs, so supply shifts left; price rises, so quantity demanded contracts. Because consumers now pay closer to the full social cost, consumption falls towards the social optimum.</div></div>
+<div class="pq"><div class="qh"><span>Q2 · AO3</span><span class="mk">Evaluate</span></div>
+<p class="qt">"However, it depends." Make this specific for the sugar tax.</p>
+<div class="ans"><b>Model</b>However, how much consumption falls depends on PED: if demand is price inelastic because of habit, price rises a lot but quantity falls only a little, so the tax raises revenue more than it changes behaviour.</div></div>
+<div class="pq"><div class="qh"><span>Q3 · AO1</span><span class="mk">Define</span></div>
+<p class="qt">"Public goods are not made by firms because there's no profit." Make it precise.</p>
+<div class="ans"><b>Model</b>Public goods are non-excludable and non-rival, so consumers can free ride; no effective demand is revealed, firms cannot charge, so the market provides none (a missing market).</div></div>
+<div class="pq"><div class="qh"><span>Q4 · Conclusion</span><span class="mk">AO3</span></div>
+<p class="qt">Write a conclusion for: "Assess whether a buffer stock scheme's benefits always outweigh its disadvantages."</p>
+<div class="ans"><b>Model</b>Overall, the benefits do not always outweigh the costs because storage and funding are expensive and the scheme fails after repeated bad harvests. However, this depends on the product, so a buffer stock is most likely to succeed for a storable staple such as rice with a realistic target price, and least likely for perishables.</div></div></div></section><section class="card" data-id="pr2" data-group="Practice" data-title="Practice: plan these" data-kind="Practice"><div class="ci"><div class="ch"><span class="sec">Practice</span><span class="kind">Practice</span></div>
+<h2>Practice · Two-minute plans</h2>
+<p class="lede">Plan each: 2 for, 2 against, 1 "depends on", verdict.</p>
+<div class="pq"><div class="qh"><span>Q5</span><span class="mk">[12]</span></div>
+<p class="qt">Assess whether a planned economy is more likely than a market economy to achieve a fair distribution of resources.</p>
+<div class="ans"><b>Plan</b>For: state distributes evenly, rations essentials, provides merit goods. Against: planning errors cause shortages; corruption favours insiders. Depends on: what "fair" means (a value judgement). Verdict: planned systems aim at fair outcomes but often fail to deliver; a mixed economy is more likely to be fair and efficient.</div></div>
+<div class="pq"><div class="qh"><span>Q6</span><span class="mk">[12]</span></div>
+<p class="qt">Assess whether knowledge of price elasticity of demand is more useful to a government than to a firm.</p>
+<div class="ans"><b>Plan</b>Firm: pricing and revenue, used constantly. Government: which goods to tax for revenue; whether sin taxes change behaviour. Depends on: the goal (revenue vs behaviour change) and data quality. Verdict: more directly useful to a firm; matters more to a government only when the aim is tax revenue.</div></div>
+<div class="pq"><div class="qh"><span>Q7</span><span class="mk">[8]</span></div>
+<p class="qt">Explain the difference between human and physical capital and consider which is more important for growth in a middle-income economy such as Malaysia.</p>
+<div class="ans"><b>Plan</b>Define both with examples; both raise productivity and shift the PPC out. Consider: physical capital drives growth at lower incomes; at middle income, human capital is needed to move up the value chain. Conclude: human capital matters more for Malaysia now, though the two are complements.</div></div></div></section><section class="card" data-id="sum" data-group="Summary" data-title="One-card summary" data-kind="Summary"><div class="ci"><div class="ch"><span class="sec">Summary</span><span class="kind">Summary</span></div>
+<h2>Essay technique on one card</h2>
+<div class="tw"><table>
+<tr><td class="k">(a) 8</td><td>Explain… consider · AO 3/3/2 · conclusion mark reserved</td></tr>
+<tr><td class="k">(b) 12</td><td>Assess · L3 6–8 + AO3 4 · one-sided = 0 AO3</td></tr>
+<tr><td class="k">Timing</td><td>~2.5 min per mark · plan 2 min</td></tr>
+<tr><td class="k">12-mark shape</td><td>Intro · For · Against · Evaluate · Conclude</td></tr>
+<tr><td class="k">Paragraph</td><td>Point → Explain → Example → Link</td></tr>
+<tr><td class="k">Chain words</td><td>because · so · which leads to · therefore</td></tr>
+<tr><td class="k">Depends on</td><td>Time · elasticity · development · type of good · government quality</td></tr>
+<tr><td class="k">Conclusion</td><td>Overall [answer] because [reason]. However, depends on [factor], so [qualified judgement].</td></tr>
+<tr><td class="k">Diagram</td><td>Named axes, labels, referred to in the text</td></tr>
+</table></div>
+<p class="lede" style="font-size:15px">Original framework: <a href="https://claude.ai/code/artifact/31acac57-ce47-4e2f-9fb6-be4a409e475c" target="_blank" rel="noopener">CIE AS Economics Essay Framework</a></p></div></section></main>
+<footer class="bot">
+  <button class="ib" id="prevBtn" type="button" aria-label="Previous card"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+  <div class="prog"><div class="bar"><i id="barFill"></i></div><div class="cnt" id="cnt">1 / 19</div></div>
+  <button class="ib" id="nextBtn" type="button" aria-label="Next card"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+</footer>
+
+<div class="sheet" id="tocSheet" hidden>
+  <header class="top"><div class="ttl"><b>Contents</b><small>19 cards · tap to jump</small></div>
+  <button class="ib" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></header>
+  <div class="sbody"><div class="in" id="tocList"></div></div>
+</div>
+<div class="sheet" id="fcSheet" hidden>
+  <header class="top"><div class="ttl"><b>Flashcards</b><small>Tap the card to flip · Space flips on a keyboard</small></div>
+  <button class="ib" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></header>
+  <div class="sbody"><div class="in">
+    <div class="chips" id="fcChips"></div>
+    <div class="fc" id="fc"><div class="fc-in">
+      <div class="fc-f front"><div class="ft"><span id="fcT"></span><span>Question</span></div><div class="q" id="fcQ"></div></div>
+      <div class="fc-f back"><div class="ft"><span id="fcT2"></span><span>Answer</span></div><div id="fcA"></div></div>
+    </div></div>
+    <div class="fcrow"><button class="btn bad" id="fcAgain" type="button">Again</button><span class="cnt" id="fcN" style="align-self:center"></span><button class="btn good" id="fcGot" type="button">Got it</button></div>
+    <div class="fcrow" style="margin-top:8px"><button class="btn" id="fcPrev" type="button">← Prev</button><button class="btn" id="fcShuf" type="button">Shuffle</button><button class="btn" id="fcNext" type="button">Next →</button></div>
+    <p class="lede" style="font-size:14.5px;margin-top:14px">"Again" puts the card in the Again pile so you can drill only the ones you missed.</p>
+  </div></div>
+</div>
+<div class="sheet" id="qSheet" hidden>
+  <header class="top"><div class="ttl"><b>Paper 1 quiz</b><small>Pick an answer to see the explanation</small></div>
+  <button class="ib" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></header>
+  <div class="sbody"><div class="in">
+    <div class="score"><span>Score <span class="num" id="qScore"></span></span><button class="btn" id="qReset" type="button">Reset</button></div>
+    <div id="qList"></div>
+  </div></div>
+</div>
+<script>var DECK={"key": "deck-9708-essays", "flash": [["Marking", "How many marks are the two parts of an AS essay?", "Part (a) <b>8</b> and part (b) <b>12</b>: 20 in total."], ["Marking", "AO split for an 8-mark part (a)?", "AO1 3 · AO2 3 · AO3 2. One AO3 mark is reserved for a justified conclusion."], ["Marking", "How is part (b) marked?", "Levels: AO1+AO2 out of 8 (L1 1–2, L2 3–5, L3 6–8) and AO3 out of 4 (L1 1–2, L2 3–4)."], ["Marking", "What happens to a one-sided 12-mark answer?", "Capped at Level 2 for AO1/AO2 and <b>0 for AO3</b>."], ["Marking", "What is AO1?", "Knowledge and understanding: precise definitions, correct terms, an accurate labelled diagram."], ["Marking", "What is AO2?", "Analysis: developed chains of reasoning linking cause to effect, using the diagram."], ["Marking", "What is AO3?", "Evaluation: what the answer depends on and why, plus a justified conclusion to the exact question."], ["Marking", "Roughly how long per mark in Paper 2?", "About 2.5 minutes (1 h 45 min for 40 marks)."], ["Structure", "Five parts of a 12-mark answer?", "Intro (define) · case for · case against · evaluation · conclusion."], ["Structure", "Three steps for \"Explain… and consider whether…\"?", "Define/distinguish A with an example; define/distinguish B with an example; consider: market alone vs what government adds, then one limit."], ["Structure", "Which command words need a judgement?", "Assess, evaluate, discuss (and consider in part a). \"Explain\" doesn't."], ["Structure", "What does \"consider\" ask for in part (a)?", "One reasoned \"however / it depends\" point plus a one-line judgement."], ["Structure", "What goes in a 2-minute plan?", "2 points for, 2 against, 1 \"depends on\" factor, and your verdict."], ["Paragraphs", "What is the paragraph unit?", "Point → Explain (chain of reasoning) → Example → Link to the question."], ["Paragraphs", "What turns an assertion into analysis?", "A chain of linked steps with connectives: because, so, which leads to, therefore."], ["Paragraphs", "How many examples per paragraph?", "One real example per paragraph."], ["Evaluation", "Five \"it depends on\" levers from your framework?", "Time period · elasticity · level of development · type of good or investment · quality of government."], ["Evaluation", "Why does generic \"it depends\" score little?", "It doesn't say on what or why. Name the factor and explain how it changes the answer."], ["Evaluation", "Where should evaluation go?", "Throughout the essay, not only in the last line."], ["Conclusion", "Conclusion template?", "Overall, [answer] because [strongest reason]. However, this depends on [key factor], so [qualified final judgement]."], ["Conclusion", "Question says \"always\". How should the conclusion start?", "Answer the exact word: \"not always, because… unless…\"."], ["Mistakes", "Why are public goods underprovided? (precise term)", "The <b>free-rider problem</b>: non-excludable, so no effective demand is revealed and firms can't charge."], ["Mistakes", "Investment and short-run consumption: what concept fixes the loose logic?", "Opportunity cost: resources move from consumer to capital goods, so short-run consumption falls (movement along the PPC)."], ["Mistakes", "Two common diagram mistakes?", "Axes labelled X/Y instead of the named goods; a diagram that isn't referred to in the text."]], "quiz": [{"s": "Marking", "q": "How many AO3 marks are available in an 8-mark part (a)?", "o": ["0", "2", "3", "4"], "c": 1, "e": "AO1 3, AO2 3, AO3 2, with one AO3 mark reserved for a justified conclusion."}, {"s": "Marking", "q": "A 12-mark answer explains only the benefits of a policy, in great detail. What is the maximum AO3 mark?", "o": ["0", "2", "3", "4"], "c": 0, "e": "A one-sided answer cannot gain any AO3 marks, and AO1/AO2 is capped at Level 2."}, {"s": "Marking", "q": "How is part (b) marked?", "o": ["One mark per valid point", "Levels: AO1+AO2 out of 8, AO3 out of 4", "Out of 25 by levels", "AO1 4, AO2 4, AO3 4 by points"], "c": 1, "e": "Part (b) is levels-based: AO1+AO2 /8 and AO3 /4."}, {"s": "Command words", "q": "Which command word does NOT require a judgement?", "o": ["Assess", "Evaluate", "Explain", "Discuss"], "c": 2, "e": "Explain needs reasons and relationships, not a verdict."}, {"s": "Command words", "q": "In \"Explain… and consider whether…\", what does \"consider\" need?", "o": ["A second diagram", "A reasoned \"however\" and a short judgement", "A list of three examples", "Nothing extra"], "c": 1, "e": "Consider is the AO3 part of an 8-marker: one reasoned counterpoint plus a conclusion."}, {"s": "Structure", "q": "What should the introduction to a 12-mark answer do?", "o": ["Summarise the conclusion", "Define the key term and say what the answer depends on", "List every argument you'll make", "Give a real-world example only"], "c": 1, "e": "1–2 lines: define, then signal what you'll weigh."}, {"s": "Paragraphs", "q": "Which is the paragraph unit from your framework?", "o": ["Point → Example → Point → Example", "Point → Explain → Example → Link", "Define → List → Conclude", "Diagram → Definition → Evaluation"], "c": 1, "e": "Point, explain with a chain of reasoning, give an example, link back to the question."}, {"s": "Paragraphs", "q": "Which sentence is an analysis chain rather than an assertion?", "o": ["Taxes reduce consumption.", "The tax is bad for consumers.", "The tax raises costs, so supply shifts left; price rises, so quantity demanded falls.", "Many economists support the tax."], "c": 2, "e": "Only C links cause to effect in steps with connectives."}, {"s": "Evaluation", "q": "Which is the strongest evaluation?", "o": ["It depends.", "There are pros and cons.", "How far consumption falls depends on PED: with inelastic demand quantity barely falls.", "Some people may disagree."], "c": 2, "e": "It names the factor and explains how it changes the outcome."}, {"s": "Conclusion", "q": "The question asks \"Are producers the only ones to benefit from more investment?\" Best conclusion opening?", "o": ["Investment leads to a more inclusive growth model.", "No, because consumers also gain from lower prices, though producers gain most in the short run.", "There are many stakeholders.", "Investment is important for growth."], "c": 1, "e": "It answers \"only\" directly with a reason and a qualification."}, {"s": "Mistakes", "q": "Why are public goods underprovided by the market? (most precise)", "o": ["They make no profit", "The government owns them", "Non-excludability lets people free ride, so no effective demand is revealed", "They are too expensive to produce"], "c": 2, "e": "Use the free-rider problem, not just \"no profit\"."}, {"s": "Timing", "q": "Roughly how long should a 12-mark part (b) take?", "o": ["About 10 minutes", "About 28–30 minutes", "About 45 minutes", "About 1 hour"], "c": 1, "e": "About 2.5 minutes per mark, including a quick plan."}]};</script>
+<script>
+(function(){
+var KEY=DECK.key, root=document.documentElement;
+function sget(k){try{return localStorage.getItem(KEY+':'+k)}catch(e){return null}}
+function sset(k,v){try{localStorage.setItem(KEY+':'+k,v)}catch(e){}}
+/* theme: dark by default, light on request */
+root.setAttribute('data-theme',sget('theme')||'dark');
+document.getElementById('themeBtn').addEventListener('click',function(){
+  var t=root.getAttribute('data-theme')==='dark'?'light':'dark';root.setAttribute('data-theme',t);sset('theme',t);});
+
+var track=document.getElementById('track'), cards=[].slice.call(track.querySelectorAll('.card'));
+var N=cards.length, cur=0, bar=document.getElementById('barFill'), cnt=document.getElementById('cnt');
+function width(){return track.clientWidth}
+function update(i){cur=i;bar.style.width=((i+1)/N*100)+'%';
+  cnt.textContent=(i+1)+' / '+N+' · '+cards[i].dataset.title;sset('pos',i);
+  document.getElementById('prevBtn').disabled=i===0;document.getElementById('nextBtn').disabled=i===N-1;}
+function go(i,smooth){i=Math.max(0,Math.min(N-1,i));
+  track.scrollTo({left:i*width(),behavior:smooth===false?'auto':'smooth'});update(i);}
+var t0;track.addEventListener('scroll',function(){clearTimeout(t0);t0=setTimeout(function(){
+  var i=Math.round(track.scrollLeft/width());if(i!==cur)update(i);},80);},{passive:true});
+window.addEventListener('resize',function(){track.scrollTo({left:cur*width(),behavior:'auto'});});
+document.getElementById('prevBtn').addEventListener('click',function(){go(cur-1)});
+document.getElementById('nextBtn').addEventListener('click',function(){go(cur+1)});
+document.addEventListener('keydown',function(e){
+  if(document.querySelector('.sheet:not([hidden])'))return;
+  if(e.key==='ArrowRight'||e.key==='PageDown'){go(cur+1);e.preventDefault();}
+  if(e.key==='ArrowLeft'||e.key==='PageUp'){go(cur-1);e.preventDefault();}});
+document.querySelectorAll('[data-goto]').forEach(function(b){b.addEventListener('click',function(){
+  var t=b.getAttribute('data-goto');for(var i=0;i<N;i++){if(cards[i].dataset.id===t){go(i);return;}}});});
+
+/* tap-to-reveal: worked-example steps */
+document.querySelectorAll('ol.steps').forEach(function(ol){
+  var li=[].slice.call(ol.children),shown=0;li.forEach(function(x){x.hidden=true});
+  var bar=document.createElement('div');bar.className='rvbar';
+  var nb=document.createElement('button');nb.className='btn pri';nb.type='button';
+  var ab=document.createElement('button');ab.className='btn';ab.type='button';ab.textContent='Show all';
+  function paint(){nb.textContent=shown<li.length?('Show step '+(shown+1)+' of '+li.length):'All steps shown';
+    nb.disabled=shown>=li.length;ab.hidden=shown>=li.length;}
+  nb.addEventListener('click',function(){if(shown<li.length){li[shown].hidden=false;shown++;paint();}});
+  ab.addEventListener('click',function(){li.forEach(function(x){x.hidden=false});shown=li.length;paint();});
+  bar.appendChild(nb);bar.appendChild(ab);ol.parentNode.insertBefore(bar,ol.nextSibling);paint();});
+/* tap-to-reveal: practice answers */
+document.querySelectorAll('.pq').forEach(function(q){
+  var a=q.querySelector('.ans');if(!a)return;a.hidden=true;
+  var b=document.createElement('button');b.className='btn';b.type='button';b.textContent='Show answer';
+  b.addEventListener('click',function(){a.hidden=!a.hidden;b.textContent=a.hidden?'Show answer':'Hide answer';});
+  q.insertBefore(b,a);});
+document.querySelectorAll('[data-revealall]').forEach(function(b){b.addEventListener('click',function(){
+  var c=b.closest('.card');c.querySelectorAll('.pq .ans').forEach(function(a){a.hidden=false});
+  c.querySelectorAll('.pq .btn').forEach(function(x){x.textContent='Hide answer'});});});
+
+/* sheets */
+function openSheet(id){document.getElementById(id).hidden=false;}
+function closeSheets(){document.querySelectorAll('.sheet').forEach(function(s){s.hidden=true});}
+document.querySelectorAll('[data-close]').forEach(function(b){b.addEventListener('click',closeSheets)});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeSheets();});
+
+/* contents */
+var toc=document.getElementById('tocList'),lastSec=null;
+cards.forEach(function(c,i){
+  var s=c.dataset.group;if(s!==lastSec){var g=document.createElement('div');g.className='tocgrp';g.textContent=s;toc.appendChild(g);lastSec=s;}
+  var b=document.createElement('button');b.className='tocitem';b.type='button';
+  b.innerHTML='<span class="no">'+(i+1)+'</span><span></span><span class="kd"></span>';
+  b.children[1].textContent=c.dataset.title;b.children[2].textContent=c.dataset.kind;
+  b.addEventListener('click',function(){closeSheets();go(i,false);});toc.appendChild(b);});
+document.getElementById('tocBtn').addEventListener('click',function(){
+  [].forEach.call(toc.querySelectorAll('.tocitem'),function(b,i){b.classList.toggle('cur',i===cur)});
+  openSheet('tocSheet');var c=toc.querySelector('.cur');if(c)c.scrollIntoView({block:'center'});});
+
+/* flashcards */
+var F=DECK.flash,topics=['All'];F.forEach(function(c){if(topics.indexOf(c[0])<0)topics.push(c[0])});topics.push('Again pile');
+var filt='All',order=[],fi=0,again={};
+var chipBox=document.getElementById('fcChips'),fc=document.getElementById('fc');
+topics.forEach(function(t){var b=document.createElement('button');b.className='chip';b.type='button';b.textContent=t;
+  b.setAttribute('aria-pressed',t===filt?'true':'false');
+  b.addEventListener('click',function(){filt=t;[].forEach.call(chipBox.children,function(x){x.setAttribute('aria-pressed',x===b?'true':'false')});build();});
+  chipBox.appendChild(b);});
+function build(){order=[];F.forEach(function(c,i){if(filt==='All'||c[0]===filt||(filt==='Again pile'&&again[i]))order.push(i)});fi=0;show();}
+function show(){fc.classList.remove('flip');var q=document.getElementById('fcQ'),a=document.getElementById('fcA');
+  if(!order.length){q.textContent=filt==='Again pile'?'Nothing in the Again pile yet.':'No cards.';a.textContent='';document.getElementById('fcN').textContent='0 cards';return;}
+  var c=F[order[fi]];q.innerHTML=c[1];a.innerHTML=c[2];
+  document.getElementById('fcT').textContent=c[0];document.getElementById('fcT2').textContent=c[0];
+  document.getElementById('fcN').textContent=(fi+1)+' / '+order.length;}
+fc.addEventListener('click',function(){fc.classList.toggle('flip')});
+document.getElementById('fcPrev').addEventListener('click',function(){if(order.length){fi=(fi-1+order.length)%order.length;show();}});
+document.getElementById('fcNext').addEventListener('click',function(){if(order.length){fi=(fi+1)%order.length;show();}});
+document.getElementById('fcShuf').addEventListener('click',function(){for(var i=order.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=order[i];order[i]=order[j];order[j]=t;}fi=0;show();});
+document.getElementById('fcAgain').addEventListener('click',function(){if(order.length){again[order[fi]]=1;fi=(fi+1)%order.length;show();}});
+document.getElementById('fcGot').addEventListener('click',function(){if(!order.length)return;delete again[order[fi]];
+  if(filt==='Again pile'){order.splice(fi,1);if(fi>=order.length)fi=0;}else fi=(fi+1)%order.length;show();});
+document.addEventListener('keydown',function(e){if(document.getElementById('fcSheet').hidden)return;
+  if(e.key===' '){fc.classList.toggle('flip');e.preventDefault();}
+  if(e.key==='ArrowRight')document.getElementById('fcNext').click();
+  if(e.key==='ArrowLeft')document.getElementById('fcPrev').click();});
+document.getElementById('fcBtn').addEventListener('click',function(){openSheet('fcSheet');});
+build();
+
+/* quiz */
+var Q=DECK.quiz,list=document.getElementById('qList'),right=0,done=0;
+function renderQ(){list.innerHTML='';right=0;done=0;paintS();
+  Q.forEach(function(it,qi){var box=document.createElement('div');box.className='mcq';
+    box.innerHTML='<div class="qh"><span>Q'+(qi+1)+'</span><span></span></div><p class="qt"></p><div class="opts"></div>';
+    box.querySelector('.qh span:last-child').textContent=it.s;box.querySelector('.qt').innerHTML=it.q;
+    var opts=box.querySelector('.opts');
+    it.o.forEach(function(t,oi){var b=document.createElement('button');b.type='button';b.className='opt';
+      b.innerHTML='<b>'+'ABCD'[oi]+'</b><span></span>';b.querySelector('span').innerHTML=t;
+      b.addEventListener('click',function(){if(box.classList.contains('done'))return;box.classList.add('done');done++;
+        var ok=oi===it.c;if(ok)right++;b.classList.add(ok?'right':'wrong');opts.children[it.c].classList.add('right');
+        var ex=document.createElement('div');ex.className='ex';
+        ex.innerHTML='<b style="color:var('+(ok?'--good':'--bad')+')">'+(ok?'Correct. ':'Answer: '+'ABCD'[it.c]+'. ')+'</b>'+it.e;box.appendChild(ex);paintS();});
+      opts.appendChild(b);});
+    list.appendChild(box);});}
+function paintS(){document.getElementById('qScore').textContent=right+' / '+done+' answered of '+Q.length;}
+document.getElementById('qReset').addEventListener('click',function(){renderQ();list.parentNode.parentNode.scrollTop=0;});
+document.getElementById('qBtn').addEventListener('click',function(){openSheet('qSheet');});
+renderQ();
+
+/* start where you left off */
+var start=parseInt(sget('pos')||'0',10);if(!(start>=0&&start<N))start=0;
+var h=(location.hash||'').slice(1);if(h){cards.forEach(function(c,i){if(c.dataset.id===h)start=i});}
+requestAnimationFrame(function(){go(start,false);});
+})();
+</script>
+
+<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(function(){});}</script>
+</body></html>
