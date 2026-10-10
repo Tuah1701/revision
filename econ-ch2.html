@@ -199,7 +199,7 @@ mjx-container{max-width:100%;overflow-x:auto;overflow-y:hidden}
 .btn.write svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .wthumb{display:block;max-width:150px;width:100%;border:1px solid var(--line);border-radius:10px;cursor:pointer;background:var(--surface)}
 .wmeta{font:600 11.5px/1.3 var(--f-mono);color:var(--muted)}
-#noteSheet{display:flex;flex-direction:column}
+#noteSheet{display:flex;flex-direction:column;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 #noteSheet>.npages{flex:1;min-height:0}
 .ntools{display:flex;gap:6px;align-items:center;padding:6px 10px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none;background:var(--bg)}
 .ntools::-webkit-scrollbar{display:none}
@@ -214,9 +214,9 @@ mjx-container{max-width:100%;overflow-x:auto;overflow-y:hidden}
 .nq .in{max-width:680px;margin:0 auto}
 .nq p{margin:.3em 0}
 .nq .tw{margin:6px 0}
-.npages{overflow-y:auto;overflow-x:hidden;padding:14px 12px 60px;background:var(--surface2);-webkit-overflow-scrolling:touch}
-.npage{position:relative;max-width:900px;margin:0 auto 14px;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.25);overflow:hidden}
-.npage canvas{display:block;width:100%;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.npages{overflow:auto;padding:14px 12px 60px;background:var(--surface2);touch-action:none;overscroll-behavior:contain}
+.npage{position:relative;margin:0 auto 14px;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.25);overflow:hidden}
+.npage canvas{display:block;width:100%;height:auto;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 .npage .pn{position:absolute;right:10px;bottom:8px;font:600 11px/1 var(--f-mono);color:var(--muted);pointer-events:none}
 .nhint{font-size:13px;color:var(--muted);text-align:center;margin:4px 0 0}
 
@@ -634,6 +634,7 @@ mjx-container{max-width:100%;overflow-x:auto;overflow-y:hidden}
     <button class="tl" data-bg="blank" type="button" aria-label="Blank paper" aria-pressed="false">□</button>
     <span class="sep"></span>
     <button class="tl" id="nFinger" type="button" aria-label="Draw with finger" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M9 11V5a1.5 1.5 0 013 0v6"/><path d="M12 10.5V9a1.5 1.5 0 013 0v2"/><path d="M15 11a1.5 1.5 0 013 0v3a6 6 0 01-6 6h-1a6 6 0 01-5-3l-2-3.5a1.5 1.5 0 012.5-1.6L9 13"/></svg></button>
+    <button class="tl" id="nZoom" type="button" aria-label="Zoom level, tap to reset" style="min-width:52px">100%</button>
     <button class="tl" id="nAdd" type="button" aria-label="Add page"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M12 9v6M9 12h6"/></svg></button>
     <button class="tl" id="nClear" type="button" aria-label="Clear this note"><svg viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button>
   </div>
@@ -804,59 +805,107 @@ function render(ctx,page,bg){paintBg(ctx,bg);page.forEach(function(s){drawStroke
 function fit(cv){var w=cv.clientWidth||cv.parentNode.clientWidth,d=window.devicePixelRatio||1;
   cv.width=Math.round(w*d);cv.height=Math.round(w*PH/L*d);var ctx=cv.getContext('2d');ctx.setTransform(cv.width/L,0,0,cv.width/L,0,0);return ctx;}
 
-/* pages */
-var views=[];
+/* pages: one gesture handler on the whole paper area (pen draws; one finger pans; two fingers pinch-zoom) */
+var views=[], zoom=1, ZMIN=.5, ZMAX=4;
+try{zoom=+localStorage.getItem(KEY+':notezoom')||1;}catch(e){}
+function baseW(){return Math.max(240,Math.min(pagesBox.clientWidth-24,900));}
+function pageW(){return Math.round(baseW()*zoom);}
 function build(){pagesBox.innerHTML='';views=[];
   note.pages.forEach(function(pg,i){
     var wrap=document.createElement('div');wrap.className='npage';
     var cv=document.createElement('canvas');cv.setAttribute('aria-label','Writing page '+(i+1));
     var pn=document.createElement('span');pn.className='pn';pn.textContent=(i+1)+' / '+note.pages.length;
     wrap.appendChild(cv);wrap.appendChild(pn);pagesBox.appendChild(wrap);
-    var v={cv:cv,i:i};views.push(v);hook(v);});
+    views.push({cv:cv,wrap:wrap,i:i});});
   var h=document.createElement('p');h.className='nhint';
-  h.textContent=st.finger?'Finger draws. Turn off the hand button to scroll with one finger.':'Write with Apple Pencil. Scroll with your finger.';
+  h.textContent=st.finger?'Finger draws. Pinch with two fingers to zoom.':'Write with Apple Pencil. One finger scrolls, two fingers pinch to zoom.';
   pagesBox.appendChild(h);
-  requestAnimationFrame(redrawAll);}
+  layout();requestAnimationFrame(redrawAll);}
+function layout(){var w=pageW();views.forEach(function(v){v.wrap.style.width=w+'px';});paintZoom();}
+function fit(cv){var w=cv.clientWidth||pageW(),h=w*PH/L,d=window.devicePixelRatio||1;
+  d=Math.min(d,Math.sqrt(16e6/(w*h)));                      // iPad canvas memory limit
+  cv.width=Math.round(w*d);cv.height=Math.round(h*d);var ctx=cv.getContext('2d');ctx.setTransform(cv.width/L,0,0,cv.width/L,0,0);return ctx;}
 function redraw(v){v.ctx=fit(v.cv);render(v.ctx,note.pages[v.i],note.bg);}
 function redrawAll(){views.forEach(redraw);}
-window.addEventListener('resize',function(){if(!sheet.hidden)redrawAll();});
+window.addEventListener('resize',function(){if(!sheet.hidden){layout();redrawAll();}});
+function paintZoom(){var z=document.getElementById('nZoom');if(z)z.textContent=Math.round(zoom*100)+'%';}
+function setZoom(z,cx,cy){ // keep the point (cx,cy) in the paper area fixed on screen
+  z=Math.max(ZMIN,Math.min(ZMAX,z));var r=pagesBox.getBoundingClientRect(),ox=cx-r.left,oy=cy-r.top;
+  var ax=(pagesBox.scrollLeft+ox)/zoom,ay=(pagesBox.scrollTop+oy)/zoom;zoom=z;layout();
+  pagesBox.scrollLeft=ax*zoom-ox;pagesBox.scrollTop=ay*zoom-oy;}
+var zt;function zoomDone(){clearTimeout(zt);zt=setTimeout(function(){redrawAll();try{localStorage.setItem(KEY+':notezoom',zoom);}catch(e){}},120);}
 
+function viewAt(x,y){for(var i=0;i<views.length;i++){var r=views[i].cv.getBoundingClientRect();
+  if(x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom)return views[i];}return null;}
 function pos(v,e){var r=v.cv.getBoundingClientRect(),k=L/r.width;
   var pr=e.pointerType==='pen'?(e.pressure||.5):.5;return [Math.round((e.clientX-r.left)*k*10)/10,Math.round((e.clientY-r.top)*k*10)/10,Math.round(pr*9)];}
-function hook(v){
-  var cur=null,scrollY=null,pid=null,live=null;
-  v.cv.addEventListener('pointerdown',function(e){
-    if(e.pointerType==='pen'&&!st.penSeen){st.penSeen=true;saveTools();}
-    var draws=e.pointerType!=='touch'||st.finger||!st.penSeen;
-    if(!draws){scrollY={y:e.clientY,t:pagesBox.scrollTop};pid=e.pointerId;v.cv.setPointerCapture(e.pointerId);return;}
-    if(cur)return;e.preventDefault();pid=e.pointerId;v.cv.setPointerCapture(e.pointerId);
-    var p=pos(v,e);
-    if(st.tool==='er'){cur={er:true,removed:[]};erase(v,p);return;}
-    cur={t:st.tool==='hl'?'h':'p',c:st.tool==='hl'?'#F5C400':st.col,w:st.tool==='hl'?SIZES[st.size]*5:SIZES[st.size],p:p.slice()};
-    if(cur.t==='h')live=note.pages[v.i].slice();
-    drawStroke(v.ctx,cur);});
-  v.cv.addEventListener('pointermove',function(e){
-    if(e.pointerId!==pid)return;
-    if(scrollY){pagesBox.scrollTop=scrollY.t-(e.clientY-scrollY.y);return;}
-    if(!cur)return;e.preventDefault();
-    var evs=e.getCoalescedEvents?e.getCoalescedEvents():[e];if(!evs.length)evs=[e];
-    evs.forEach(function(ev){var p=pos(v,ev);
-      if(cur.er){erase(v,p);return;}
-      var q=cur.p,n=q.length;if(Math.abs(q[n-3]-p[0])+Math.abs(q[n-2]-p[1])<1.2)return;
-      q.push(p[0],p[1],p[2]);
-      if(cur.t==='p'){var seg={t:'p',c:cur.c,w:cur.w,p:q.slice(Math.max(0,q.length-9))};drawStroke(v.ctx,seg);}});
-    if(cur&&cur.t==='h'){render(v.ctx,live,note.bg);drawStroke(v.ctx,cur);}});
-  function end(e){if(e.pointerId!==pid)return;pid=null;
-    if(scrollY){scrollY=null;return;}if(!cur)return;
+
+/* iOS: stop Safari treating pen or finger movement as scrolling, text selection or the callout menu.
+   Without this a quick vertical stroke after a horizontal one gets cancelled (the "+" problem). */
+['touchstart','touchmove'].forEach(function(t){pagesBox.addEventListener(t,function(e){if(e.cancelable)e.preventDefault();},{passive:false});});
+sheet.addEventListener('selectstart',function(e){e.preventDefault();});
+pagesBox.addEventListener('contextmenu',function(e){e.preventDefault();});
+
+var touches={},mode=null,cur=null,curV=null,drawPid=null,live=null,pan=null,pinch=null;
+function nTouch(){return Object.keys(touches).length;}
+function pinchInfo(){var k=Object.keys(touches),a=touches[k[0]],b=touches[k[1]];
+  return {d:Math.hypot(a.x-b.x,a.y-b.y)||1,x:(a.x+b.x)/2,y:(a.y+b.y)/2};}
+function startStroke(v,e){var p=pos(v,e);curV=v;
+  if(st.tool==='er'){cur={er:true,removed:[]};erase(v,p);return;}
+  cur={t:st.tool==='hl'?'h':'p',c:st.tool==='hl'?'#F5C400':st.col,w:st.tool==='hl'?SIZES[st.size]*5:SIZES[st.size],p:p.slice()};
+  if(cur.t==='h')live=note.pages[v.i].slice();
+  drawStroke(v.ctx,cur);}
+function moveStroke(e){var v=curV,evs=e.getCoalescedEvents?e.getCoalescedEvents():[e];if(!evs.length)evs=[e];
+  evs.forEach(function(ev){var p=pos(v,ev);
+    if(cur.er){erase(v,p);return;}
+    var q=cur.p,n=q.length;if(Math.abs(q[n-3]-p[0])+Math.abs(q[n-2]-p[1])<1.2)return;
+    q.push(p[0],p[1],p[2]);
+    if(cur.t==='p')drawStroke(v.ctx,{t:'p',c:cur.c,w:cur.w,p:q.slice(Math.max(0,q.length-9))});});
+  if(cur.t==='h'){render(v.ctx,live,note.bg);drawStroke(v.ctx,cur);}}
+function endStroke(keep){var v=curV;
+  if(cur&&keep!==false){
     if(cur.er){if(cur.removed.length){undo.push({k:'er',i:v.i,items:cur.removed});redo=[];}}
-    else{note.pages[v.i].push(cur);undo.push({k:'add',i:v.i,s:cur});redo=[];}
-    cur=null;live=null;redraw(v);paintUR();save();}
-  v.cv.addEventListener('pointerup',end);v.cv.addEventListener('pointercancel',end);
-  function erase(v2,p){var pg=note.pages[v2.i],r=14,hit=false;
-    for(var i=pg.length-1;i>=0;i--){var q=pg[i].p;
-      for(var j=0;j<q.length;j+=3){if(Math.abs(q[j]-p[0])<r&&Math.abs(q[j+1]-p[1])<r){cur.removed.push({s:pg[i],at:i});pg.splice(i,1);hit=true;break;}}}
-    if(hit)render(v2.ctx,pg,note.bg);}
-}
+    else{note.pages[v.i].push(cur);undo.push({k:'add',i:v.i,s:cur});redo=[];}}
+  if(cur&&keep===false&&cur.er)cur.removed.slice().reverse().forEach(function(it){note.pages[v.i].splice(it.at,0,it.s);});
+  cur=null;live=null;curV=null;drawPid=null;mode=null;if(v)redraw(v);paintUR();save();}
+function erase(v,p){var pg=note.pages[v.i],r=14/Math.min(zoom,2)*1.2,hit=false;
+  for(var i=pg.length-1;i>=0;i--){var q=pg[i].p;
+    for(var j=0;j<q.length;j+=3){if(Math.abs(q[j]-p[0])<r&&Math.abs(q[j+1]-p[1])<r){cur.removed.push({s:pg[i],at:i});pg.splice(i,1);hit=true;break;}}}
+  if(hit)render(v.ctx,pg,note.bg);}
+
+pagesBox.addEventListener('pointerdown',function(e){
+  try{var sel=window.getSelection&&window.getSelection();if(sel&&sel.removeAllRanges)sel.removeAllRanges();}catch(x){}
+  if(e.pointerType==='pen'&&!st.penSeen){st.penSeen=true;saveTools();}
+  var isTouch=e.pointerType==='touch';
+  if(isTouch){
+    if(mode==='draw'&&!drawIsTouch)return;                       // palm resting while the pen writes
+    touches[e.pointerId]={x:e.clientX,y:e.clientY};try{pagesBox.setPointerCapture(e.pointerId);}catch(x){}
+    if(nTouch()===2){if(mode==='draw')endStroke(false);var pi=pinchInfo();pinch={d:pi.d,z:zoom};pan=null;mode='pinch';return;}
+    if(nTouch()>2)return;
+    if(st.penSeen&&!st.finger){mode='pan';pan={x:e.clientX,y:e.clientY,l:pagesBox.scrollLeft,t:pagesBox.scrollTop};return;}
+  }
+  if(mode==='draw')return;
+  var v=viewAt(e.clientX,e.clientY);if(!v)return;
+  if(mode==='pan')pan=null;
+  e.preventDefault();mode='draw';drawPid=e.pointerId;drawIsTouch=isTouch;
+  if(!isTouch){try{pagesBox.setPointerCapture(e.pointerId);}catch(x){}}
+  startStroke(v,e);});
+var drawIsTouch=false;
+pagesBox.addEventListener('pointermove',function(e){
+  if(touches[e.pointerId]){touches[e.pointerId]={x:e.clientX,y:e.clientY};
+    if(mode==='pinch'&&nTouch()>=2){var pi=pinchInfo();setZoom(pinch.z*pi.d/pinch.d,pi.x,pi.y);
+      if(pinch.mx!=null){pagesBox.scrollLeft-=pi.x-pinch.mx;pagesBox.scrollTop-=pi.y-pinch.my;}
+      pinch.mx=pi.x;pinch.my=pi.y;e.preventDefault();return;}
+    if(mode==='pan'&&pan){pagesBox.scrollLeft=pan.l-(e.clientX-pan.x);pagesBox.scrollTop=pan.t-(e.clientY-pan.y);return;}}
+  if(mode==='draw'&&e.pointerId===drawPid&&cur){e.preventDefault();moveStroke(e);}});
+function up(e){
+  if(touches[e.pointerId]){delete touches[e.pointerId];
+    if(mode==='pinch'){if(nTouch()<2){mode=nTouch()?'wait':null;pan=null;zoomDone();}return;}
+    if(mode==='wait'&&!nTouch())mode=null;
+    if(mode==='pan'){mode=null;pan=null;return;}}
+  if(mode==='draw'&&e.pointerId===drawPid)endStroke(true);}
+pagesBox.addEventListener('pointerup',up);pagesBox.addEventListener('pointercancel',up);
+pagesBox.addEventListener('wheel',function(e){if(!e.ctrlKey)return;e.preventDefault();setZoom(zoom*Math.exp(-e.deltaY/200),e.clientX,e.clientY);zoomDone();},{passive:false});
 function paintUR(){document.getElementById('nUndo').disabled=!undo.length;document.getElementById('nRedo').disabled=!redo.length;}
 document.getElementById('nUndo').addEventListener('click',function(){var a=undo.pop();if(!a)return;
   if(a.k==='add'){var pg=note.pages[a.i],k=pg.lastIndexOf(a.s);if(k>=0)pg.splice(k,1);}
@@ -882,6 +931,7 @@ sheet.querySelectorAll('[data-tool]').forEach(function(b){b.addEventListener('cl
 sheet.querySelectorAll('[data-col]').forEach(function(b){b.addEventListener('click',function(){st.col=b.dataset.col;if(st.tool!=='pen')st.tool='pen';paintTools();saveTools();});});
 sheet.querySelectorAll('[data-size]').forEach(function(b){b.addEventListener('click',function(){st.size=+b.dataset.size;paintTools();saveTools();});});
 sheet.querySelectorAll('[data-bg]').forEach(function(b){b.addEventListener('click',function(){note.bg=b.dataset.bg;paintTools();redrawAll();save();});});
+document.getElementById('nZoom').addEventListener('click',function(){var r=pagesBox.getBoundingClientRect();setZoom(1,r.left+r.width/2,r.top);zoomDone();});
 document.getElementById('nFinger').addEventListener('click',function(){st.finger=!st.finger;paintTools();saveTools();build();});
 document.getElementById('nAdd').addEventListener('click',function(){note.pages.push([]);undo.push({k:'page',i:note.pages.length-1});redo=[];build();paintUR();save();
   setTimeout(function(){pagesBox.scrollTop=pagesBox.scrollHeight;},60);});
