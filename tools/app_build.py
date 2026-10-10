@@ -16,6 +16,8 @@ DECKS = {  # published artifact URL -> local file in the app
 TIMER = SRC / "data/timer-source.html"
 TIMER_URL = "https://claude.ai/code/artifact/f3cef93e-1ff7-49d0-8358-6c072def1db6"
 
+REG_SNIPPET = "<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(function(r){document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')r.update().catch(function(){});});}).catch(function(){});var had=!!navigator.serviceWorker.controller,done=false;navigator.serviceWorker.addEventListener('controllerchange',function(){if(had&&!done){done=true;location.reload();}});}</script>"
+
 HEAD = """<!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8">
@@ -27,7 +29,7 @@ HEAD = """<!doctype html>
 </head><body>
 """
 TAIL = """
-<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(function(){});}</script>
+<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(function(r){document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')r.update().catch(function(){});});}).catch(function(){});var had=!!navigator.serviceWorker.controller,done=false;navigator.serviceWorker.addEventListener('controllerchange',function(){if(had&&!done){done=true;location.reload();}});}</script>
 </body></html>
 """
 
@@ -86,7 +88,7 @@ def main(mathjax):
         t = t.replace("</head>", '<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icon-180.png"></head>', 1)
         t = t.replace('<div><span class="eyebrow" id="subjectCode">',
                       '<div><a href="index.html" style="display:inline-block;font-weight:700;color:var(--accent);text-decoration:none;padding:6px 0;margin-bottom:4px">← Revision Hub</a><br><span class="eyebrow" id="subjectCode">', 1)
-        t = t.replace("</body>", "<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(function(){});}</script></body>", 1)
+        t = t.replace("</body>", "<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(function(r){document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')r.update().catch(function(){});});}).catch(function(){});var had=!!navigator.serviceWorker.controller,done=false;navigator.serviceWorker.addEventListener('controllerchange',function(){if(had&&!done){done=true;location.reload();}});}</script></body>", 1)
         (OUT / "timer.html").write_text(t, encoding="utf8")
         h = (OUT / "index.html").read_text(encoding="utf8")
         h = h.replace(f'href="{TIMER_URL}" target="_blank" rel="noopener"', 'href="timer.html"')
@@ -107,21 +109,25 @@ def main(mathjax):
     (OUT / "manifest.webmanifest").write_text(json.dumps(manifest, indent=2), encoding="utf8")
 
     files = sorted(str(p.relative_to(OUT)) for p in OUT.rglob("*") if p.is_file() and not p.name.startswith("."))
-    ver = hashlib.sha1("".join((OUT / f).read_bytes().hex()[:64] for f in files).encode()).hexdigest()[:10]
-    sw = f"""// Offline cache: everything in the app is stored on first open; fonts are cached as they load.
+    ver = hashlib.sha1(b"".join((OUT / f).read_bytes() for f in files)).hexdigest()[:10]
+    sw = f"""// Pages (HTML): network first, so new decks show as soon as you're online; cached copy when offline.
+// Everything else (maths renderer, icons, fonts): cache first.
 const CACHE = 'revision-{ver}';
 const FILES = {json.dumps(['./'] + files)};
-self.addEventListener('install', e => {{ e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)).then(() => self.skipWaiting())); }});
+self.addEventListener('install', e => {{ e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES.map(f => new Request(f, {{cache: 'reload'}})))).then(() => self.skipWaiting())); }});
 self.addEventListener('activate', e => {{ e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())); }});
+const keep = (req, res) => {{ if (res.ok || res.type === 'opaque') {{ const copy = res.clone(); caches.open(CACHE).then(c => c.put(req, copy)); }} return res; }};
 self.addEventListener('fetch', e => {{
-  if (e.request.method !== 'GET') return;
-  e.respondWith(caches.match(e.request, {{ignoreSearch: true}}).then(hit => hit || fetch(e.request).then(res => {{
-    const u = new URL(e.request.url);
-    if (res.ok || res.type === 'opaque') if (u.origin === location.origin || /fonts\\.(googleapis|gstatic)\\.com$/.test(u.hostname)) {{
-      const copy = res.clone(); caches.open(CACHE).then(c => c.put(e.request, copy));
-    }}
-    return res;
-  }}).catch(() => caches.match('./index.html'))));
+  const req = e.request; if (req.method !== 'GET') return;
+  const u = new URL(req.url), same = u.origin === location.origin;
+  const page = req.mode === 'navigate' || (same && (u.pathname.endsWith('.html') || u.pathname.endsWith('/')));
+  if (page) {{
+    e.respondWith(fetch(req, {{cache: 'no-cache'}}).then(res => keep(req, res))
+      .catch(() => caches.match(req, {{ignoreSearch: true}}).then(hit => hit || caches.match('./index.html'))));
+    return;
+  }}
+  if (!same && !/fonts\\.(googleapis|gstatic)\\.com$/.test(u.hostname)) return;
+  e.respondWith(caches.match(req, {{ignoreSearch: true}}).then(hit => hit || fetch(req).then(res => keep(req, res))));
 }});
 """
     (OUT / "sw.js").write_text(sw, encoding="utf8")

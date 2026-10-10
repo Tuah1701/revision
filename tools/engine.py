@@ -1,5 +1,6 @@
 """Deck engine: turns a list of cards + flashcards + MCQs into one self-contained, swipeable HTML page."""
 import json, html as _h
+import notes_ui
 
 CSS = r"""
 /* Layout: one-card-per-screen swipe track (CSS scroll-snap) between a slim top bar and a bottom progress bar.
@@ -178,6 +179,7 @@ a{color:var(--accent)}
 .score{position:sticky;top:0;z-index:2;background:var(--bg);padding-block:10px;display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px solid var(--line);font:600 14px var(--f-body)}
 .score .num{font:700 16px var(--f-mono);color:var(--accent);font-variant-numeric:tabular-nums}
 mjx-container{max-width:100%;overflow-x:auto;overflow-y:hidden}
+""" + notes_ui.CSS + r"""
 @media (prefers-reduced-motion:reduce){.fc-in,.bar i{transition:none}.track{scroll-behavior:auto}}
 """
 
@@ -306,6 +308,7 @@ document.getElementById('qReset').addEventListener('click',function(){renderQ();
 document.getElementById('qBtn').addEventListener('click',function(){openSheet('qSheet');});
 renderQ();
 
+""" + notes_ui.JS + r"""
 /* start where you left off */
 var start=parseInt(sget('pos')||'0',10);if(!(start>=0&&start<N))start=0;
 var h=(location.hash||'').slice(1);if(h){cards.forEach(function(c,i){if(c.dataset.id===h)start=i});}
@@ -383,6 +386,7 @@ def render(meta, cards, flash, quiz, math=False):
     <div id="qList"></div>
   </div></div>
 </div>
+{notes_ui.HTML}
 <script>var DECK={data};</script>
 <script>{JS}</script>
 """

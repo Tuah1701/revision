@@ -192,6 +192,34 @@ a{color:var(--accent)}
 .score{position:sticky;top:0;z-index:2;background:var(--bg);padding-block:10px;display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px solid var(--line);font:600 14px var(--f-body)}
 .score .num{font:700 16px var(--f-mono);color:var(--accent);font-variant-numeric:tabular-nums}
 mjx-container{max-width:100%;overflow-x:auto;overflow-y:hidden}
+
+/* ---------- handwriting notes ---------- */
+.wrow{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-start;margin:10px 0}
+.btn.write{border-color:var(--teal);color:var(--teal)}
+.btn.write svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.wthumb{display:block;max-width:150px;width:100%;border:1px solid var(--line);border-radius:10px;cursor:pointer;background:var(--surface)}
+.wmeta{font:600 11.5px/1.3 var(--f-mono);color:var(--muted)}
+#noteSheet{display:flex;flex-direction:column}
+#noteSheet>.npages{flex:1;min-height:0}
+.ntools{display:flex;gap:6px;align-items:center;padding:6px 10px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none;background:var(--bg)}
+.ntools::-webkit-scrollbar{display:none}
+.tl{all:unset;cursor:pointer;flex:none;display:inline-grid;place-items:center;min-width:38px;height:40px;border-radius:10px;border:1px solid transparent;font:700 13px/1 var(--f-body)}
+.tl svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.tl[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.tl[disabled]{opacity:.35;cursor:default}
+.tl .dot{width:20px;height:20px;border-radius:50%;border:2px solid var(--line)}
+.tl[aria-pressed="true"] .dot{border-color:var(--accent)}
+.sep{flex:none;width:1px;height:26px;background:var(--line);margin:0 2px}
+.nq{border-bottom:1px solid var(--line);background:var(--surface);padding:8px 16px;max-height:34vh;overflow-y:auto;font-size:15.5px}
+.nq .in{max-width:680px;margin:0 auto}
+.nq p{margin:.3em 0}
+.nq .tw{margin:6px 0}
+.npages{overflow-y:auto;overflow-x:hidden;padding:14px 12px 60px;background:var(--surface2);-webkit-overflow-scrolling:touch}
+.npage{position:relative;max-width:900px;margin:0 auto 14px;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.25);overflow:hidden}
+.npage canvas{display:block;width:100%;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.npage .pn{position:absolute;right:10px;bottom:8px;font:600 11px/1 var(--f-mono);color:var(--muted);pointer-events:none}
+.nhint{font-size:13px;color:var(--muted);text-align:center;margin:4px 0 0}
+
 @media (prefers-reduced-motion:reduce){.fc-in,.bar i{transition:none}.track{scroll-behavior:auto}}
 </style>
 <script>window.MathJax={tex:{inlineMath:[["\\(","\\)"]]},svg:{fontCache:"global"},options:{enableMenu:false}};</script><script src="mathjax/tex-svg.js"></script>
@@ -578,6 +606,41 @@ mjx-container{max-width:100%;overflow-x:auto;overflow-y:hidden}
     <div id="qList"></div>
   </div></div>
 </div>
+
+<div class="sheet" id="noteSheet" hidden>
+  <header class="top">
+    <div class="ttl"><b id="nTitle">Your working</b><small id="nSub">Saved on this device</small></div>
+    <button class="tl" id="nQ" type="button" aria-pressed="true" aria-label="Show question"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9.5 9.5a2.5 2.5 0 114 2c-1 .7-1.5 1.2-1.5 2.5M12 17h.01"/></svg></button>
+    <button class="tl" id="nUndo" type="button" aria-label="Undo"><svg viewBox="0 0 24 24"><path d="M9 7L4 12l5 5"/><path d="M4 12h11a5 5 0 010 10h-2"/></svg></button>
+    <button class="tl" id="nRedo" type="button" aria-label="Redo"><svg viewBox="0 0 24 24"><path d="M15 7l5 5-5 5"/><path d="M20 12H9a5 5 0 000 10h2"/></svg></button>
+    <button class="btn pri" id="nDone" type="button">Done</button>
+  </header>
+  <div class="ntools" role="toolbar" aria-label="Writing tools">
+    <button class="tl" data-tool="pen" type="button" aria-label="Pen" aria-pressed="true"><svg viewBox="0 0 24 24"><path d="M4 20l4-1 11-11-3-3L5 16l-1 4z"/><path d="M14 6l3 3"/></svg></button>
+    <button class="tl" data-tool="hl" type="button" aria-label="Highlighter" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M9 15l-3 5h6l1-2"/><path d="M9 15l7-11 4 3-7 11z"/></svg></button>
+    <button class="tl" data-tool="er" type="button" aria-label="Eraser" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M8 20h12"/><path d="M4.5 14.5l9-9 6 6-7.5 7.5H9z"/></svg></button>
+    <span class="sep"></span>
+    <button class="tl" data-col="ink" type="button" aria-label="Black ink" aria-pressed="true"><span class="dot" style="background:var(--fg)"></span></button>
+    <button class="tl" data-col="blue" type="button" aria-label="Blue ink" aria-pressed="false"><span class="dot" style="background:#3E7BFA"></span></button>
+    <button class="tl" data-col="red" type="button" aria-label="Red ink" aria-pressed="false"><span class="dot" style="background:#E5484D"></span></button>
+    <button class="tl" data-col="green" type="button" aria-label="Green ink" aria-pressed="false"><span class="dot" style="background:#2FA36B"></span></button>
+    <span class="sep"></span>
+    <button class="tl" data-size="1" type="button" aria-label="Fine" aria-pressed="false">S</button>
+    <button class="tl" data-size="2" type="button" aria-label="Medium" aria-pressed="true">M</button>
+    <button class="tl" data-size="3" type="button" aria-label="Thick" aria-pressed="false">L</button>
+    <span class="sep"></span>
+    <button class="tl" data-bg="lined" type="button" aria-label="Lined paper" aria-pressed="true">≡</button>
+    <button class="tl" data-bg="grid" type="button" aria-label="Grid paper" aria-pressed="false">#</button>
+    <button class="tl" data-bg="blank" type="button" aria-label="Blank paper" aria-pressed="false">□</button>
+    <span class="sep"></span>
+    <button class="tl" id="nFinger" type="button" aria-label="Draw with finger" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M9 11V5a1.5 1.5 0 013 0v6"/><path d="M12 10.5V9a1.5 1.5 0 013 0v2"/><path d="M15 11a1.5 1.5 0 013 0v3a6 6 0 01-6 6h-1a6 6 0 01-5-3l-2-3.5a1.5 1.5 0 012.5-1.6L9 13"/></svg></button>
+    <button class="tl" id="nAdd" type="button" aria-label="Add page"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M12 9v6M9 12h6"/></svg></button>
+    <button class="tl" id="nClear" type="button" aria-label="Clear this note"><svg viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button>
+  </div>
+  <div class="nq" id="nQBox"><div class="in" id="nQText"></div></div>
+  <div class="npages" id="nPages"></div>
+</div>
+
 <script>var DECK={"key": "deck-9708-ch2", "flash": [["Demand", "Define effective demand.", "The quantity consumers are <b>willing and able</b> to buy at each price per period, ceteris paribus. Desire must be backed by ability to pay."], ["Demand", "State the law of demand.", "Ceteris paribus, a higher price leads to a lower quantity demanded, and vice versa: an inverse relationship."], ["Demand", "Price of a good falls. Movement or shift? What is it called?", "Movement down along the demand curve: an <b>expansion</b> (increase in quantity demanded)."], ["Demand", "Name five non-price determinants of demand.", "Price of substitutes/complements, income, tastes &amp; preferences, expected future price, government policy (also population, credit)."], ["Demand", "Price of coffee rises. What happens to demand for tea (a substitute)?", "Demand for tea increases: D shifts right, because tea is now relatively cheaper."], ["Demand", "Price of petrol falls. Effect on demand for cars?", "Cars and petrol are complements, so demand for cars increases (shifts right)."], ["Demand", "What is an inferior good? Example?", "Demand falls as income rises, e.g. bus tickets, second-hand clothes. YED &lt; 0."], ["Demand", "What is a Veblen good?", "A status good whose quantity demanded may rise as price rises because high price signals prestige (diamonds, luxury watches)."], ["Demand", "What is a Giffen good and why does demand slope up?", "A staple inferior good taking a large share of poor households' income. A price rise makes them too poor to buy better foods, so they buy more of the staple."], ["Supply", "Define supply.", "The quantity producers are willing and able to sell at each price per period, ceteris paribus."], ["Supply", "Wages rise. What happens to supply?", "Costs rise → supply decreases → S shifts left (up)."], ["Supply", "How does a specific tax differ from an ad valorem tax on the diagram?", "Specific: fixed amount per unit → parallel upward shift. Ad valorem: % of price → pivots, gap widens at higher prices."], ["Supply", "What does a subsidy do to supply?", "Lowers costs per unit → S shifts right/down by the subsidy amount."], ["Supply", "Beef and leather: what relationship? Effect of higher beef demand on leather?", "Joint supply. More beef produced → supply of leather shifts right → leather price falls."], ["Supply", "Oranges rise in price. Effect on lemon supply (competitive supply)?", "Farmers shift land to oranges → supply of lemons decreases (shifts left)."], ["Equilibrium", "Define equilibrium price.", "The price where quantity demanded equals quantity supplied, with no tendency to change."], ["Equilibrium", "Solve Qd = 50 − 5P and Qs = 2 + 3P.", "50 − 5P = 2 + 3P → 8P = 48 → P = $6, Q = 20."], ["Equilibrium", "Price is above equilibrium. What exists and what happens?", "Excess supply (surplus); sellers cut price until Qd = Qs."], ["Equilibrium", "Demand and supply both increase. What is certain?", "Quantity rises for certain. Price depends on which shift is bigger."], ["Equilibrium", "Demand rises and supply falls. What is certain?", "Price rises for certain. Quantity depends on the relative size of the shifts."], ["Elasticity", "PED formula and meaning of 0.2.", "PED = %ΔQd ÷ %ΔP. 0.2 = inelastic: a 1% price rise cuts quantity demanded by 0.2%."], ["Elasticity", "Price $12 → $18, Qd 200,000 → 180,000. PED?", "%ΔP = +50%, %ΔQd = −10% → PED = −0.2 (inelastic)."], ["Elasticity", "Demand is inelastic. Should a firm raise or lower price to raise revenue?", "Raise it: quantity falls proportionally less than price rises, so TR rises."], ["Elasticity", "Where on a straight-line demand curve is PED = 1?", "At the midpoint, where TR is maximised. Above it demand is elastic; below it inelastic."], ["Elasticity", "List five determinants of PED.", "Substitutes (most important), proportion of income, necessity vs luxury, habit/addiction, time period (and breadth of definition)."], ["Elasticity", "Why do governments tax goods with inelastic demand?", "Quantity falls little, so tax revenue is high (price rises proportionally more than quantity falls)."], ["Elasticity", "Define PES and give its formula.", "Responsiveness of quantity supplied to a change in price, ceteris paribus. PES = %ΔQs ÷ %ΔP."], ["Elasticity", "Price $16 → $18.40, Qs 28,000 → 28,840. PES?", "+3% ÷ +15% = 0.2 → inelastic supply."], ["Elasticity", "Five determinants of PES.", "Spare capacity, stocks/storability, mobility of factors, time period, nature of the good (primary vs manufactured)."], ["Elasticity", "Why is agricultural supply price inelastic?", "Growing seasons mean output cannot be raised quickly, and perishability limits stocks."], ["Elasticity", "A straight supply curve through the origin has PES = ?", "1 at every point (unitary)."], ["Elasticity", "Income $800 → $1,000, clothes 100 → 140. YED and type?", "+40% ÷ +25% = +1.6 → luxury (income-elastic normal good)."], ["Elasticity", "YED of +0.3 means?", "Necessity: normal good, income inelastic."], ["Elasticity", "Negative YED means?", "Inferior good: demand falls as income rises."], ["Elasticity", "How can a firm use YED?", "Plan output over the business cycle, diversify the product range (luxury to no-frills), adjust marketing in booms vs recessions."], ["Elasticity", "XED formula.", "%ΔQd of good A ÷ %ΔP of good B."], ["Elasticity", "XED = +0.5. Relationship?", "Weak substitutes."], ["Elasticity", "XED = −2. Relationship?", "Close complements."], ["Elasticity", "Main determinant of the size of XED?", "How closely the goods are related (closeness as substitutes or complements)."], ["Elasticity", "Two general limitations of any elasticity estimate.", "Based on past data that may be unreliable or out of date; ceteris paribus rarely holds in reality."], ["Surplus", "Define consumer surplus and where it sits on the diagram.", "Maximum price willing to pay minus price paid. Area below D and above the price."], ["Surplus", "Define producer surplus and where it sits.", "Price received minus minimum price acceptable (marginal cost). Area above S and below the price."], ["Surplus", "Willing to pay $1.00 and $0.90 for two drinks priced $0.75. Total CS?", "$0.25 + $0.15 = $0.40."], ["Surplus", "Costs rise and price rises. When is the loss of CS largest in absolute terms?", "When demand is price inelastic: price rises most, so buyers pay much more per unit."], ["Price mechanism", "Name the three functions of the price mechanism.", "Rationing, signalling, incentive."], ["Price mechanism", "Explain the rationing function with a diagram reference.", "Supply falls → price rises → movement up D → the good goes to those willing and able to pay most."], ["Price mechanism", "What is the transmission of preferences?", "The automatic way prices let consumers' wants be known to producers (part of the signalling function)."], ["Price mechanism", "Explain the incentive function.", "Higher prices make production more profitable, so firms expand output and hire resources: a movement up the supply curve."], ["Price mechanism", "What is derived demand? Example.", "Demand for a factor that comes from demand for the product it makes, e.g. supermarket workers."], ["Exam", "Mark split of an 8-mark part (a)?", "AO1 3, AO2 3, AO3 2."], ["Exam", "Mark split of a 12-mark part (b), and the penalty for one-sided answers?", "AO1+AO2 8, AO3 4. One-sided: capped at Level 2 for AO1/AO2 and 0 for AO3."], ["Exam", "What makes a conclusion earn AO3 marks?", "A judgement that answers the exact question, supported by reasons and conditions (\"on balance… because… unless…\")."], ["Exam", "Buffer stock: what does the agency do in a good harvest?", "Buys the surplus at the target price and stores it, preventing price falling below the target."], ["Price mechanism", "Which function of price answers \"for whom\"? Which answers \"what\"?", "Rationing answers <b>for whom</b>; signalling answers <b>what</b>; the incentive function answers <b>how much</b>."], ["Price mechanism", "Is the incentive function a shift of supply?", "No. Higher price → extension in quantity supplied: a <b>movement along S</b>. Only non-price factors shift S."], ["Price mechanism", "Why did Malaysia's 2022 capped chicken and egg prices lead to shortages?", "A maximum price below equilibrium blocks the <b>signal</b> and <b>incentive</b>, so supply doesn't rise and excess demand persists."], ["Price mechanism", "Two weaknesses of rationing by price?", "It rations by <b>ability to pay, not need</b> (essentials like rice); and with <b>low PES</b> the incentive works slowly, so high prices persist."]], "quiz": [{"s": "Demand", "q": "The price of a good falls. What happens?", "o": ["Demand increases", "Quantity demanded expands along the demand curve", "The demand curve shifts right", "Supply shifts left"], "c": 1, "e": "A change in the good's own price is a movement along D. \"Increase in demand\" means a shift."}, {"s": "Demand", "q": "Which of these shifts the demand curve for cars to the right?", "o": ["A fall in the price of cars", "A rise in the price of petrol", "A fall in the price of petrol", "A rise in the cost of steel"], "c": 2, "e": "Petrol is a complement: cheaper petrol raises demand for cars. A is a movement; B shifts D left; D shifts supply."}, {"s": "Demand", "q": "Bus tickets are an inferior good. Incomes rise. What happens to demand for bus tickets?", "o": ["It increases", "It decreases", "It stays the same", "Quantity demanded contracts along D"], "c": 1, "e": "For an inferior good, YED &lt; 0: higher income shifts demand left as people switch to cars."}, {"s": "Supply", "q": "A $2 specific tax is placed on a good. What happens to the supply curve?", "o": ["It shifts up by $2 at every quantity (parallel)", "It pivots, with the gap widening at higher prices", "It shifts down by $2", "It does not move; price rises by $2"], "c": 0, "e": "A specific tax is a fixed amount per unit, so supply shifts up in parallel. B describes an ad valorem tax."}, {"s": "Equilibrium", "q": "Qd = 50 − 5P and Qs = 2 + 3P. What is the equilibrium?", "o": ["P = $6, Q = 20", "P = $8, Q = 10", "P = $4, Q = 30", "P = $6, Q = 26"], "c": 0, "e": "50 − 5P = 2 + 3P → 8P = 48 → P = 6; Q = 50 − 30 = 20."}, {"s": "Equilibrium", "q": "Demand and supply both increase. What can be predicted with certainty?", "o": ["Price rises", "Price falls", "Quantity rises", "Quantity falls"], "c": 2, "e": "Both shifts raise quantity. Price depends on which shift is larger."}, {"s": "Equilibrium", "q": "Demand increases while supply decreases. What is certain?", "o": ["Price rises", "Price falls", "Quantity rises", "Quantity falls"], "c": 0, "e": "Both shifts push price up. Quantity depends on the relative size of the shifts."}, {"s": "PED", "q": "Price rises from $12 to $18; quantity demanded falls from 200,000 to 180,000. What is |PED|?", "o": ["0.2", "0.5", "2", "5"], "c": 0, "e": "%ΔQd = −10%, %ΔP = +50%, so PED = −0.2: inelastic."}, {"s": "PED", "q": "A firm's demand has PED of 0.4. If it raises price, what happens to total revenue?", "o": ["It rises", "It falls", "It stays the same", "It depends on supply"], "c": 0, "e": "Inelastic demand: quantity falls proportionally less than price rises, so TR rises."}, {"s": "PED", "q": "Where on a straight-line demand curve is PED equal to 1?", "o": ["At the price-axis intercept", "At the midpoint", "At the quantity-axis intercept", "Everywhere, because the slope is constant"], "c": 1, "e": "PED depends on P/Q as well as slope. It is 1 at the midpoint, where TR is maximised."}, {"s": "PED", "q": "Which tax is likely to raise the most revenue for a government?", "o": ["A tax on a good with elastic demand", "A tax on a good with inelastic demand", "A tax on a good with many close substitutes", "A tax on a luxury brand"], "c": 1, "e": "With inelastic demand quantity barely falls, so the tax base stays large."}, {"s": "YED", "q": "A good has YED of −0.5. What type of good is it?", "o": ["A luxury", "A necessity", "An inferior good", "A Giffen good necessarily"], "c": 2, "e": "Negative YED means demand falls as income rises: an inferior good. A Giffen good is a special case, not implied."}, {"s": "XED", "q": "Pencils rise in price by 30% and demand for erasers falls by 20%. What is the relationship?", "o": ["Close substitutes", "Weak substitutes", "Weak complements", "Unrelated"], "c": 2, "e": "XED = −20 ÷ 30 ≈ −0.67. Negative means complements; below 1 in size means weak."}, {"s": "PES", "q": "Which is most likely to make supply more price elastic?", "o": ["Perishable output", "Firms operating at full capacity", "Spare capacity and large stocks", "A very short time period"], "c": 2, "e": "Spare capacity and stocks let output respond quickly. The others make supply inelastic."}, {"s": "Surplus", "q": "Higher costs raise a good's price. When is the absolute loss of consumer surplus largest?", "o": ["When demand is price elastic", "When demand is price inelastic", "When supply is perfectly elastic", "When demand is perfectly elastic"], "c": 1, "e": "With inelastic demand price rises most, so existing buyers pay much more per unit."}, {"s": "Related markets", "q": "Demand for beef rises. What happens in the leather market?", "o": ["Demand for leather rises", "Supply of leather increases and its price falls", "Supply of leather decreases and its price rises", "Nothing changes"], "c": 1, "e": "Joint supply: more cattle slaughtered for beef means more leather, so leather supply shifts right."}, {"s": "Related markets", "q": "Car prices fall. Cars and petrol are complements. What happens in the petrol market?", "o": ["Petrol demand shifts right", "Petrol supply shifts right", "Petrol demand shifts left", "Movement along petrol demand"], "c": 0, "e": "More cars are bought, so demand for the complement petrol increases."}, {"s": "Pack Q9", "q": "Cod is overfished while pollock is plentiful. How might the price mechanism limit cod depletion?", "o": ["Cod price falls and pollock price rises", "Cod price rises and pollock price falls, so buyers switch", "Both prices rise", "The government fixes the cod price"], "c": 1, "e": "The rising cod price rations it and the falling pollock price encourages switching. D isn't the price mechanism."}, {"s": "Pack Q8", "q": "A disease kills many sheep. What happens in the wool market?", "o": ["Demand for wool shifts left", "Supply of wool shifts left", "Supply of wool shifts right", "Movement along the wool supply curve"], "c": 1, "e": "Fewer sheep is a non-price factor reducing supply."}, {"s": "Price mechanism", "q": "Demand for face masks rises sharply. Which shows the incentive function?", "o": ["A shift of the supply curve to the right", "A movement up the supply curve as firms expand output", "A movement down the demand curve", "A fall in the price of masks"], "c": 1, "e": "The higher price makes supplying more profitable, so quantity supplied extends along S."}]};</script>
 <script>
 (function(){
@@ -696,6 +759,182 @@ document.getElementById('qReset').addEventListener('click',function(){renderQ();
 document.getElementById('qBtn').addEventListener('click',function(){openSheet('qSheet');});
 renderQ();
 
+
+/* ---------- handwriting notes ---------- */
+(function(){
+var NK=KEY+':note:', L=1000, PH=1414;              // logical page: 1000 × 1414 (A4)
+var COLS={blue:'#3E7BFA',red:'#E5484D',green:'#2FA36B'};
+var SIZES={1:2.2,2:3.6,3:6};
+var sheet=document.getElementById('noteSheet'), pagesBox=document.getElementById('nPages');
+var st={tool:'pen',col:'ink',size:2,finger:false}, note=null, nid=null, undo=[], redo=[], onSave=null;
+try{var s=JSON.parse(localStorage.getItem(KEY+':notetools')||'null');if(s)for(var k in s)st[k]=s[k];}catch(e){}
+function css(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
+function colOf(c){return c==='ink'?css('--fg'):(COLS[c]||c);}
+function load(id){try{var n=JSON.parse(localStorage.getItem(NK+id)||'null');if(n&&n.pages)return n;}catch(e){}return {bg:'lined',pages:[[]]};}
+function hasInk(n){return n.pages.some(function(p){return p.length;});}
+var saveT;
+function save(){clearTimeout(saveT);saveT=setTimeout(function(){
+  var sub=document.getElementById('nSub');
+  try{ if(hasInk(note)) localStorage.setItem(NK+nid,JSON.stringify(note)); else localStorage.removeItem(NK+nid);
+    sub.textContent='Saved on this device';
+  }catch(e){ sub.textContent='Storage full: clear an old note to keep saving'; }
+  if(onSave)onSave();},350);}
+function saveTools(){try{localStorage.setItem(KEY+':notetools',JSON.stringify(st));}catch(e){}}
+
+/* drawing */
+function paintBg(ctx,bg){
+  ctx.fillStyle=css('--surface');ctx.fillRect(0,0,L,PH);
+  ctx.strokeStyle=css('--line');ctx.lineWidth=1.2;ctx.beginPath();
+  if(bg==='lined'){for(var y=110;y<PH-40;y+=44){ctx.moveTo(40,y);ctx.lineTo(L-40,y);}}
+  if(bg==='grid'){for(var x=0;x<=L;x+=40){ctx.moveTo(x,0);ctx.lineTo(x,PH);}for(var y2=0;y2<=PH;y2+=40){ctx.moveTo(0,y2);ctx.lineTo(L,y2);}}
+  ctx.stroke();
+}
+function drawStroke(ctx,s){
+  var p=s.p;if(!p.length)return;
+  ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle=colOf(s.c);
+  if(s.t==='h'){ctx.globalAlpha=.32;ctx.lineWidth=s.w;ctx.beginPath();ctx.moveTo(p[0],p[1]);
+    for(var i=3;i<p.length;i+=3)ctx.lineTo(p[i],p[i+1]);if(p.length===3)ctx.lineTo(p[0]+.1,p[1]);ctx.stroke();ctx.globalAlpha=1;return;}
+  if(p.length===3){ctx.fillStyle=ctx.strokeStyle;ctx.beginPath();ctx.arc(p[0],p[1],s.w*(.35+p[2]/10)/2,0,7);ctx.fill();return;}
+  for(var j=3;j<p.length;j+=3){ctx.lineWidth=s.w*(.35+(p[j+2]+p[j-1])/20);ctx.beginPath();
+    var mx=(p[j-3]+p[j])/2,my=(p[j-2]+p[j+1])/2;
+    if(j>3){ctx.moveTo((p[j-6]+p[j-3])/2,(p[j-5]+p[j-2])/2);ctx.quadraticCurveTo(p[j-3],p[j-2],mx,my);}else{ctx.moveTo(p[0],p[1]);ctx.lineTo(mx,my);}
+    if(j===p.length-3)ctx.lineTo(p[j],p[j+1]);ctx.stroke();}
+}
+function render(ctx,page,bg){paintBg(ctx,bg);page.forEach(function(s){drawStroke(ctx,s);});}
+function fit(cv){var w=cv.clientWidth||cv.parentNode.clientWidth,d=window.devicePixelRatio||1;
+  cv.width=Math.round(w*d);cv.height=Math.round(w*PH/L*d);var ctx=cv.getContext('2d');ctx.setTransform(cv.width/L,0,0,cv.width/L,0,0);return ctx;}
+
+/* pages */
+var views=[];
+function build(){pagesBox.innerHTML='';views=[];
+  note.pages.forEach(function(pg,i){
+    var wrap=document.createElement('div');wrap.className='npage';
+    var cv=document.createElement('canvas');cv.setAttribute('aria-label','Writing page '+(i+1));
+    var pn=document.createElement('span');pn.className='pn';pn.textContent=(i+1)+' / '+note.pages.length;
+    wrap.appendChild(cv);wrap.appendChild(pn);pagesBox.appendChild(wrap);
+    var v={cv:cv,i:i};views.push(v);hook(v);});
+  var h=document.createElement('p');h.className='nhint';
+  h.textContent=st.finger?'Finger draws. Turn off the hand button to scroll with one finger.':'Write with Apple Pencil. Scroll with your finger.';
+  pagesBox.appendChild(h);
+  requestAnimationFrame(redrawAll);}
+function redraw(v){v.ctx=fit(v.cv);render(v.ctx,note.pages[v.i],note.bg);}
+function redrawAll(){views.forEach(redraw);}
+window.addEventListener('resize',function(){if(!sheet.hidden)redrawAll();});
+
+function pos(v,e){var r=v.cv.getBoundingClientRect(),k=L/r.width;
+  var pr=e.pointerType==='pen'?(e.pressure||.5):.5;return [Math.round((e.clientX-r.left)*k*10)/10,Math.round((e.clientY-r.top)*k*10)/10,Math.round(pr*9)];}
+function hook(v){
+  var cur=null,scrollY=null,pid=null,live=null;
+  v.cv.addEventListener('pointerdown',function(e){
+    if(e.pointerType==='pen'&&!st.penSeen){st.penSeen=true;saveTools();}
+    var draws=e.pointerType!=='touch'||st.finger||!st.penSeen;
+    if(!draws){scrollY={y:e.clientY,t:pagesBox.scrollTop};pid=e.pointerId;v.cv.setPointerCapture(e.pointerId);return;}
+    if(cur)return;e.preventDefault();pid=e.pointerId;v.cv.setPointerCapture(e.pointerId);
+    var p=pos(v,e);
+    if(st.tool==='er'){cur={er:true,removed:[]};erase(v,p);return;}
+    cur={t:st.tool==='hl'?'h':'p',c:st.tool==='hl'?'#F5C400':st.col,w:st.tool==='hl'?SIZES[st.size]*5:SIZES[st.size],p:p.slice()};
+    if(cur.t==='h')live=note.pages[v.i].slice();
+    drawStroke(v.ctx,cur);});
+  v.cv.addEventListener('pointermove',function(e){
+    if(e.pointerId!==pid)return;
+    if(scrollY){pagesBox.scrollTop=scrollY.t-(e.clientY-scrollY.y);return;}
+    if(!cur)return;e.preventDefault();
+    var evs=e.getCoalescedEvents?e.getCoalescedEvents():[e];if(!evs.length)evs=[e];
+    evs.forEach(function(ev){var p=pos(v,ev);
+      if(cur.er){erase(v,p);return;}
+      var q=cur.p,n=q.length;if(Math.abs(q[n-3]-p[0])+Math.abs(q[n-2]-p[1])<1.2)return;
+      q.push(p[0],p[1],p[2]);
+      if(cur.t==='p'){var seg={t:'p',c:cur.c,w:cur.w,p:q.slice(Math.max(0,q.length-9))};drawStroke(v.ctx,seg);}});
+    if(cur&&cur.t==='h'){render(v.ctx,live,note.bg);drawStroke(v.ctx,cur);}});
+  function end(e){if(e.pointerId!==pid)return;pid=null;
+    if(scrollY){scrollY=null;return;}if(!cur)return;
+    if(cur.er){if(cur.removed.length){undo.push({k:'er',i:v.i,items:cur.removed});redo=[];}}
+    else{note.pages[v.i].push(cur);undo.push({k:'add',i:v.i,s:cur});redo=[];}
+    cur=null;live=null;redraw(v);paintUR();save();}
+  v.cv.addEventListener('pointerup',end);v.cv.addEventListener('pointercancel',end);
+  function erase(v2,p){var pg=note.pages[v2.i],r=14,hit=false;
+    for(var i=pg.length-1;i>=0;i--){var q=pg[i].p;
+      for(var j=0;j<q.length;j+=3){if(Math.abs(q[j]-p[0])<r&&Math.abs(q[j+1]-p[1])<r){cur.removed.push({s:pg[i],at:i});pg.splice(i,1);hit=true;break;}}}
+    if(hit)render(v2.ctx,pg,note.bg);}
+}
+function paintUR(){document.getElementById('nUndo').disabled=!undo.length;document.getElementById('nRedo').disabled=!redo.length;}
+document.getElementById('nUndo').addEventListener('click',function(){var a=undo.pop();if(!a)return;
+  if(a.k==='add'){var pg=note.pages[a.i],k=pg.lastIndexOf(a.s);if(k>=0)pg.splice(k,1);}
+  if(a.k==='er'){a.items.slice().reverse().forEach(function(it){note.pages[a.i].splice(it.at,0,it.s);});}
+  if(a.k==='clear'){note.pages=a.pages;build();}
+  if(a.k==='page'){note.pages.pop();build();}
+  redo.push(a);if(views[a.i])redraw(views[a.i]);paintUR();save();});
+document.getElementById('nRedo').addEventListener('click',function(){var a=redo.pop();if(!a)return;
+  if(a.k==='add')note.pages[a.i].push(a.s);
+  if(a.k==='er')a.items.forEach(function(it){var pg=note.pages[a.i],k=pg.indexOf(it.s);if(k>=0)pg.splice(k,1);});
+  if(a.k==='clear'){note.pages=[[]];build();}
+  if(a.k==='page'){note.pages.push([]);build();}
+  undo.push(a);if(views[a.i])redraw(views[a.i]);paintUR();save();});
+
+/* toolbar */
+function paintTools(){
+  sheet.querySelectorAll('[data-tool]').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.tool===st.tool);});
+  sheet.querySelectorAll('[data-col]').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.col===st.col);});
+  sheet.querySelectorAll('[data-size]').forEach(function(b){b.setAttribute('aria-pressed',+b.dataset.size===+st.size);});
+  sheet.querySelectorAll('[data-bg]').forEach(function(b){b.setAttribute('aria-pressed',note&&b.dataset.bg===note.bg);});
+  document.getElementById('nFinger').setAttribute('aria-pressed',!!st.finger);}
+sheet.querySelectorAll('[data-tool]').forEach(function(b){b.addEventListener('click',function(){st.tool=b.dataset.tool;paintTools();saveTools();});});
+sheet.querySelectorAll('[data-col]').forEach(function(b){b.addEventListener('click',function(){st.col=b.dataset.col;if(st.tool!=='pen')st.tool='pen';paintTools();saveTools();});});
+sheet.querySelectorAll('[data-size]').forEach(function(b){b.addEventListener('click',function(){st.size=+b.dataset.size;paintTools();saveTools();});});
+sheet.querySelectorAll('[data-bg]').forEach(function(b){b.addEventListener('click',function(){note.bg=b.dataset.bg;paintTools();redrawAll();save();});});
+document.getElementById('nFinger').addEventListener('click',function(){st.finger=!st.finger;paintTools();saveTools();build();});
+document.getElementById('nAdd').addEventListener('click',function(){note.pages.push([]);undo.push({k:'page',i:note.pages.length-1});redo=[];build();paintUR();save();
+  setTimeout(function(){pagesBox.scrollTop=pagesBox.scrollHeight;},60);});
+var clearArm=false,clearBtn=document.getElementById('nClear');
+clearBtn.addEventListener('click',function(){
+  if(!clearArm){clearArm=true;document.getElementById('nSub').textContent='Tap the bin again to clear every page';setTimeout(function(){clearArm=false;document.getElementById('nSub').textContent='Saved on this device';},3000);return;}
+  clearArm=false;undo.push({k:'clear',i:0,pages:note.pages});redo=[];note.pages=[[]];build();paintUR();save();});
+var qBtn=document.getElementById('nQ');
+qBtn.addEventListener('click',function(){var box=document.getElementById('nQBox');box.hidden=!box.hidden;qBtn.setAttribute('aria-pressed',!box.hidden);});
+
+/* open / close */
+function open(id,title,qNode,after){
+  nid=id;note=load(id);undo=[];redo=[];onSave=after;
+  document.getElementById('nTitle').textContent=title;document.getElementById('nSub').textContent='Saved on this device';
+  var qt=document.getElementById('nQText');qt.innerHTML='';
+  if(qNode){qNode.forEach(function(n){var c=n.cloneNode(true);c.querySelectorAll('button,.wrow,.ans,.rvbar').forEach(function(x){x.remove();});qt.appendChild(c);});}
+  document.getElementById('nQBox').hidden=!qNode;qBtn.setAttribute('aria-pressed',!!qNode);
+  sheet.hidden=false;paintTools();paintUR();build();pagesBox.scrollTop=0;
+  if(window.MathJax&&MathJax.typesetPromise)MathJax.typesetPromise([qt]).catch(function(){});}
+document.getElementById('nDone').addEventListener('click',function(){clearTimeout(saveT);
+  try{if(hasInk(note))localStorage.setItem(NK+nid,JSON.stringify(note));else localStorage.removeItem(NK+nid);}catch(e){}
+  sheet.hidden=true;if(onSave)onSave();});
+
+/* thumbnails + buttons on cards */
+function thumb(id){var n=load(id);if(!hasInk(n))return null;
+  var c=document.createElement('canvas');c.width=360;c.height=Math.round(360*PH/L);var ctx=c.getContext('2d');
+  ctx.setTransform(360/L,0,0,360/L,0,0);render(ctx,n.pages[0],n.bg);return {src:c.toDataURL('image/png'),pages:n.pages.length};}
+var PEN='<svg viewBox="0 0 24 24"><path d="M4 20l4-1 11-11-3-3L5 16l-1 4z"/><path d="M14 6l3 3"/></svg>';
+function attach(anchor,where,id,title,qNodes){
+  var row=document.createElement('div');row.className='wrow';
+  var b=document.createElement('button');b.type='button';b.className='btn write';
+  var img=document.createElement('img');img.className='wthumb';img.alt='Your handwritten working';
+  var meta=document.createElement('span');meta.className='wmeta';
+  row.appendChild(b);row.appendChild(meta);
+  function paint(){var t=thumb(id);
+    b.innerHTML=PEN+(t?'Edit your working':'Write your working');
+    if(t){img.src=t.src;meta.textContent=t.pages>1?t.pages+' pages':'';if(!img.parentNode)row.appendChild(img);}
+    else{if(img.parentNode)img.remove();meta.textContent='';}}
+  function go(){open(id,title,qNodes,paint);}
+  b.addEventListener('click',go);img.addEventListener('click',go);
+  if(where==='before')anchor.parentNode.insertBefore(row,anchor);else anchor.parentNode.insertBefore(row,anchor.nextSibling);
+  paint();}
+cards.forEach(function(c){
+  var title=c.dataset.title, cid=c.dataset.id;
+  if(c.dataset.kind==='Worked example'){
+    var ci=c.querySelector('.ci'),first=ci.querySelector('ol.steps');
+    if(first){var q=[].slice.call(ci.children).filter(function(n){return n.matches('p:not(.sec),.tw,figure,.formula');});
+      attach(first,'before',cid,title,q);}}
+  c.querySelectorAll('.pq').forEach(function(pq,i){var qt=pq.querySelector('.qt');if(!qt)return;
+    var lab=pq.querySelector('.qh span');attach(qt,'after',cid+'-q'+(i+1),(lab?lab.textContent:'Question '+(i+1)),[qt]);});
+});
+})();
+
 /* start where you left off */
 var start=parseInt(sget('pos')||'0',10);if(!(start>=0&&start<N))start=0;
 var h=(location.hash||'').slice(1);if(h){cards.forEach(function(c,i){if(c.dataset.id===h)start=i});}
@@ -703,5 +942,5 @@ requestAnimationFrame(function(){go(start,false);});
 })();
 </script>
 
-<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(function(){});}</script>
+<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(function(r){document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')r.update().catch(function(){});});}).catch(function(){});var had=!!navigator.serviceWorker.controller,done=false;navigator.serviceWorker.addEventListener('controllerchange',function(){if(had&&!done){done=true;location.reload();}});}</script>
 </body></html>
