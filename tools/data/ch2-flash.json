@@ -1,0 +1,267 @@
+[
+[
+"Demand",
+"Define effective demand.",
+"The quantity consumers are <b>willing and able</b> to buy at each price per period, ceteris paribus. Desire must be backed by ability to pay."
+],
+[
+"Demand",
+"State the law of demand.",
+"Ceteris paribus, a higher price leads to a lower quantity demanded, and vice versa: an inverse relationship."
+],
+[
+"Demand",
+"Price of a good falls. Movement or shift? What is it called?",
+"Movement down along the demand curve: an <b>expansion</b> (increase in quantity demanded)."
+],
+[
+"Demand",
+"Name five non-price determinants of demand.",
+"Price of substitutes/complements, income, tastes &amp; preferences, expected future price, government policy (also population, credit)."
+],
+[
+"Demand",
+"Price of coffee rises. What happens to demand for tea (a substitute)?",
+"Demand for tea increases: D shifts right, because tea is now relatively cheaper."
+],
+[
+"Demand",
+"Price of petrol falls. Effect on demand for cars?",
+"Cars and petrol are complements, so demand for cars increases (shifts right)."
+],
+[
+"Demand",
+"What is an inferior good? Example?",
+"Demand falls as income rises, e.g. bus tickets, second-hand clothes. YED &lt; 0."
+],
+[
+"Demand",
+"What is a Veblen good?",
+"A status good whose quantity demanded may rise as price rises because high price signals prestige (diamonds, luxury watches)."
+],
+[
+"Demand",
+"What is a Giffen good and why does demand slope up?",
+"A staple inferior good taking a large share of poor households' income. A price rise makes them too poor to buy better foods, so they buy more of the staple."
+],
+[
+"Supply",
+"Define supply.",
+"The quantity producers are willing and able to sell at each price per period, ceteris paribus."
+],
+[
+"Supply",
+"Wages rise. What happens to supply?",
+"Costs rise → supply decreases → S shifts left (up)."
+],
+[
+"Supply",
+"How does a specific tax differ from an ad valorem tax on the diagram?",
+"Specific: fixed amount per unit → parallel upward shift. Ad valorem: % of price → pivots, gap widens at higher prices."
+],
+[
+"Supply",
+"What does a subsidy do to supply?",
+"Lowers costs per unit → S shifts right/down by the subsidy amount."
+],
+[
+"Supply",
+"Beef and leather: what relationship? Effect of higher beef demand on leather?",
+"Joint supply. More beef produced → supply of leather shifts right → leather price falls."
+],
+[
+"Supply",
+"Oranges rise in price. Effect on lemon supply (competitive supply)?",
+"Farmers shift land to oranges → supply of lemons decreases (shifts left)."
+],
+[
+"Equilibrium",
+"Define equilibrium price.",
+"The price where quantity demanded equals quantity supplied, with no tendency to change."
+],
+[
+"Equilibrium",
+"Solve Qd = 50 − 5P and Qs = 2 + 3P.",
+"50 − 5P = 2 + 3P → 8P = 48 → P = $6, Q = 20."
+],
+[
+"Equilibrium",
+"Price is above equilibrium. What exists and what happens?",
+"Excess supply (surplus); sellers cut price until Qd = Qs."
+],
+[
+"Equilibrium",
+"Demand and supply both increase. What is certain?",
+"Quantity rises for certain. Price depends on which shift is bigger."
+],
+[
+"Equilibrium",
+"Demand rises and supply falls. What is certain?",
+"Price rises for certain. Quantity depends on the relative size of the shifts."
+],
+[
+"Elasticity",
+"PED formula and meaning of 0.2.",
+"PED = %ΔQd ÷ %ΔP. 0.2 = inelastic: a 1% price rise cuts quantity demanded by 0.2%."
+],
+[
+"Elasticity",
+"Price $12 → $18, Qd 200,000 → 180,000. PED?",
+"%ΔP = +50%, %ΔQd = −10% → PED = −0.2 (inelastic)."
+],
+[
+"Elasticity",
+"Demand is inelastic. Should a firm raise or lower price to raise revenue?",
+"Raise it: quantity falls proportionally less than price rises, so TR rises."
+],
+[
+"Elasticity",
+"Where on a straight-line demand curve is PED = 1?",
+"At the midpoint, where TR is maximised. Above it demand is elastic; below it inelastic."
+],
+[
+"Elasticity",
+"List five determinants of PED.",
+"Substitutes (most important), proportion of income, necessity vs luxury, habit/addiction, time period (and breadth of definition)."
+],
+[
+"Elasticity",
+"Why do governments tax goods with inelastic demand?",
+"Quantity falls little, so tax revenue is high (price rises proportionally more than quantity falls)."
+],
+[
+"Elasticity",
+"Define PES and give its formula.",
+"Responsiveness of quantity supplied to a change in price, ceteris paribus. PES = %ΔQs ÷ %ΔP."
+],
+[
+"Elasticity",
+"Price $16 → $18.40, Qs 28,000 → 28,840. PES?",
+"+3% ÷ +15% = 0.2 → inelastic supply."
+],
+[
+"Elasticity",
+"Five determinants of PES.",
+"Spare capacity, stocks/storability, mobility of factors, time period, nature of the good (primary vs manufactured)."
+],
+[
+"Elasticity",
+"Why is agricultural supply price inelastic?",
+"Growing seasons mean output cannot be raised quickly, and perishability limits stocks."
+],
+[
+"Elasticity",
+"A straight supply curve through the origin has PES = ?",
+"1 at every point (unitary)."
+],
+[
+"Elasticity",
+"Income $800 → $1,000, clothes 100 → 140. YED and type?",
+"+40% ÷ +25% = +1.6 → luxury (income-elastic normal good)."
+],
+[
+"Elasticity",
+"YED of +0.3 means?",
+"Necessity: normal good, income inelastic."
+],
+[
+"Elasticity",
+"Negative YED means?",
+"Inferior good: demand falls as income rises."
+],
+[
+"Elasticity",
+"How can a firm use YED?",
+"Plan output over the business cycle, diversify the product range (luxury to no-frills), adjust marketing in booms vs recessions."
+],
+[
+"Elasticity",
+"XED formula.",
+"%ΔQd of good A ÷ %ΔP of good B."
+],
+[
+"Elasticity",
+"XED = +0.5. Relationship?",
+"Weak substitutes."
+],
+[
+"Elasticity",
+"XED = −2. Relationship?",
+"Close complements."
+],
+[
+"Elasticity",
+"Main determinant of the size of XED?",
+"How closely the goods are related (closeness as substitutes or complements)."
+],
+[
+"Elasticity",
+"Two general limitations of any elasticity estimate.",
+"Based on past data that may be unreliable or out of date; ceteris paribus rarely holds in reality."
+],
+[
+"Surplus",
+"Define consumer surplus and where it sits on the diagram.",
+"Maximum price willing to pay minus price paid. Area below D and above the price."
+],
+[
+"Surplus",
+"Define producer surplus and where it sits.",
+"Price received minus minimum price acceptable (marginal cost). Area above S and below the price."
+],
+[
+"Surplus",
+"Willing to pay $1.00 and $0.90 for two drinks priced $0.75. Total CS?",
+"$0.25 + $0.15 = $0.40."
+],
+[
+"Surplus",
+"Costs rise and price rises. When is the loss of CS largest in absolute terms?",
+"When demand is price inelastic: price rises most, so buyers pay much more per unit."
+],
+[
+"Price mechanism",
+"Name the three functions of the price mechanism.",
+"Rationing, signalling, incentive."
+],
+[
+"Price mechanism",
+"Explain the rationing function with a diagram reference.",
+"Supply falls → price rises → movement up D → the good goes to those willing and able to pay most."
+],
+[
+"Price mechanism",
+"What is the transmission of preferences?",
+"The automatic way prices let consumers' wants be known to producers (part of the signalling function)."
+],
+[
+"Price mechanism",
+"Explain the incentive function.",
+"Higher prices make production more profitable, so firms expand output and hire resources: a movement up the supply curve."
+],
+[
+"Price mechanism",
+"What is derived demand? Example.",
+"Demand for a factor that comes from demand for the product it makes, e.g. supermarket workers."
+],
+[
+"Exam",
+"Mark split of an 8-mark part (a)?",
+"AO1 3, AO2 3, AO3 2."
+],
+[
+"Exam",
+"Mark split of a 12-mark part (b), and the penalty for one-sided answers?",
+"AO1+AO2 8, AO3 4. One-sided: capped at Level 2 for AO1/AO2 and 0 for AO3."
+],
+[
+"Exam",
+"What makes a conclusion earn AO3 marks?",
+"A judgement that answers the exact question, supported by reasons and conditions (\"on balance… because… unless…\")."
+],
+[
+"Exam",
+"Buffer stock: what does the agency do in a good harvest?",
+"Buys the surplus at the target price and stores it, preventing price falling below the target."
+]
+]

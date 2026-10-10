@@ -1,0 +1,707 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
+</head><body>
+<title>Price System Deck</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Econ Ch2">
+<meta name="theme-color" content="#11151C">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@500;600;700&display=swap">
+<style>
+/* Layout: one-card-per-screen swipe track (CSS scroll-snap) between a slim top bar and a bottom progress bar.
+   Each card scrolls vertically on its own; content column caps at ~680px so iPad landscape still reads like a page. */
+:root{
+  --bg:#11151C; --surface:#191E28; --surface2:#222937; --line:#2D3544;
+  --fg:#E7EAF0; --muted:#98A1B0; --accent:#F0B44A; --accent-soft:#3A2D12; --on-accent:#1B1404;
+  --teal:#5CC6BF; --teal-soft:#14302F; --good:#6FD39A; --good-soft:#15301F; --bad:#F2897F; --bad-soft:#3A1C1A;
+  --fill-a:rgba(240,180,74,.28); --fill-b:rgba(92,198,191,.26); --fill-c:rgba(242,137,127,.32);
+  --f-disp:"Bricolage Grotesque","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible","Segoe UI",system-ui,-apple-system,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){
+  --bg:#F4F5F8; --surface:#FFFFFF; --surface2:#ECEEF3; --line:#D7DBE3;
+  --fg:#171B23; --muted:#576070; --accent:#A66F07; --accent-soft:#FBEFD6; --on-accent:#FFFFFF;
+  --teal:#13807A; --teal-soft:#DDF2F0; --good:#1E7A47; --good-soft:#DDF1E5; --bad:#B23A30; --bad-soft:#F9E1DE;
+  --fill-a:rgba(214,150,30,.25); --fill-b:rgba(19,128,122,.20); --fill-c:rgba(178,58,48,.22);
+  color-scheme:light}}
+:root[data-theme="light"]{
+  --bg:#F4F5F8; --surface:#FFFFFF; --surface2:#ECEEF3; --line:#D7DBE3;
+  --fg:#171B23; --muted:#576070; --accent:#A66F07; --accent-soft:#FBEFD6; --on-accent:#FFFFFF;
+  --teal:#13807A; --teal-soft:#DDF2F0; --good:#1E7A47; --good-soft:#DDF1E5; --bad:#B23A30; --bad-soft:#F9E1DE;
+  --fill-a:rgba(214,150,30,.25); --fill-b:rgba(19,128,122,.20); --fill-c:rgba(178,58,48,.22);
+  color-scheme:light}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%;background:var(--bg);overscroll-behavior:none}
+body{margin:0;color:var(--fg);font:17px/1.55 var(--f-body);display:grid;grid-template-rows:auto 1fr auto;overflow:hidden;-webkit-text-size-adjust:100%}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* top bar */
+.top{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--line);background:var(--bg);min-width:0}
+.ib{all:unset;cursor:pointer;display:inline-grid;place-items:center;min-width:44px;height:44px;border-radius:10px;color:var(--fg)}
+.ib:hover{background:var(--surface2)}
+.ib svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.ttl{flex:1;min-width:0;line-height:1.15}
+.ttl b{display:block;font:700 15px/1.2 var(--f-disp);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ttl small{display:block;font:500 11.5px/1.3 var(--f-mono);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mode{all:unset;cursor:pointer;height:36px;padding:0 12px;border-radius:999px;border:1px solid var(--line);font:600 13.5px/36px var(--f-body);white-space:nowrap}
+.mode:hover{border-color:var(--accent)}
+@media (max-width:430px){.mode .lg{display:none}.mode{padding:0 10px}}
+
+/* track */
+.track{display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;min-height:0;overscroll-behavior-x:contain}
+.track::-webkit-scrollbar{display:none}
+.card{flex:0 0 100%;width:100%;scroll-snap-align:start;scroll-snap-stop:always;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-inline:16px}
+.ci{max-width:680px;margin:0 auto;padding-block:20px 48px;min-width:0}
+.ch{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px}
+.sec{font:600 11.5px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.kind{font:600 10.5px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:5px 8px}
+h1{font:800 clamp(34px,9vw,52px)/1.02 var(--f-disp);letter-spacing:-.02em;margin:.2em 0 .3em;text-wrap:balance}
+h2{font:750 clamp(25px,6.4vw,32px)/1.12 var(--f-disp);letter-spacing:-.01em;margin:0 0 .5em;text-wrap:balance}
+h3{font:700 19px/1.25 var(--f-disp);margin:1.4em 0 .45em;text-wrap:balance}
+p{margin:.5em 0} ul,ol{margin:.4em 0 .8em;padding-left:1.25em} li{margin:.28em 0}
+b,strong{font-weight:700}
+.lede{color:var(--muted);font-size:17.5px}
+.mono{font-family:var(--f-mono);font-size:.88em}
+.def{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 15px;margin:12px 0}
+.def .lab{display:flex;justify-content:space-between;gap:8px;font:600 11px/1.3 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+.def .lab i{font-style:normal;color:var(--muted)}
+.def p{margin:.2em 0}
+.note{border-radius:12px;padding:11px 14px;margin:12px 0;font-size:16px}
+.note>b:first-child{display:block;font:600 11px/1.3 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px}
+.note.trap{background:var(--bad-soft)} .note.trap>b:first-child{color:var(--bad)}
+.note.tip{background:var(--good-soft)} .note.tip>b:first-child{color:var(--good)}
+.note.link{background:var(--teal-soft)} .note.link>b:first-child{color:var(--teal)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:10px;margin:12px 0}
+.two>div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:11px 14px;min-width:0}
+.two h4{font:700 12px/1.3 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin:0 0 4px}
+.two h4.t{color:var(--teal)} .two h4.g{color:var(--good)} .two h4.r{color:var(--bad)}
+.two p,.two ul{margin:.2em 0;font-size:16px}
+.chain{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0;font:600 14.5px/1.3 var(--f-body)}
+.chain span{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 9px}
+.chain i{font-style:normal;color:var(--accent);font-weight:800}
+.formula{font:600 15px/1.5 var(--f-mono);background:var(--surface);border:1px dashed var(--muted);border-radius:10px;padding:9px 12px;margin:10px 0;overflow-x:auto}
+.tw{overflow-x:auto;margin:12px 0;border:1px solid var(--line);border-radius:12px;overscroll-behavior-x:contain}
+table{border-collapse:collapse;width:100%;font-size:15px;line-height:1.4;background:var(--surface)}
+.tw.wide table{min-width:560px}
+th,td{padding:8px 10px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+tr:last-child td{border-bottom:0}
+th{font:600 10.5px/1.3 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--surface2)}
+td.n,th.n{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-size:14px}
+td.k{font-weight:700}
+.tag{display:inline-block;font:600 10.5px/1 var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:4px 7px;border-radius:6px;margin-right:6px;vertical-align:2px}
+
+/* diagrams */
+figure.dg{margin:14px 0;display:grid;gap:10px}
+figure.dg.multi{grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr))}
+.pnl{min-width:0}
+.ptitle{font:600 11px/1.3 var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+figure.dg svg{width:100%;height:auto;display:block;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+figcaption{font-size:14.5px;color:var(--muted);grid-column:1/-1}
+svg text{font-family:var(--f-body);fill:var(--fg)}
+svg .ax{stroke:var(--fg);stroke-width:1.5;fill:none}
+svg .k{fill:none;stroke-width:2.6;stroke-linecap:round}
+svg .d{stroke:var(--accent)} svg .s{stroke:var(--teal)} svg .o{stroke:var(--muted);stroke-dasharray:6 4;stroke-width:2}
+svg .b{stroke:var(--bad)} svg .gr{stroke:var(--good)}
+svg .g{stroke:var(--muted);stroke-width:1;stroke-dasharray:3 3;fill:none}
+svg .ar{stroke:var(--fg);stroke-width:1.8} svg .arh{fill:var(--fg)}
+svg .pt{fill:var(--fg)} svg .pto{fill:var(--surface);stroke:var(--fg);stroke-width:1.6}
+svg .fa{fill:var(--fill-a)} svg .fb{fill:var(--fill-b)} svg .fc{fill:var(--fill-c)}
+svg .t-ax{font-size:12px;font-weight:700;fill:var(--muted)}
+svg .t-axl{font-size:12px;font-weight:700;fill:var(--fg)}
+svg .t-pt{font-size:13px;font-weight:700}
+svg .t-sm{font-size:11.5px;fill:var(--muted)}
+svg .t-d{fill:var(--accent);font-size:12.5px;font-weight:700} svg .t-s{fill:var(--teal);font-size:12.5px;font-weight:700}
+svg .t-o{fill:var(--muted);font-size:12.5px;font-weight:700} svg .t-b{fill:var(--bad);font-size:12.5px;font-weight:700}
+svg .t-gr{fill:var(--good);font-size:12.5px;font-weight:700}
+
+/* reveal: worked-example steps and practice answers */
+ol.steps{list-style:none;padding:0;margin:12px 0;counter-reset:st;display:grid;gap:8px}
+ol.steps>li{counter-increment:st;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 14px 10px 46px;position:relative;margin:0}
+ol.steps>li::before{content:counter(st);position:absolute;left:12px;top:10px;width:24px;height:24px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font:700 13px/24px var(--f-mono);text-align:center}
+.rvbar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.btn{all:unset;cursor:pointer;min-height:44px;padding:0 16px;border-radius:12px;display:inline-flex;align-items:center;gap:8px;font:700 15px/1 var(--f-body);border:1px solid var(--line);background:var(--surface)}
+.btn.pri{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.btn[disabled]{opacity:.45;cursor:default}
+.btn.good{border-color:var(--good);color:var(--good)} .btn.bad{border-color:var(--bad);color:var(--bad)}
+.pq{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:12px 0}
+.pq .qh{display:flex;justify-content:space-between;gap:8px;font:600 11px/1.3 var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.pq .qh .mk{color:var(--accent)}
+.pq .qt{margin:.35em 0 .5em}
+.pq .ans{border-top:1px dashed var(--line);margin-top:8px;padding-top:8px}
+.pq .ans>b:first-child{font:600 11px/1 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--good);margin-right:6px}
+.swipehint{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:14.5px;margin-top:22px}
+.toc-mini{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:8px;margin:14px 0}
+.toc-mini button{all:unset;cursor:pointer;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.toc-mini button:hover{border-color:var(--accent)}
+.toc-mini b{display:block;font:800 20px/1 var(--f-disp);color:var(--accent);margin-bottom:4px}
+.toc-mini span{font-size:14.5px;color:var(--muted)}
+.cover-k{font:800 clamp(80px,26vw,150px)/.85 var(--f-disp);color:var(--accent);letter-spacing:-.04em;margin:8px 0 0}
+.stat{display:flex;gap:18px;flex-wrap:wrap;margin:16px 0;font:600 14px/1.3 var(--f-mono);color:var(--muted)}
+.stat b{display:block;font:800 26px/1 var(--f-disp);color:var(--fg)}
+a{color:var(--accent)}
+
+/* bottom bar */
+.bot{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;padding:8px 12px;border-top:1px solid var(--line);background:var(--bg)}
+.prog{display:grid;gap:5px;min-width:0}
+.bar{height:4px;background:var(--surface2);border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+.cnt{font:600 12.5px/1 var(--f-mono);color:var(--muted);text-align:center;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* sheets (contents, flashcards, quiz) */
+.sheet{position:fixed;inset:0;z-index:20;background:var(--bg);display:grid;grid-template-rows:auto 1fr;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.sheet .top{border-bottom:1px solid var(--line)}
+.sbody{overflow-y:auto;padding-inline:16px;-webkit-overflow-scrolling:touch}
+.sbody>.in{max-width:680px;margin:0 auto;padding-block:14px 40px}
+.tocgrp{font:600 11px/1.3 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--accent);margin:18px 0 6px}
+.tocitem{all:unset;cursor:pointer;display:grid;grid-template-columns:32px 1fr auto;gap:8px;align-items:baseline;width:100%;box-sizing:border-box;padding:10px 8px;border-radius:10px}
+.tocitem:hover,.tocitem.cur{background:var(--surface)}
+.tocitem .no{font:600 12px/1 var(--f-mono);color:var(--muted)}
+.tocitem .kd{font:600 10px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 12px}
+.chip{all:unset;cursor:pointer;min-height:34px;padding:0 12px;border-radius:999px;border:1px solid var(--line);font:600 13.5px/34px var(--f-body)}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.fc{perspective:1200px;height:min(56vh,380px);cursor:pointer;margin:6px 0 12px}
+.fc-in{position:relative;width:100%;height:100%;transition:transform .45s;transform-style:preserve-3d}
+.fc.flip .fc-in{transform:rotateY(180deg)}
+.fc-f{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:18px;border:1px solid var(--line);background:var(--surface);padding:42px 22px 30px;display:flex;flex-direction:column;justify-content:center;overflow:auto;font-size:19px;line-height:1.45}
+.fc-f.back{transform:rotateY(180deg);background:var(--accent-soft);font-size:17.5px}
+.fc-f .ft{position:absolute;top:14px;left:18px;right:18px;display:flex;justify-content:space-between;font:600 11px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.fc-f.front .q{font:700 21px/1.3 var(--f-disp)}
+.fcrow{display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between}
+.mcq{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}
+.mcq .qh{display:flex;justify-content:space-between;gap:8px;font:600 11px/1.3 var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.mcq .qt{margin:.4em 0 .7em;font-weight:700}
+.opts{display:grid;gap:6px}
+.opt{all:unset;cursor:pointer;display:grid;grid-template-columns:26px 1fr;gap:8px;align-items:baseline;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font-size:16px;line-height:1.4}
+.opt b{font:700 13px/1 var(--f-mono);color:var(--accent)}
+.opt.right{background:var(--good-soft);border-color:var(--good)} .opt.wrong{background:var(--bad-soft);border-color:var(--bad)}
+.mcq.done .opt{cursor:default}
+.mcq .ex{margin-top:10px;font-size:15.5px;border-top:1px dashed var(--line);padding-top:10px}
+.score{position:sticky;top:0;z-index:2;background:var(--bg);padding-block:10px;display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px solid var(--line);font:600 14px var(--f-body)}
+.score .num{font:700 16px var(--f-mono);color:var(--accent);font-variant-numeric:tabular-nums}
+mjx-container{max-width:100%;overflow-x:auto;overflow-y:hidden}
+@media (prefers-reduced-motion:reduce){.fc-in,.bar i{transition:none}.track{scroll-behavior:auto}}
+</style>
+<script>window.MathJax={tex:{inlineMath:[["\\(","\\)"]]},svg:{fontCache:"global"},options:{enableMenu:false}};</script><script src="mathjax/tex-svg.js"></script>
+<header class="top">
+  <a class="ib" href="index.html" aria-label="Revision Hub"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7M6 9.5V20h12V9.5"/></svg></a><button class="ib" id="tocBtn" type="button" aria-label="Contents"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/></svg></button>
+  <div class="ttl"><b>The price system</b><small>9708 · AS Chapter 2</small></div>
+  <button class="mode" id="fcBtn" type="button">Cards<span class="lg"> · 57</span></button>
+  <button class="mode" id="qBtn" type="button">Quiz<span class="lg"> · 20</span></button>
+  <button class="ib" id="themeBtn" type="button" aria-label="Switch light or dark"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4L6 18M18 6l1.4-1.4"/></svg></button>
+</header>
+<main class="track" id="track"><section class="card" data-id="cover" data-group="Start" data-title="The price system" data-kind="Cover"><div class="ci"><div class="ch"><span class="sec">Start</span><span class="kind">Cover</span></div>
+<p class="sec" style="margin:0">CAIE 9708 · AS Level · Chapter 2</p>
+<p class="cover-k">Ch2</p>
+<h1>The price system: demand, supply &amp; elasticity</h1>
+<p class="lede">Built from Puan Zaihan's 11 Chapter 2 handouts, plus your Functions of Price and Four Elasticities pages.</p>
+<div class="stat"><div><b>5</b>topic blocks</div><div><b>6</b>worked examples</div><div><b>57</b>flashcards</div><div><b>20</b>quiz questions</div></div>
+<p class="swipehint">Swipe left to start. Tap ☰ for contents.</p>
+<p><a href="index.html">← Back to Revision Hub</a></p></div></section><section class="card" data-id="big" data-group="Start" data-title="The big picture" data-kind="Overview"><div class="ci"><div class="ch"><span class="sec">Overview</span><span class="kind">Overview</span></div>
+<h2>How Chapter 2 fits together</h2>
+<p>Every topic here is one of three things: <b>what moves a curve</b>, <b>what happens to price and quantity</b> when it moves, or <b>how strongly something responds</b>. Draw the diagram and say how big the effect is, and you can answer almost any question.</p>
+<div class="toc-mini">
+<button type="button" data-goto="dem"><b>2.1–2.2</b><span>Demand &amp; supply</span></button>
+<button type="button" data-goto="eq"><b>2.4</b><span>Market equilibrium</span></button>
+<button type="button" data-goto="el0"><b>2.3</b><span>Elasticities: PED, PES, YED, XED</span></button>
+<button type="button" data-goto="cs"><b>2.5</b><span>Consumer &amp; producer surplus</span></button>
+<button type="button" data-goto="rel"><b>2.4.3–4</b><span>Related markets &amp; price mechanism</span></button>
+<button type="button" data-goto="ex1"><b>P2</b><span>Turning notes into marks</span></button>
+</div>
+<div class="tw"><table><tr><th>Paper</th><th>How Chapter 2 is tested</th></tr>
+<tr><td class="k">Paper 1</td><td>Which point is the new equilibrium? Shift vs movement traps, elasticity calculations, related-market chains.</td></tr>
+<tr><td class="k">Paper 2 A</td><td>Calculate a % change or elasticity from a table, explain a price change with a diagram, judge a claim.</td></tr>
+<tr><td class="k">Paper 2 B</td><td>(a) explain with a diagram or formula and "consider"; (b) "assess". Recent: CS/PS, wage rise, XED, PES, buffer stocks.</td></tr></table></div></div></section><section class="card" data-id="dem" data-group="Demand &amp; supply" data-title="Demand: movement vs shift" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">2.1 · Demand</span><span class="kind">Concept</span></div>
+<h2>Demand</h2>
+<div class="def"><span class="lab">Definition · Demand <i>2.1.1</i></span><p>The quantity consumers are <b>willing and able</b> to buy at different prices per period, ceteris paribus. "Able" makes it <b>effective demand</b>: desire backed by ability to pay.</p></div>
+<p><b>Law of demand:</b> higher price → lower quantity demanded (inverse relationship). Market demand is the horizontal sum of individual demand curves.</p>
+<figure class="dg multi"><div class="pnl"><p class="ptitle">Own price changes · movement</p><svg viewBox="0 0 320 250" role="img" aria-label="Movement along the demand curve"><defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0,0 L10,5 L0,10 z"/></marker></defs><line class="k d" x1="71.6" y1="33.5" x2="276.4" y2="195.0"/><text class="t-d" x="280.4" y="209.0" text-anchor="start">D</text><path class="g" d="M143.9,90.5 L143.9,214 M143.9,90.5 L46,90.5"/><text class="t-ax" x="143.9" y="229" text-anchor="middle">Q1</text><text class="t-ax" x="40" y="94.5" text-anchor="end">P1</text><path class="g" d="M216.2,147.5 L216.2,214 M216.2,147.5 L46,147.5"/><text class="t-ax" x="216.2" y="229" text-anchor="middle">Q2</text><text class="t-ax" x="40" y="151.5" text-anchor="end">P2</text><circle class="pt" cx="143.9" cy="90.5" r="3.6"/><text class="t-pt" x="149.9" y="84.5" text-anchor="start">A</text><circle class="pt" cx="216.2" cy="147.5" r="3.6"/><text class="t-pt" x="222.2" y="141.5" text-anchor="start">B</text><line class="ar" x1="152.8" y1="94.3" x2="209.8" y2="138.9" marker-end="url(#ah)"/><path class="ax" d="M46,12 L46,214 L314,214"/><text class="t-axl" x="40" y="8" text-anchor="start">Price</text><text class="t-axl" x="314" y="244" text-anchor="end">Quantity</text><text class="t-ax" x="40" y="229" text-anchor="end">O</text></svg></div><div class="pnl"><p class="ptitle">Non-price factor · shift</p><svg viewBox="0 0 320 250" role="img" aria-label="Shift of demand from D0 to D1"><defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0,0 L10,5 L0,10 z"/></marker></defs><line class="k o" x1="71.6" y1="33.5" x2="276.4" y2="195.0"/><text class="t-o" x="280.4" y="209.0" text-anchor="start">D0</text><line class="k d" x1="135.6" y1="33.5" x2="302.0" y2="164.6"/><text class="t-d" x="296.0" y="178.6" text-anchor="end">D1</text><path class="g" d="M180.0,119.0 L180.0,214 M180.0,119.0 L46,119.0"/><text class="t-ax" x="180.0" y="229" text-anchor="middle">Q0</text><text class="t-ax" x="40" y="123.0" text-anchor="end">P0</text><path class="g" d="M244.1,119.0 L244.1,214 M244.1,119.0 L46,119.0"/><text class="t-ax" x="244.1" y="229" text-anchor="middle">Q1</text><circle class="pt" cx="180.0" cy="119.0" r="3.6"/><circle class="pt" cx="244.1" cy="119.0" r="3.6"/><line class="ar" x1="187.7" y1="119.0" x2="236.4" y2="119.0" marker-end="url(#ah)"/><path class="ax" d="M46,12 L46,214 L314,214"/><text class="t-axl" x="40" y="8" text-anchor="start">Price</text><text class="t-axl" x="314" y="244" text-anchor="end">Quantity</text><text class="t-ax" x="40" y="229" text-anchor="end">O</text></svg></div></figure>
+<div class="tw"><table><tr><th>Change in…</th><th>Effect</th><th>Language</th></tr>
+<tr><td class="k">Own price</td><td>Movement along D</td><td>"Change in <b>quantity demanded</b>": expansion / contraction</td></tr>
+<tr><td class="k">Anything else</td><td>Shift of D</td><td>"<b>Increase / decrease in demand</b>": right / left</td></tr></table></div></div></section><section class="card" data-id="dem2" data-group="Demand &amp; supply" data-title="What shifts demand" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">2.1 · Syllabus 2.1.2–2.1.3</span><span class="kind">Concept</span></div>
+<h2>Non-price determinants of demand</h2>
+<div class="two">
+<div><h4>1 · Related goods</h4><p><b>Substitutes</b> (Coke/Pepsi): coffee price ↑ → tea demand ↑. <b>Complements</b> (car/petrol): petrol price ↓ → car demand ↑.</p></div>
+<div><h4>2 · Income</h4><p><b>Normal</b>: income ↑ → demand ↑. <b>Inferior</b>: income ↑ → demand ↓ (bus tickets, second-hand clothes).</p></div>
+<div><h4>3 · Expected price</h4><p>Expect a price rise (milk powder) → stock up now → demand shifts right, usually temporarily.</p></div>
+<div><h4>4 · Tastes</h4><p>Advertising or a trend raises demand; a health scare lowers it.</p></div>
+<div><h4>5 · Government</h4><p>Laws (compulsory seat belts). Higher income tax → lower disposable income → normal goods ↓, inferior ↑.</p></div>
+<div><h4>Also accepted</h4><p>Population size and age structure, credit availability, seasons.</p></div>
+</div>
+<h3>Exceptional upward-sloping demand</h3>
+<div class="two">
+<div><h4 class="t">Veblen goods</h4><p>Status goods (diamonds, luxury watches): a higher price signals prestige, so quantity demanded can rise.</p></div>
+<div><h4 class="t">Giffen goods</h4><p>Highly inferior staples taking a large share of poor households' income (broken rice). A price rise makes better food unaffordable, so they buy more of the staple.</p></div>
+</div></div></section><section class="card" data-id="sup" data-group="Demand &amp; supply" data-title="Supply and what shifts it" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">2.2 · Supply</span><span class="kind">Concept</span></div>
+<h2>Supply</h2>
+<div class="def"><span class="lab">Definition · Supply <i>2.2</i></span><p>The quantity producers are willing and able to sell at various prices per period, ceteris paribus.</p></div>
+<p><b>Law of supply:</b> higher price → higher quantity supplied, because production is more profitable and covers rising marginal cost. Price ↑ → <b>expansion</b>; price ↓ → <b>contraction</b>.</p>
+<div class="tw wide"><table><tr><th>Factor</th><th>Example</th><th>Shift</th></tr>
+<tr><td class="k">Costs of production</td><td>Wages rise</td><td>S left</td></tr>
+<tr><td class="k">Technology</td><td>Automation → lower MC</td><td>S right</td></tr>
+<tr><td class="k">Indirect tax</td><td>$2 per unit</td><td>S up/left by $2</td></tr>
+<tr><td class="k">Subsidy</td><td>$2 per unit to producers</td><td>S down/right by $2</td></tr>
+<tr><td class="k">Joint supply</td><td>Beef price ↑ → more cattle slaughtered</td><td>Leather S right</td></tr>
+<tr><td class="k">Competitive supply</td><td>Orange price ↑ → land moves from lemons</td><td>Lemon S left</td></tr>
+<tr><td class="k">Expected price</td><td>Expect rise → hold stock back</td><td>S left today</td></tr>
+<tr><td class="k">Number of firms</td><td>New firms enter</td><td>S right</td></tr>
+<tr><td class="k">Nature</td><td>Floods, disease</td><td>S left</td></tr></table></div></div></section><section class="card" data-id="tax" data-group="Demand &amp; supply" data-title="Specific vs ad valorem tax" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">2.2 · Taxes & subsidies</span><span class="kind">Concept</span></div>
+<h2>How taxes move supply</h2>
+<figure class="dg multi"><div class="pnl"><p class="ptitle">Specific (unit) tax</p><svg viewBox="0 0 320 250" role="img" aria-label="Specific tax: parallel upward shift of supply"><defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0,0 L10,5 L0,10 z"/></marker></defs><line class="k s" x1="71.6" y1="195.0" x2="276.4" y2="81.0"/><text class="t-s" x="280.4" y="85.0" text-anchor="start">S</text><line class="k b" x1="71.6" y1="157.0" x2="276.4" y2="43.0"/><text class="t-b" x="272.4" y="37.0" text-anchor="end">S + tax</text><line class="ar" x1="174.0" y1="136.1" x2="174.0" y2="101.9" marker-end="url(#ah)"/><text class="t-pt" x="183.1" y="123.0" text-anchor="start">$2</text><path class="ax" d="M46,12 L46,214 L314,214"/><text class="t-axl" x="40" y="8" text-anchor="start">Price</text><text class="t-axl" x="314" y="244" text-anchor="end">Quantity</text><text class="t-ax" x="40" y="229" text-anchor="end">O</text></svg></div><div class="pnl"><p class="ptitle">Ad valorem tax</p><svg viewBox="0 0 320 250" role="img" aria-label="Ad valorem tax: supply pivots, gap widens as price rises"><defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0,0 L10,5 L0,10 z"/></marker></defs><line class="k s" x1="71.6" y1="195.0" x2="250.8" y2="100.0"/><text class="t-s" x="254.8" y="104.0" text-anchor="start">S</text><line class="k b" x1="71.6" y1="189.3" x2="250.8" y2="65.8"/><text class="t-b" x="246.8" y="59.8" text-anchor="end">S + tax</text><line class="ar" x1="122.8" y1="167.4" x2="122.8" y2="155.1" marker-end="url(#ah)"/><line class="ar" x1="225.2" y1="113.3" x2="225.2" y2="83.9" marker-end="url(#ah)"/><path class="ax" d="M46,12 L46,214 L314,214"/><text class="t-axl" x="40" y="8" text-anchor="start">Price</text><text class="t-axl" x="314" y="244" text-anchor="end">Quantity</text><text class="t-ax" x="40" y="229" text-anchor="end">O</text></svg></div></figure>
+<div class="two">
+<div><h4 class="r">Specific (unit) tax</h4><p>A fixed amount per unit, e.g. $2. Supply shifts up by $2 at every quantity: a <b>parallel</b> shift.</p></div>
+<div><h4 class="r">Ad valorem tax</h4><p>A percentage of price, e.g. 20% VAT. The tax per unit grows with price, so the gap <b>widens</b>: $5 → $6, $10 → $12, $30 → $36.</p></div>
+</div>
+<p>A subsidy is the specific-tax diagram in reverse: S shifts down by the subsidy.</p></div></section><section class="card" data-id="eq" data-group="Equilibrium" data-title="Market equilibrium" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">2.4 · Equilibrium</span><span class="kind">Concept</span></div>
+<h2>Market equilibrium</h2>
+<div class="def"><span class="lab">Definition · Equilibrium <i>2.4</i></span><p>The price at which quantity demanded equals quantity supplied, so there is no tendency for price to change. The market clears.</p></div>
+<figure class="dg"><div class="pnl"><svg viewBox="0 0 320 250" role="img" aria-label="Equilibrium with excess supply above and excess demand below"><defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0,0 L10,5 L0,10 z"/></marker></defs><line class="k d" x1="71.6" y1="43.0" x2="276.4" y2="195.0"/><text class="t-d" x="280.4" y="209.0" text-anchor="start">D</text><line class="k s" x1="71.6" y1="195.0" x2="276.4" y2="43.0"/><text class="t-s" x="280.4" y="41.0" text-anchor="start">S</text><path class="g" d="M174.0,119.0 L174.0,214 M174.0,119.0 L46,119.0"/><text class="t-ax" x="174.0" y="229" text-anchor="middle">Q*</text><text class="t-ax" x="40" y="123.0" text-anchor="end">P*</text><circle class="pt" cx="174.0" cy="119.0" r="3.6"/><text class="t-pt" x="183.0" y="123.0" text-anchor="start">E</text><path class="k o" d="M46.0,81.0 L225.2,81.0"/><text class="t-sm" x="174.0" y="75.0" text-anchor="middle">excess supply</text><path class="k o" d="M46.0,157.0 L225.2,157.0"/><text class="t-sm" x="174.0" y="171.0" text-anchor="middle">excess demand</text><path class="ax" d="M46,12 L46,214 L314,214"/><text class="t-axl" x="40" y="8" text-anchor="start">Price</text><text class="t-axl" x="314" y="244" text-anchor="end">Quantity</text><text class="t-ax" x="40" y="229" text-anchor="end">O</text></svg></div><figcaption>Above P* sellers can't sell all they make, so price falls. Below P* buyers bid price up. Price settles at E where Qd = Qs.</figcaption></figure>
+<div class="formula">Demand Qd = a − bP · Supply Qs = c + dP · Equilibrium: Qd = Qs</div></div></section><section class="card" data-id="eq2" data-group="Equilibrium" data-title="When both curves shift" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">2.4 · Shifts</span><span class="kind">Concept</span></div>
+<h2>When curves shift</h2>
+<p>One curve shifts: both P and Q move predictably. <b>Both</b> shift: one of P or Q is certain; the other depends on the relative size of the shifts.</p>
+<div class="tw wide"><table><tr><th>Change</th><th>Price</th><th>Quantity</th><th>Example</th></tr>
+<tr><td class="k">D ↑ only</td><td>Rises</td><td>Rises</td><td>Income ↑, normal good</td></tr>
+<tr><td class="k">D ↓ only</td><td>Falls</td><td>Falls</td><td>Income ↑, inferior good</td></tr>
+<tr><td class="k">S ↑ only</td><td>Falls</td><td>Rises</td><td>Costs fall</td></tr>
+<tr><td class="k">S ↓ only</td><td>Rises</td><td>Falls</td><td>Costs rise</td></tr>
+<tr><td class="k">D ↑ S ↑</td><td>Depends</td><td><b>Rises</b></td><td>Cake: tastes ↑, costs ↓</td></tr>
+<tr><td class="k">D ↓ S ↓</td><td>Depends</td><td><b>Falls</b></td><td>Coffee: tea cheaper, fewer sellers</td></tr>
+<tr><td class="k">D ↑ S ↓</td><td><b>Rises</b></td><td>Depends</td><td>Pantene: more ads, higher costs</td></tr>
+<tr><td class="k">D ↓ S ↑</td><td><b>Falls</b></td><td>Depends</td><td>Petrol demand ↓, car tech ↑</td></tr></table></div>
+<div class="note tip"><b>MCQ shortcut</b>Quantity certain, price uncertain → curves shift the <b>same</b> direction. Price certain, quantity uncertain → <b>opposite</b> directions.</div>
+<div class="note trap"><b>Careful</b>Some handout lines compare "the increase in price" with "the increase in quantity". You can't compare them in general; it depends on the slopes. Say which variable is certain and which depends on the relative shifts.</div></div></section><section class="card" data-id="el0" data-group="Elasticities" data-title="One formula, four questions" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">2.3 · Elasticities</span><span class="kind">Concept</span></div>
+<h2>One formula, four questions</h2>
+<p>Every elasticity answers: "If X changes by 1%, by what % does Y respond?"</p>
+<div class="formula">\( E = \dfrac{\%\Delta \text{ in what responds}}{\%\Delta \text{ in what caused it}} \qquad \%\Delta = \dfrac{\text{new} - \text{original}}{\text{original}} \times 100 \)</div>
+<div class="tw wide"><table><tr><th></th><th>Question it answers</th><th>Formula</th><th>On the diagram</th></tr>
+<tr><td class="k">PED</td><td>If I change my price, what happens to quantity and revenue?</td><td class="mono">%ΔQd ÷ %ΔP</td><td>Movement along D</td></tr>
+<tr><td class="k">PES</td><td>If price rises, how much can producers raise output?</td><td class="mono">%ΔQs ÷ %ΔP</td><td>Movement along S</td></tr>
+<tr><td class="k">YED</td><td>If incomes change, what happens to demand?</td><td class="mono">%ΔQd ÷ %ΔY</td><td>Shift of D</td></tr>
+<tr><td class="k">XED</td><td>If another good's price changes, what happens to mine?</td><td class="mono">%ΔQd(A) ÷ %ΔP(B)</td><td>Shift of D for A</td></tr></table></div>
+<div class="note tip"><b>Memory hook</b>"<b>P</b>rice measures <b>p</b>ass along the curve; the others push it." For YED and XED the <b>sign</b> is the answer to "what type of good"; for PED and PES the <b>size</b> matters.</div></div></section><section class="card" data-id="ped" data-group="Elasticities" data-title="PED: values and revenue" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">2.3 · PED</span><span class="kind">Concept</span></div>
+<h2>Price elasticity of demand</h2>
+<div class="def"><span class="lab">Definition · PED</span><p>The responsiveness of quantity demanded to a change in the good's own price, ceteris paribus. Usually negative; quote the absolute value.</p></div>
+<div class="tw"><table><tr><th class="n">Value</th><th>Name</th><th>Meaning</th></tr>
+<tr><td class="n">0</td><td class="k">Perfectly inelastic</td><td>No quantity change; vertical</td></tr>
+<tr><td class="n">0–1</td><td class="k">Inelastic</td><td>%ΔQd &lt; %ΔP (necessities, addictive)</td></tr>
+<tr><td class="n">1</td><td class="k">Unitary</td><td>TR unchanged</td></tr>
+<tr><td class="n">&gt;1</td><td class="k">Elastic</td><td>%ΔQd &gt; %ΔP (close substitutes, luxuries)</td></tr>
+<tr><td class="n">∞</td><td class="k">Perfectly elastic</td><td>Any price rise → zero demand; horizontal</td></tr></table></div>
+<figure class="dg multi"><div class="pnl"><p class="ptitle">Inelastic · TR rises</p><svg viewBox="0 0 320 250" role="img" aria-label="Inelastic demand: revenue gained exceeds revenue lost after a price rise"><defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0,0 L10,5 L0,10 z"/></marker></defs><polygon class="fb" points="46.0,138.0 46.0,100.0 161.2,100.0 161.2,138.0"/><polygon class="fc" points="161.2,214.0 161.2,138.0 174.0,138.0 174.0,214.0"/><line class="k d" x1="135.6" y1="24.0" x2="199.6" y2="214.0"/><text class="t-d" x="205.6" y="212.0" text-anchor="start">D</text><path class="g" d="M161.2,100.0 L161.2,214 M161.2,100.0 L46,100.0"/><text class="t-ax" x="40" y="104.0" text-anchor="end">P1</text><path class="g" d="M174.0,138.0 L174.0,214 M174.0,138.0 L46,138.0"/><text class="t-ax" x="40" y="142.0" text-anchor="end">P0</text><path class="ax" d="M46,12 L46,214 L314,214"/><text class="t-axl" x="40" y="8" text-anchor="start">Price</text><text class="t-axl" x="314" y="244" text-anchor="end">Quantity</text><text class="t-ax" x="40" y="229" text-anchor="end">O</text></svg></div><div class="pnl"><p class="ptitle">Elastic · TR falls</p><svg viewBox="0 0 320 250" role="img" aria-label="Elastic demand: revenue lost exceeds revenue gained after a price rise"><defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0,0 L10,5 L0,10 z"/></marker></defs><polygon class="fb" points="46.0,138.0 46.0,119.0 148.4,119.0 148.4,138.0"/><polygon class="fc" points="148.4,214.0 148.4,138.0 199.6,138.0 199.6,214.0"/><line class="k d" x1="46.0" y1="81.0" x2="302.0" y2="176.0"/><text class="t-d" x="298.0" y="168.0" text-anchor="end">D</text><path class="g" d="M148.4,119.0 L148.4,214 M148.4,119.0 L46,119.0"/><text class="t-ax" x="40" y="123.0" text-anchor="end">P1</text><path class="g" d="M199.6,138.0 L199.6,214 M199.6,138.0 L46,138.0"/><text class="t-ax" x="40" y="142.0" text-anchor="end">P0</text><path class="ax" d="M46,12 L46,214 L314,214"/><text class="t-axl" x="40" y="8" text-anchor="start">Price</text><text class="t-axl" x="314" y="244" text-anchor="end">Quantity</text><text class="t-ax" x="40" y="229" text-anchor="end">O</text></svg></div><figcaption>Teal: revenue gained on units still sold at the higher price. Red: revenue lost on units no longer sold.</figcaption></figure>
+<div class="tw"><table><tr><th>Demand is…</th><th>Raise price</th><th>Cut price</th></tr>
+<tr><td class="k">Inelastic</td><td>TR rises</td><td>TR falls</td></tr><tr><td class="k">Elastic</td><td>TR falls</td><td>TR rises</td></tr><tr><td class="k">Unitary</td><td>TR same</td><td>TR same</td></tr></table></div></div></section><section class="card" data-id="ped2" data-group="Elasticities" data-title="PED along a line; determinants" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">2.3 · PED</span><span class="kind">Concept</span></div>
+<h2>PED changes along a straight line</h2>
+<p>Same slope everywhere, but P/Q changes, so PED changes. Above the midpoint demand is elastic, below it inelastic; TR peaks at the midpoint.</p>
+<div class="tw"><table><tr><th class="n">P ($)</th><th class="n">Qd</th><th class="n">PED</th><th class="n">TR ($)</th></tr>
+<tr><td class="n">20</td><td class="n">10</td><td class="n">4</td><td class="n">200</td></tr>
+<tr><td class="n">15</td><td class="n">20</td><td class="n">1.5</td><td class="n">300</td></tr>
+<tr><td class="n">12.50</td><td class="n">25</td><td class="n">1</td><td class="n">312.50</td></tr>
+<tr><td class="n">10</td><td class="n">30</td><td class="n">0.67</td><td class="n">300</td></tr>
+<tr><td class="n">5</td><td class="n">40</td><td class="n">0.25</td><td class="n">200</td></tr></table></div>
+<p class="lede" style="font-size:14.5px">Q = 50 − 2P, point PED = 2 × P/Q.</p>
+<h3>Determinants of PED</h3>
+<ul><li><b>Substitutes</b>: the most important; more and closer → more elastic.</li>
+<li><b>Share of income</b>: a 10% rise on a $1,000 staycation matters far more than on $100 of bus fares.</li>
+<li><b>Necessity vs luxury</b>: rice inelastic, luxury watches elastic.</li>
+<li><b>Habit / addiction</b>: cigarettes → inelastic.</li>
+<li><b>Time</b>: more elastic in the long run.</li>
+<li><b>Breadth of definition</b>: food inelastic; one brand of bread elastic.</li></ul></div></section><section class="card" data-id="ped3" data-group="Elasticities" data-title="Using PED" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">2.3 · PED</span><span class="kind">Concept</span></div>
+<h2>Applications of PED</h2>
+<div class="two">
+<div><h4>Firms</h4><p>Raise price if inelastic, cut if elastic. Advertising and branding aim to make demand <b>more inelastic</b>; measuring PED afterwards shows whether it worked.</p></div>
+<div><h4 class="t">Government</h4><p>Tax goods with inelastic demand for revenue. Sin taxes on cigarettes and sugary drinks raise revenue but cut consumption only a little. Subsidies change consumption most when demand is elastic.</p></div>
+</div>
+<p>The same tax raises more revenue when demand is inelastic, because quantity barely falls. With elastic demand quantity falls a lot and producers bear most of the tax.</p>
+<div class="note tip"><b>Evaluating PED</b>Estimates rely on past data; ceteris paribus rarely holds; PED differs along the curve and over time; rivals may react; firms care about profit, not just revenue. A useful guide, not a precise forecast.</div></div></section><section class="card" data-id="pes" data-group="Elasticities" data-title="PES" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">2.3 · PES</span><span class="kind">Concept</span></div>
+<h2>Price elasticity of supply</h2>
+<div class="def"><span class="lab">Definition · PES</span><p>The responsiveness of quantity supplied to a change in price, ceteris paribus. PES = %ΔQs ÷ %ΔP. Positive.</p></div>
+<p>Straight-line supply: starts on the price axis → elastic; through the origin → unitary at every point; starts on the quantity axis → inelastic. Horizontal = perfectly elastic; vertical = perfectly inelastic.</p>
+<h3>Determinants</h3>
+<ul><li><b>Spare capacity</b>: idle machines and workers → elastic.</li>
+<li><b>Stocks</b>: storable goods → elastic; perishables → inelastic.</li>
+<li><b>Factor mobility</b>: easy to switch resources → elastic.</li>
+<li><b>Time</b>: supply becomes more elastic as time passes.</li>
+<li><b>Nature of the good</b>: agricultural goods low PES (growing seasons).</li></ul>
+<div class="two">
+<div><h4 class="g">Uses</h4><p>Firms: production planning, inventory, just-in-time. Government: low farm PES causes volatile prices → buffer stocks; infrastructure, cold storage and training raise PES.</p></div>
+<div><h4 class="r">Limits</h4><p>Hard to estimate; ceteris paribus; very different SR vs LR. Rubber trees take years to mature, so higher prices can't raise supply this season.</p></div>
+</div></div></section><section class="card" data-id="yx" data-group="Elasticities" data-title="YED and XED" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">2.3 · YED & XED</span><span class="kind">Concept</span></div>
+<h2>Income and cross elasticity</h2>
+<div class="def"><span class="lab">Definition · YED</span><p>Responsiveness of demand to a change in income, ceteris paribus. YED = %ΔQd ÷ %ΔY.</p></div>
+<div class="tw"><table><tr><th class="n">YED</th><th>Type</th></tr>
+<tr><td class="n">&gt; 1</td><td><b>Luxury</b> (normal): demand rises more than income</td></tr>
+<tr><td class="n">0–1</td><td><b>Necessity</b> (normal): rises less than income</td></tr>
+<tr><td class="n">&lt; 0</td><td><b>Inferior</b>: demand falls as income rises</td></tr></table></div>
+<p><b>Firms</b> plan over the business cycle and diversify ranges (luxury, everyday, no-frills shampoo). <b>Government</b> taxes luxuries in booms; rising demand for inferior goods signals hardship. A good can switch category as a country gets richer.</p>
+<div class="def"><span class="lab">Definition · XED</span><p>Responsiveness of demand for A to a change in the price of B. XED = %ΔQd(A) ÷ %ΔP(B). Sign = relationship; size = strength.</p></div>
+<div class="chain"><span>−∞ close complements</span><i>·</i><span>0 unrelated</span><i>·</i><span>close substitutes +∞</span></div>
+<p>Main determinant: how closely the goods meet the same need (Coke is closer to Pepsi than to mineral water). Firms watch rivals' prices and bundle complements; governments predict knock-on effects (fuel tax → public transport).</p></div></section><section class="card" data-id="elcmp" data-group="Elasticities" data-title="All four side by side" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">2.3 · Compared</span><span class="kind">Concept</span></div>
+<h2>All four, side by side</h2>
+<div class="tw wide"><table><tr><th></th><th>PED</th><th>PES</th><th>YED</th><th>XED</th></tr>
+<tr><td class="k">Usual sign</td><td>Negative</td><td>Positive</td><td>+ normal / − inferior</td><td>+ subs / − comps</td></tr>
+<tr><td class="k">Key value</td><td>|1|</td><td>1</td><td>0 and +1</td><td>0, distance from 0</td></tr>
+<tr><td class="k">Determinants</td><td>Substitutes, income share, necessity, habit, time</td><td>Spare capacity, stocks, mobility, time, nature</td><td>Necessity vs luxury, income level</td><td>Closeness of goods</td></tr>
+<tr><td class="k">Most useful over</td><td>Short run (pricing)</td><td>SR and LR (capacity)</td><td>Long run / cycle</td><td>SR (rivals) and strategy</td></tr>
+<tr><td class="k">Special limit</td><td>Varies along a line; ignores costs</td><td>Very different SR vs LR</td><td>Goods change category</td><td>Only related goods; not symmetrical</td></tr></table></div>
+<h3>Which is most useful?</h3>
+<div class="tw"><table>
+<tr><td class="k">Firm setting price now</td><td>PED: links its own decision to revenue</td></tr>
+<tr><td class="k">Firm planning 5 years</td><td>YED: which products grow or shrink</td></tr>
+<tr><td class="k">Firm in a competitive market</td><td>XED with rivals</td></tr>
+<tr><td class="k">Long production times</td><td>PES: can it exploit higher prices?</td></tr>
+<tr><td class="k">Government raising tax</td><td>PED (and PES)</td></tr>
+<tr><td class="k">Stabilising food prices</td><td>PES: low farm PES causes the swings</td></tr>
+<tr><td class="k">Growth or recession</td><td>YED</td></tr></table></div></div></section><section class="card" data-id="cs" data-group="Surplus" data-title="Consumer &amp; producer surplus" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">2.5 · Surplus</span><span class="kind">Concept</span></div>
+<h2>Consumer and producer surplus</h2>
+<div class="def"><span class="lab">Consumer surplus <i>2.5</i></span><p>The difference between the maximum price consumers are willing and able to pay and the price they actually pay.</p></div>
+<div class="def"><span class="lab">Producer surplus</span><p>The difference between the price producers receive and the minimum they'd accept (their marginal cost).</p></div>
+<figure class="dg"><div class="pnl"><svg viewBox="0 0 320 250" role="img" aria-label="Consumer and producer surplus at equilibrium"><defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0,0 L10,5 L0,10 z"/></marker></defs><polygon class="fa" points="46.0,43.0 46.0,119.0 148.4,119.0"/><polygon class="fb" points="46.0,119.0 148.4,119.0 46.0,195.0"/><line class="k d" x1="46.0" y1="43.0" x2="276.4" y2="214.0"/><text class="t-d" x="272.4" y="208.0" text-anchor="end">D</text><line class="k s" x1="46.0" y1="195.0" x2="250.8" y2="43.0"/><text class="t-s" x="254.8" y="47.0" text-anchor="start">S</text><path class="g" d="M148.4,119.0 L148.4,214 M148.4,119.0 L46,119.0"/><text class="t-ax" x="148.4" y="229" text-anchor="middle">Q*</text><text class="t-ax" x="40" y="123.0" text-anchor="end">P*</text><circle class="pt" cx="148.4" cy="119.0" r="3.6"/><text class="t-pt" x="156.4" y="123.0" text-anchor="start">E</text><text class="t-pt" x="76.7" y="96.2" text-anchor="start">CS</text><text class="t-pt" x="76.7" y="147.5" text-anchor="start">PS</text><path class="ax" d="M46,12 L46,214 L314,214"/><text class="t-axl" x="40" y="8" text-anchor="start">Price</text><text class="t-axl" x="314" y="244" text-anchor="end">Quantity</text><text class="t-ax" x="40" y="229" text-anchor="end">O</text></svg></div><figcaption>CS: below demand, above price. PS: above supply, below price. Total welfare CS + PS is maximised at the free-market equilibrium.</figcaption></figure>
+<div class="tw wide"><table><tr><th>Event</th><th>Price</th><th>CS</th><th>PS</th></tr>
+<tr><td class="k">Demand ↑</td><td>↑</td><td>Usually ↑</td><td>↑</td></tr>
+<tr><td class="k">Demand ↓</td><td>↓</td><td>↓</td><td>↓</td></tr>
+<tr><td class="k">Supply ↑ (lower costs)</td><td>↓</td><td>↑</td><td>Usually ↑</td></tr>
+<tr><td class="k">Supply ↓ (higher costs)</td><td>↑</td><td>↓</td><td>Usually ↓</td></tr></table></div>
+<div class="note link"><b>Elasticity decides the CS loss</b>After the same cost rise, inelastic demand means price rises further, so consumers lose more surplus in total. This is 9708/22 M/J 2023 Q2(a).</div></div></section><section class="card" data-id="rel" data-group="Price mechanism" data-title="Related markets" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">2.4.3 · Related markets</span><span class="kind">Concept</span></div>
+<h2>Relationships between markets</h2>
+<p><b>Method:</b> change in market A → new price in A → shift in market B → new equilibrium in B. Draw two diagrams side by side.</p>
+<div class="two">
+<div><h4>Substitutes</h4><p>Coffee costs rise → coffee S left → coffee price ↑ → tea relatively cheaper → tea D right → tea P and Q rise.</p></div>
+<div><h4>Complements</h4><p>New tech → washing machine S right → price ↓, Q ↑ → washing powder D right → its P and Q rise.</p></div>
+<div><h4>Derived demand</h4><p>Factors are wanted for what they produce. Supermarket demand ↑ → demand for supermarket workers ↑ → wages and jobs rise.</p></div>
+<div><h4>Joint supply</h4><p>Two goods from one process. Beef demand ↑ → more beef → leather S right → leather price ↓, quantity ↑.</p></div>
+</div></div></section><section class="card" data-id="fn" data-group="Price mechanism" data-title="Three functions of price" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">2.4.4 · Functions of price</span><span class="kind">Concept</span></div>
+<h2>Rationing, signalling, incentive</h2>
+<div class="def"><span class="lab">Price mechanism <i>2.4.4</i></span><p>Demand and supply set prices, and changes in those prices allocate scarce resources between competing uses, without central direction.</p></div>
+<div class="tw"><table><tr><th>Function</th><th>Answers</th><th>Acts on</th><th>On the diagram</th></tr>
+<tr><td class="k">Signalling</td><td>What</td><td>Both</td><td>The change in P itself</td></tr>
+<tr><td class="k">Incentive</td><td>How much</td><td>Mainly producers</td><td>Movement along S</td></tr>
+<tr><td class="k">Rationing</td><td>For whom</td><td>Consumers</td><td>Movement along D</td></tr></table></div>
+<figure class="dg multi"><div class="pnl"><p class="ptitle">Rationing</p><svg viewBox="0 0 320 250" role="img" aria-label="Rationing: supply falls, price rises, movement up demand"><defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0,0 L10,5 L0,10 z"/></marker></defs><line class="k d" x1="71.6" y1="43.0" x2="276.4" y2="195.0"/><text class="t-d" x="280.4" y="209.0" text-anchor="start">D</text><line class="k o" x1="97.2" y1="195.0" x2="302.0" y2="43.0"/><text class="t-o" x="298.0" y="37.0" text-anchor="end">S1</text><line class="k s" x1="46.0" y1="195.0" x2="250.8" y2="43.0"/><text class="t-s" x="246.8" y="37.0" text-anchor="end">S2</text><path class="g" d="M186.8,128.5 L186.8,214 M186.8,128.5 L46,128.5"/><text class="t-ax" x="186.8" y="229" text-anchor="middle">B</text><text class="t-ax" x="40" y="132.5" text-anchor="end">P1</text><path class="g" d="M161.2,109.5 L161.2,214 M161.2,109.5 L46,109.5"/><text class="t-ax" x="161.2" y="229" text-anchor="middle">A</text><text class="t-ax" x="40" y="113.5" text-anchor="end">P2</text><circle class="pt" cx="186.8" cy="128.5" r="3.6"/><circle class="pt" cx="161.2" cy="109.5" r="3.6"/><path class="ax" d="M46,12 L46,214 L314,214"/><text class="t-axl" x="40" y="8" text-anchor="start">Price</text><text class="t-axl" x="314" y="244" text-anchor="end">Quantity</text><text class="t-ax" x="40" y="229" text-anchor="end">O</text></svg></div><div class="pnl"><p class="ptitle">Incentive</p><svg viewBox="0 0 320 250" role="img" aria-label="Incentive: demand rises, price rises, movement up supply"><defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0,0 L10,5 L0,10 z"/></marker></defs><line class="k s" x1="71.6" y1="195.0" x2="276.4" y2="43.0"/><text class="t-s" x="280.4" y="41.0" text-anchor="start">S</text><line class="k o" x1="46.0" y1="43.0" x2="276.4" y2="214.0"/><text class="t-o" x="272.4" y="208.0" text-anchor="end">D1</text><line class="k d" x1="71.6" y1="24.0" x2="302.0" y2="195.0"/><text class="t-d" x="298.0" y="189.0" text-anchor="end">D2</text><path class="g" d="M161.2,128.5 L161.2,214 M161.2,128.5 L46,128.5"/><text class="t-ax" x="161.2" y="229" text-anchor="middle">A</text><text class="t-ax" x="40" y="132.5" text-anchor="end">P1</text><path class="g" d="M186.8,109.5 L186.8,214 M186.8,109.5 L46,109.5"/><text class="t-ax" x="186.8" y="229" text-anchor="middle">B</text><text class="t-ax" x="40" y="113.5" text-anchor="end">P2</text><circle class="pt" cx="161.2" cy="128.5" r="3.6"/><circle class="pt" cx="186.8" cy="109.5" r="3.6"/><path class="ax" d="M46,12 L46,214 L314,214"/><text class="t-axl" x="40" y="8" text-anchor="start">Price</text><text class="t-axl" x="314" y="244" text-anchor="end">Quantity</text><text class="t-ax" x="40" y="229" text-anchor="end">O</text></svg></div><figcaption>Left: supply falls, price rises, quantity demanded contracts from OB to OA (movement up D). Right: demand rises, price rises, quantity supplied extends from OA to OB (movement up S). In both, the price change is the signal.</figcaption></figure>
+<p><b>Transmission of preferences:</b> consumers "vote" with spending; the price change passes their wants to producers automatically.</p>
+<div class="note trap"><b>Common error</b>The incentive function is a <b>movement along S</b> (extension), not a shift. Rationing is a contraction of quantity demanded, not a fall in demand.</div></div></section><section class="card" data-id="fn2" data-group="Price mechanism" data-title="One chain, and its limits" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">2.4.4 · Evaluation</span><span class="kind">Concept</span></div>
+<h2>How the three work as one chain</h2>
+<div class="chain"><span>Shock: Covid-19, mask demand surges</span><i>→</i><span>Price bid up</span><i>→</i><span>Signal: masks highly valued</span><i>→</i><span>Incentive: lines switch, new producers</span><i>→</i><span>Rationing: high price limits masks</span><i>→</i><span>Supply rises, price falls back</span></div>
+<p>Explaining them as a sequence from one price change lifts an answer from listing (L1–2) to analysis (L3).</p>
+<h3>When the price mechanism fails</h3>
+<div class="tw wide"><table><tr><th>Weakness</th><th>Why it limits the functions</th><th>Example</th></tr>
+<tr><td class="k">Inequity</td><td>Rations by ability to pay, not need</td><td>Rice, medicines, masks</td></tr>
+<tr><td class="k">Time lags / low PES</td><td>Incentive works slowly, so high prices persist</td><td>Durian and rubber trees; housing</td></tr>
+<tr><td class="k">Price controls</td><td>A maximum price blocks signal and incentive</td><td>Malaysia's 2022 chicken and egg shortages under capped prices</td></tr>
+<tr><td class="k">Imperfect information</td><td>Signals misread; speculation</td><td>Panic buying</td></tr>
+<tr><td class="k">Market power</td><td>A monopoly keeps prices high without raising output</td><td>Single dominant supplier</td></tr>
+<tr><td class="k">Externalities</td><td>Prices ignore third parties (Chapter 3)</td><td>Pollution; vaccinations</td></tr></table></div>
+<div class="note tip"><b>It works well when…</b>the good is a private good, information is good, markets are competitive and supply is elastic.</div></div></section><section class="card" data-id="we1" data-group="Worked examples" data-title="Solve for equilibrium" data-kind="Worked example"><div class="ci"><div class="ch"><span class="sec">Worked example 1 · 2.4</span><span class="kind">Worked example</span></div>
+<h2>Solve the equilibrium, then add a tax</h2>
+<p><b>Q:</b> \(Q_d = 50 - 5P\) and \(Q_s = 2 + 3P\). Find P* and Q*. Then a $2 specific tax is imposed. Who bears it?</p>
+<ol class="steps">
+<li>Set \(Q_d = Q_s\): \(50 - 5P = 2 + 3P\).</li>
+<li>\(48 = 8P\), so <b>P* = $6</b>.</li>
+<li>\(Q^* = 50 - 5(6) = 20\). Check: \(2 + 3(6) = 20\). <b>Q* = 20 units</b>.</li>
+<li>The tax means producers keep \(P - 2\): new supply \(Q_s = 2 + 3(P - 2) = 3P - 4\).</li>
+<li>\(50 - 5P = 3P - 4 \Rightarrow 54 = 8P \Rightarrow P = \$6.75\); \(Q = 50 - 5(6.75) = 16.25\).</li>
+<li>Consumers pay $0.75 more; producers keep $4.75, i.e. $1.25 less. Consumers bear <b>$0.75 of the $2</b>, producers $1.25.</li>
+</ol></div></section><section class="card" data-id="we2" data-group="Worked examples" data-title="PED and revenue" data-kind="Worked example"><div class="ci"><div class="ch"><span class="sec">Worked example 2 · PED</span><span class="kind">Worked example</span></div>
+<h2>Calculate PED and use it</h2>
+<p><b>Q:</b> Price rises from $12 to $18 and quantity demanded falls from 200,000 to 180,000. Calculate PED and state what happened to total revenue.</p>
+<ol class="steps">
+<li>%ΔP = (18 − 12) ÷ 12 × 100 = <b>+50%</b>.</li>
+<li>%ΔQd = (180,000 − 200,000) ÷ 200,000 × 100 = <b>−10%</b>.</li>
+<li>PED = −10 ÷ 50 = <b>−0.2</b>, so |PED| = 0.2 &lt; 1: <b>inelastic</b>. A 1% price rise cuts Qd by 0.2%.</li>
+<li>TR before = 12 × 200,000 = $2.4m. TR after = 18 × 180,000 = $3.24m.</li>
+<li>TR <b>rose by $0.84m</b>, as expected for an inelastic good: the gain on units still sold outweighs the loss on units no longer sold.</li>
+</ol></div></section><section class="card" data-id="we3" data-group="Worked examples" data-title="PES and YED" data-kind="Worked example"><div class="ci"><div class="ch"><span class="sec">Worked example 3 · PES & YED</span><span class="kind">Worked example</span></div>
+<h2>PES and YED from handout data</h2>
+<p><b>Q1:</b> Price $16 → $18.40; quantity supplied 28,000 → 28,840. PES?</p>
+<ol class="steps">
+<li>%ΔP = 2.40 ÷ 16 = <b>+15%</b>. %ΔQs = 840 ÷ 28,000 = <b>+3%</b>.</li>
+<li>PES = 3 ÷ 15 = <b>0.2</b>: inelastic. Producers can barely raise output, typical of farm goods in the short run.</li>
+</ol>
+<p><b>Q2:</b> Income $800 → $1,000; clothes bought 100 → 140. YED and type?</p>
+<ol class="steps">
+<li>%ΔY = 200 ÷ 800 = <b>+25%</b>. %ΔQd = 40 ÷ 100 = <b>+40%</b>.</li>
+<li>YED = 40 ÷ 25 = <b>+1.6</b>. Positive → normal; above 1 → a <b>luxury</b>.</li>
+</ol></div></section><section class="card" data-id="we4" data-group="Worked examples" data-title="XED: read the sign" data-kind="Worked example"><div class="ci"><div class="ch"><span class="sec">Worked example 4 · XED</span><span class="kind">Worked example</span></div>
+<h2>XED: two examples</h2>
+<p><b>Q1:</b> Coffee $10 → $12; orange juice bought 1,500 → 1,650 kg. XED?</p>
+<ol class="steps">
+<li>%ΔP coffee = +20%. %ΔQd juice = 150 ÷ 1,500 = +10%.</li>
+<li>XED = +10 ÷ +20 = <b>+0.5</b>: positive, below 1 → <b>weak substitutes</b>.</li>
+</ol>
+<p><b>Q2:</b> Pencils $1.00 → $1.30; erasers bought 1,000 → 800. XED?</p>
+<ol class="steps">
+<li>%ΔP pencils = +30%. %ΔQd erasers = −200 ÷ 1,000 = <b>−20%</b>.</li>
+<li>XED = −20 ÷ +30 ≈ <b>−0.67</b>: negative → <b>complements</b>, weak.</li>
+</ol>
+<div class="note trap"><b>Handout correction</b>The handout uses 400 instead of 800, getting −60% and XED = −2, then calls the goods "close substitutes". A negative XED always means complements. Example 1 also mentions tea where the table uses orange juice. Check with Puan Zaihan.</div></div></section><section class="card" data-id="we5" data-group="Worked examples" data-title="Surplus by hand" data-kind="Worked example"><div class="ci"><div class="ch"><span class="sec">Worked example 5 · 2.5</span><span class="kind">Worked example</span></div>
+<h2>Consumer and producer surplus</h2>
+<p><b>Q1:</b> You'd pay $1.00 for one drink and $0.90 for a second. The price is $0.75. Total CS?</p>
+<ol class="steps"><li>Drink 1: 1.00 − 0.75 = $0.25. Drink 2: 0.90 − 0.75 = $0.15.</li><li>Total CS = <b>$0.40</b>.</li></ol>
+<p><b>Q2:</b> A firm would sell unit 1 for $2.00 and unit 2 for $2.20. Market price $3.00. PS?</p>
+<ol class="steps"><li>Unit 1: 3.00 − 2.00 = $1.00. Unit 2: 3.00 − 2.20 = $0.80.</li><li>PS = <b>$1.80</b>.</li></ol>
+<p><b>Q3:</b> On a linear diagram, PS is a triangle with base 8 units and height $4. PS?</p>
+<ol class="steps"><li>Area = ½ × base × height = ½ × 8 × 4 = <b>$16</b>.</li></ol></div></section><section class="card" data-id="we6" data-group="Worked examples" data-title="8-mark plan: wage rise" data-kind="Worked example"><div class="ci"><div class="ch"><span class="sec">Worked example 6 · Paper 2</span><span class="kind">Worked example</span></div>
+<h2>Equilibrium after a wage rise [8]</h2>
+<p><b>Q (9708/22 M/J 2023 Q3a):</b> Using a diagram, explain market equilibrium and consider how far a general rise in wages would change the equilibrium price and quantity of a product.</p>
+<ol class="steps">
+<li><b>AO1:</b> define equilibrium (Qd = Qs, no tendency to change); diagram with D0, S0, E0 at P0, Q0; explain surplus above, shortage below.</li>
+<li><b>AO2 supply side:</b> wages are a cost, so S shifts left to S1: price up to P1, quantity down to Q1.</li>
+<li><b>AO2 demand side:</b> wages are income; for a normal good D shifts right to D1, pushing price up further to P2.</li>
+<li><b>AO3:</b> price almost certainly rises. Quantity depends on relative shifts: labour-intensive haircuts → S shift dominates, Q falls; high-YED restaurant meals → D shift may dominate, Q rises; inferior goods → D falls.</li>
+<li><b>Conclude:</b> price rises; how far quantity changes, and in which direction, depends on labour intensity and YED (and PED, PES).</li>
+</ol></div></section><section class="card" data-id="ex1" data-group="Exam technique" data-title="Plans &amp; evaluation" data-kind="Exam"><div class="ci"><div class="ch"><span class="sec">Paper 2 · Exam technique</span><span class="kind">Exam</span></div>
+<h2>Using this in the exam</h2>
+<div class="tw"><table><tr><th>Part</th><th class="n">AO1</th><th class="n">AO2</th><th class="n">AO3</th></tr>
+<tr><td class="k">(a) 8 · Explain… consider…</td><td class="n">3</td><td class="n">3</td><td class="n">2</td></tr>
+<tr><td class="k">(b) 12 · Assess…</td><td class="n" colspan="2">8 (levels)</td><td class="n">4</td></tr></table></div>
+<p>One-sided 12-markers are capped at Level 2 for AO1/AO2 and get <b>0 for AO3</b>.</p>
+<div class="two">
+<div><h4>8-mark plan · ~15 min</h4><ul><li>Define every term; give the formula</li><li>One fully labelled diagram</li><li>Explain step by step, citing labels</li><li>Consider 1–2 "it depends" factors</li><li>Conclude in 1–2 sentences</li></ul></div>
+<div><h4>12-mark plan · ~22 min</h4><ul><li>Intro: define, say what you'll weigh</li><li>For: diagram + developed chain</li><li>Against: developed the same way</li><li>Evaluation woven in: SR vs LR, which goods</li><li>Judgement: "on balance… because… unless…"</li></ul></div>
+</div>
+<h3>Elasticity as your evaluation tool</h3>
+<div class="tw wide"><table><tr><th>Essay about…</th><th>Use</th><th>Sentence frame</th></tr>
+<tr><td class="k">Tax, cost rise, subsidy</td><td>PED</td><td>"How far price rises depends on PED: with inelastic demand, as for petrol, most of the tax is passed on…"</td></tr>
+<tr><td class="k">Recession, growth</td><td>YED</td><td>"Demand for luxuries such as overseas holidays falls sharply, while inferior goods may even rise."</td></tr>
+<tr><td class="k">Related good's price</td><td>XED</td><td>"Pepsi is a close substitute for Coke, so the effect would be large."</td></tr>
+<tr><td class="k">Shortages, farming</td><td>PES</td><td>"In the short run supply is inelastic, so higher demand mainly raises price…"</td></tr>
+<tr><td class="k">CS / PS</td><td>PED</td><td>"The loss of CS is largest when demand is inelastic."</td></tr></table></div></div></section><section class="card" data-id="mist" data-group="Exam technique" data-title="Mistakes &amp; diagram checklist" data-kind="Mistakes"><div class="ci"><div class="ch"><span class="sec">Paper 2 · Mistakes</span><span class="kind">Mistakes</span></div>
+<h2>Common mistakes that cost marks</h2>
+<ul>
+<li>"Price rises so demand falls." Write <b>quantity demanded</b> falls (movement).</li>
+<li>Shifting demand when the question is about a cost or tax (that shifts supply).</li>
+<li>Judging elasticity from slope alone across different diagrams or units.</li>
+<li>Forgetting the sign: negative XED = complements; negative YED = inferior.</li>
+<li>Calling the incentive function a shift of supply.</li>
+<li>A conclusion that only repeats the essay. It must make a judgement.</li>
+</ul>
+<h3>Diagram checklist</h3>
+<ul><li>Axes labelled Price and Quantity; origin O.</li><li>Curves D0, D1, S0, S1 with a shift arrow.</li><li>Equilibria dashed to both axes: P0, Q0, P1, Q1.</li><li>Shade and name any area (CS, PS, tax revenue, TR gain/loss).</li><li>Refer to it: "as shown in Figure 1, price rises from P0 to P1".</li><li>Inelastic curves visibly steep, elastic flat, in separate diagrams.</li></ul>
+<div class="note tip"><b>Data response calculations</b>Write the formula, show both % changes with signs, give the answer to 2 d.p., then interpret it in words ("inelastic, so…").</div></div></section><section class="card" data-id="pr1" data-group="Practice" data-title="Practice: MCQ pack picks" data-kind="Practice"><div class="ci"><div class="ch"><span class="sec">Practice · Paper 1</span><span class="kind">Practice</span></div>
+<h2>Practice · Paper 1 style</h2>
+<button class="btn" type="button" data-revealall>Reveal all answers</button>
+<div class="pq"><div class="qh"><span>Q1 · Pack Q6</span><span class="mk">[1]</span></div>
+<p class="qt">Supply of a good falls and its price rises. What is the only certain outcome on the demand side?</p>
+<div class="ans"><b>Contraction</b>A fall in quantity demanded: a movement up along D. Demand itself hasn't changed.</div></div>
+<div class="pq"><div class="qh"><span>Q2 · Pack Q23</span><span class="mk">[1]</span></div>
+<p class="qt">A tax on cigarettes cuts restaurant meal sales. What happens in each market?</p>
+<div class="ans"><b>Answer</b>Cigarettes: the tax shifts S, so a movement along D. Meals (a complement for smokers): demand shifts left.</div></div>
+<div class="pq"><div class="qh"><span>Q3 · Pack Q26</span><span class="mk">[1]</span></div>
+<p class="qt">The government advises people to drink less fizzy drink. Effect on the sugar market?</p>
+<div class="ans"><b>Answer</b>Fizzy drink D shifts left. Sugar demand is derived from it, so sugar demand falls: a movement down the sugar supply curve.</div></div>
+<div class="pq"><div class="qh"><span>Q4 · Pack Q1</span><span class="mk">[1]</span></div>
+<p class="qt">A car park has a fixed number of spaces and demand varies by day. How can price clear the market each day?</p>
+<div class="ans"><b>Vary the price</b>Supply is fixed (vertical S), so charge a different price each day where that day's demand meets the fixed supply.</div></div>
+<div class="pq"><div class="qh"><span>Q5 · Calculation</span><span class="mk">[2]</span></div>
+<p class="qt">A firm's PED is 0.4. It raises price by 10%. By how much does quantity demanded change, and what happens to revenue?</p>
+<div class="ans"><b>−4%; TR rises</b>%ΔQd = 0.4 × 10 = 4% fall. Inelastic, so the price rise increases total revenue.</div></div></div></section><section class="card" data-id="pr2" data-group="Practice" data-title="Practice: essay plans" data-kind="Practice"><div class="ci"><div class="ch"><span class="sec">Practice · Paper 2</span><span class="kind">Practice</span></div>
+<h2>Practice · Paper 2 essays</h2>
+<div class="pq"><div class="qh"><span>Q6 · PED</span><span class="mk">[8]</span></div>
+<p class="qt">Explain, using a diagram, how a firm can use PED to decide its pricing, and consider whether raising price will always raise its revenue.</p>
+<div class="ans"><b>Plan</b>Define PED + formula; TR gain/loss diagrams for inelastic vs elastic. Consider: only if demand is inelastic at the current price; PED changes along the curve; rivals may not follow; revenue isn't profit. Conclude: not always.</div></div>
+<div class="pq"><div class="qh"><span>Q7 · YED</span><span class="mk">[8]</span></div>
+<p class="qt">Explain the difference between a normal and an inferior good using YED, and consider whether a producer of luxury goods should worry about a recession.</p>
+<div class="ans"><b>Plan</b>YED formula; + vs −; luxury &gt; 1. Hotel with YED +2.5: incomes −5% → demand ≈ −12.5%. Consider: depends on its customers' incomes (the very rich may be little affected), brand strength, and whether it can add budget lines.</div></div>
+<div class="pq"><div class="qh"><span>Q8 · Price mechanism</span><span class="mk">[12]</span></div>
+<p class="qt">Assess whether the price mechanism is the best way to allocate a staple food, such as rice, after a sudden fall in supply.</p>
+<div class="ans"><b>Plan</b>For: S left → price ↑ → rationing, signal to farmers and importers, incentive over time; no bureaucracy. Against: rice is a necessity with low PED, a big share of poor budgets → harsh rationing by ability to pay; low PES → slow response. Alternatives: maximum price (blocks the signal), buffer stock release, transfers, imports. Judge: short run, targeted transfers or stock release; long run, let price signal more supply.</div></div>
+<div class="pq"><div class="qh"><span>Q9 · Elasticity</span><span class="mk">[12]</span></div>
+<p class="qt">Assess whether PED is more useful than YED to a firm.</p>
+<div class="ans"><b>Plan</b>PED: price the firm controls → TR decision now. YED: plan output over the cycle (car maker YED +2, incomes −3% → demand ≈ −6%). Evaluate: PED wins in the short run with price-setting power; YED wins for luxury or inferior goods over the cycle; both rely on past data. Judge: PED for most firms, with that exception.</div></div></div></section><section class="card" data-id="pp" data-group="Practice" data-title="Past paper questions" data-kind="Past papers"><div class="ci"><div class="ch"><span class="sec">Practice · Past papers</span><span class="kind">Past papers</span></div>
+<h2>Real 9708 questions on Chapter 2</h2>
+<div class="tw wide"><table><tr><th>Paper</th><th>Question (paraphrased)</th><th class="n">Marks</th></tr>
+<tr><td class="k">22 M/J 2023 Q2(a)</td><td>Explain CS and PS; consider whether a cost-driven price rise always reduces CS.</td><td class="n">8</td></tr>
+<tr><td class="k">22 M/J 2023 Q3(a)</td><td>Explain equilibrium; consider how far a general wage rise changes equilibrium P and Q.</td><td class="n">8</td></tr>
+<tr><td class="k">21 M/J 2023 Q3(a)</td><td>Explain XED with a formula; consider which factors most decide its sign and size.</td><td class="n">8</td></tr>
+<tr><td class="k">21 M/J 2023 Q3(b)</td><td>Assess whether a buffer stock's benefits always outweigh its disadvantages.</td><td class="n">12</td></tr>
+<tr><td class="k">2023 Specimen Q3(a)</td><td>Explain PES with a formula; consider which factors matter most.</td><td class="n">8</td></tr>
+<tr><td class="k">2023 Specimen Q3(b)</td><td>Assess two policies to make agricultural supply more price elastic.</td><td class="n">12</td></tr>
+<tr><td class="k">22 M/J 2023 Q2(b)</td><td>Maximum price vs transfers for rice (Chapter 3, built on Chapter 2).</td><td class="n">12</td></tr></table></div>
+<div class="note link"><b>Model essays</b>Full highlighted model answers for five of these are in your original notes. <a href="https://claude.ai/code/artifact/5dbc6cca-15c2-4658-bb6a-db0c7688855f" target="_blank" rel="noopener">Price System notes</a> · <a href="https://claude.ai/code/artifact/5fbf385c-b27a-4d56-b85f-f4593065026c" target="_blank" rel="noopener">Functions of Price</a> · <a href="https://claude.ai/code/artifact/58d9ef5b-30f1-4508-84f8-7ae4e8276858" target="_blank" rel="noopener">Four Elasticities</a></div></div></section><section class="card" data-id="sum" data-group="Summary" data-title="Formula sheet" data-kind="Summary"><div class="ci"><div class="ch"><span class="sec">Summary</span><span class="kind">Summary</span></div>
+<h2>Chapter 2 formula &amp; summary sheet</h2>
+<div class="tw"><table>
+<tr><td class="k">% change</td><td>\(\dfrac{\text{new} - \text{old}}{\text{old}} \times 100\)</td></tr>
+<tr><td class="k">PED</td><td>\(\dfrac{\%\Delta Q_d}{\%\Delta P}\) · &lt;1 inelastic → raise P, TR ↑</td></tr>
+<tr><td class="k">PES</td><td>\(\dfrac{\%\Delta Q_s}{\%\Delta P}\) · spare capacity, stocks, time</td></tr>
+<tr><td class="k">YED</td><td>\(\dfrac{\%\Delta Q_d}{\%\Delta Y}\) · &gt;1 luxury · 0–1 necessity · &lt;0 inferior</td></tr>
+<tr><td class="k">XED</td><td>\(\dfrac{\%\Delta Q_{d,A}}{\%\Delta P_B}\) · + substitutes · − complements</td></tr>
+<tr><td class="k">Equilibrium</td><td>Set \(Q_d = Q_s\), solve for P, substitute back</td></tr>
+<tr><td class="k">Specific tax t</td><td>New supply: replace P with \(P - t\)</td></tr>
+<tr><td class="k">CS, PS</td><td>Triangle area \(\tfrac12 \times Q \times \Delta P\)</td></tr>
+<tr><td class="k">Movement vs shift</td><td>Own price → along; anything else → shift</td></tr>
+<tr><td class="k">Both curves shift</td><td>Same direction → Q certain; opposite → P certain</td></tr>
+<tr><td class="k">Price functions</td><td>Signal (what) · Incentive (how much, along S) · Rationing (for whom, along D)</td></tr>
+<tr><td class="k">Essay marks</td><td>(a) 3/3/2 · (b) 8 + 4; one-sided = 0 AO3</td></tr>
+</table></div>
+<p class="lede" style="font-size:15px">Screenshot this card. Then open <b>Cards</b> or <b>Quiz</b> at the top.</p></div></section></main>
+<footer class="bot">
+  <button class="ib" id="prevBtn" type="button" aria-label="Previous card"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+  <div class="prog"><div class="bar"><i id="barFill"></i></div><div class="cnt" id="cnt">1 / 31</div></div>
+  <button class="ib" id="nextBtn" type="button" aria-label="Next card"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+</footer>
+
+<div class="sheet" id="tocSheet" hidden>
+  <header class="top"><div class="ttl"><b>Contents</b><small>31 cards · tap to jump</small></div>
+  <button class="ib" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></header>
+  <div class="sbody"><div class="in" id="tocList"></div></div>
+</div>
+<div class="sheet" id="fcSheet" hidden>
+  <header class="top"><div class="ttl"><b>Flashcards</b><small>Tap the card to flip · Space flips on a keyboard</small></div>
+  <button class="ib" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></header>
+  <div class="sbody"><div class="in">
+    <div class="chips" id="fcChips"></div>
+    <div class="fc" id="fc"><div class="fc-in">
+      <div class="fc-f front"><div class="ft"><span id="fcT"></span><span>Question</span></div><div class="q" id="fcQ"></div></div>
+      <div class="fc-f back"><div class="ft"><span id="fcT2"></span><span>Answer</span></div><div id="fcA"></div></div>
+    </div></div>
+    <div class="fcrow"><button class="btn bad" id="fcAgain" type="button">Again</button><span class="cnt" id="fcN" style="align-self:center"></span><button class="btn good" id="fcGot" type="button">Got it</button></div>
+    <div class="fcrow" style="margin-top:8px"><button class="btn" id="fcPrev" type="button">← Prev</button><button class="btn" id="fcShuf" type="button">Shuffle</button><button class="btn" id="fcNext" type="button">Next →</button></div>
+    <p class="lede" style="font-size:14.5px;margin-top:14px">"Again" puts the card in the Again pile so you can drill only the ones you missed.</p>
+  </div></div>
+</div>
+<div class="sheet" id="qSheet" hidden>
+  <header class="top"><div class="ttl"><b>Paper 1 quiz</b><small>Pick an answer to see the explanation</small></div>
+  <button class="ib" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></header>
+  <div class="sbody"><div class="in">
+    <div class="score"><span>Score <span class="num" id="qScore"></span></span><button class="btn" id="qReset" type="button">Reset</button></div>
+    <div id="qList"></div>
+  </div></div>
+</div>
+<script>var DECK={"key": "deck-9708-ch2", "flash": [["Demand", "Define effective demand.", "The quantity consumers are <b>willing and able</b> to buy at each price per period, ceteris paribus. Desire must be backed by ability to pay."], ["Demand", "State the law of demand.", "Ceteris paribus, a higher price leads to a lower quantity demanded, and vice versa: an inverse relationship."], ["Demand", "Price of a good falls. Movement or shift? What is it called?", "Movement down along the demand curve: an <b>expansion</b> (increase in quantity demanded)."], ["Demand", "Name five non-price determinants of demand.", "Price of substitutes/complements, income, tastes &amp; preferences, expected future price, government policy (also population, credit)."], ["Demand", "Price of coffee rises. What happens to demand for tea (a substitute)?", "Demand for tea increases: D shifts right, because tea is now relatively cheaper."], ["Demand", "Price of petrol falls. Effect on demand for cars?", "Cars and petrol are complements, so demand for cars increases (shifts right)."], ["Demand", "What is an inferior good? Example?", "Demand falls as income rises, e.g. bus tickets, second-hand clothes. YED &lt; 0."], ["Demand", "What is a Veblen good?", "A status good whose quantity demanded may rise as price rises because high price signals prestige (diamonds, luxury watches)."], ["Demand", "What is a Giffen good and why does demand slope up?", "A staple inferior good taking a large share of poor households' income. A price rise makes them too poor to buy better foods, so they buy more of the staple."], ["Supply", "Define supply.", "The quantity producers are willing and able to sell at each price per period, ceteris paribus."], ["Supply", "Wages rise. What happens to supply?", "Costs rise → supply decreases → S shifts left (up)."], ["Supply", "How does a specific tax differ from an ad valorem tax on the diagram?", "Specific: fixed amount per unit → parallel upward shift. Ad valorem: % of price → pivots, gap widens at higher prices."], ["Supply", "What does a subsidy do to supply?", "Lowers costs per unit → S shifts right/down by the subsidy amount."], ["Supply", "Beef and leather: what relationship? Effect of higher beef demand on leather?", "Joint supply. More beef produced → supply of leather shifts right → leather price falls."], ["Supply", "Oranges rise in price. Effect on lemon supply (competitive supply)?", "Farmers shift land to oranges → supply of lemons decreases (shifts left)."], ["Equilibrium", "Define equilibrium price.", "The price where quantity demanded equals quantity supplied, with no tendency to change."], ["Equilibrium", "Solve Qd = 50 − 5P and Qs = 2 + 3P.", "50 − 5P = 2 + 3P → 8P = 48 → P = $6, Q = 20."], ["Equilibrium", "Price is above equilibrium. What exists and what happens?", "Excess supply (surplus); sellers cut price until Qd = Qs."], ["Equilibrium", "Demand and supply both increase. What is certain?", "Quantity rises for certain. Price depends on which shift is bigger."], ["Equilibrium", "Demand rises and supply falls. What is certain?", "Price rises for certain. Quantity depends on the relative size of the shifts."], ["Elasticity", "PED formula and meaning of 0.2.", "PED = %ΔQd ÷ %ΔP. 0.2 = inelastic: a 1% price rise cuts quantity demanded by 0.2%."], ["Elasticity", "Price $12 → $18, Qd 200,000 → 180,000. PED?", "%ΔP = +50%, %ΔQd = −10% → PED = −0.2 (inelastic)."], ["Elasticity", "Demand is inelastic. Should a firm raise or lower price to raise revenue?", "Raise it: quantity falls proportionally less than price rises, so TR rises."], ["Elasticity", "Where on a straight-line demand curve is PED = 1?", "At the midpoint, where TR is maximised. Above it demand is elastic; below it inelastic."], ["Elasticity", "List five determinants of PED.", "Substitutes (most important), proportion of income, necessity vs luxury, habit/addiction, time period (and breadth of definition)."], ["Elasticity", "Why do governments tax goods with inelastic demand?", "Quantity falls little, so tax revenue is high (price rises proportionally more than quantity falls)."], ["Elasticity", "Define PES and give its formula.", "Responsiveness of quantity supplied to a change in price, ceteris paribus. PES = %ΔQs ÷ %ΔP."], ["Elasticity", "Price $16 → $18.40, Qs 28,000 → 28,840. PES?", "+3% ÷ +15% = 0.2 → inelastic supply."], ["Elasticity", "Five determinants of PES.", "Spare capacity, stocks/storability, mobility of factors, time period, nature of the good (primary vs manufactured)."], ["Elasticity", "Why is agricultural supply price inelastic?", "Growing seasons mean output cannot be raised quickly, and perishability limits stocks."], ["Elasticity", "A straight supply curve through the origin has PES = ?", "1 at every point (unitary)."], ["Elasticity", "Income $800 → $1,000, clothes 100 → 140. YED and type?", "+40% ÷ +25% = +1.6 → luxury (income-elastic normal good)."], ["Elasticity", "YED of +0.3 means?", "Necessity: normal good, income inelastic."], ["Elasticity", "Negative YED means?", "Inferior good: demand falls as income rises."], ["Elasticity", "How can a firm use YED?", "Plan output over the business cycle, diversify the product range (luxury to no-frills), adjust marketing in booms vs recessions."], ["Elasticity", "XED formula.", "%ΔQd of good A ÷ %ΔP of good B."], ["Elasticity", "XED = +0.5. Relationship?", "Weak substitutes."], ["Elasticity", "XED = −2. Relationship?", "Close complements."], ["Elasticity", "Main determinant of the size of XED?", "How closely the goods are related (closeness as substitutes or complements)."], ["Elasticity", "Two general limitations of any elasticity estimate.", "Based on past data that may be unreliable or out of date; ceteris paribus rarely holds in reality."], ["Surplus", "Define consumer surplus and where it sits on the diagram.", "Maximum price willing to pay minus price paid. Area below D and above the price."], ["Surplus", "Define producer surplus and where it sits.", "Price received minus minimum price acceptable (marginal cost). Area above S and below the price."], ["Surplus", "Willing to pay $1.00 and $0.90 for two drinks priced $0.75. Total CS?", "$0.25 + $0.15 = $0.40."], ["Surplus", "Costs rise and price rises. When is the loss of CS largest in absolute terms?", "When demand is price inelastic: price rises most, so buyers pay much more per unit."], ["Price mechanism", "Name the three functions of the price mechanism.", "Rationing, signalling, incentive."], ["Price mechanism", "Explain the rationing function with a diagram reference.", "Supply falls → price rises → movement up D → the good goes to those willing and able to pay most."], ["Price mechanism", "What is the transmission of preferences?", "The automatic way prices let consumers' wants be known to producers (part of the signalling function)."], ["Price mechanism", "Explain the incentive function.", "Higher prices make production more profitable, so firms expand output and hire resources: a movement up the supply curve."], ["Price mechanism", "What is derived demand? Example.", "Demand for a factor that comes from demand for the product it makes, e.g. supermarket workers."], ["Exam", "Mark split of an 8-mark part (a)?", "AO1 3, AO2 3, AO3 2."], ["Exam", "Mark split of a 12-mark part (b), and the penalty for one-sided answers?", "AO1+AO2 8, AO3 4. One-sided: capped at Level 2 for AO1/AO2 and 0 for AO3."], ["Exam", "What makes a conclusion earn AO3 marks?", "A judgement that answers the exact question, supported by reasons and conditions (\"on balance… because… unless…\")."], ["Exam", "Buffer stock: what does the agency do in a good harvest?", "Buys the surplus at the target price and stores it, preventing price falling below the target."], ["Price mechanism", "Which function of price answers \"for whom\"? Which answers \"what\"?", "Rationing answers <b>for whom</b>; signalling answers <b>what</b>; the incentive function answers <b>how much</b>."], ["Price mechanism", "Is the incentive function a shift of supply?", "No. Higher price → extension in quantity supplied: a <b>movement along S</b>. Only non-price factors shift S."], ["Price mechanism", "Why did Malaysia's 2022 capped chicken and egg prices lead to shortages?", "A maximum price below equilibrium blocks the <b>signal</b> and <b>incentive</b>, so supply doesn't rise and excess demand persists."], ["Price mechanism", "Two weaknesses of rationing by price?", "It rations by <b>ability to pay, not need</b> (essentials like rice); and with <b>low PES</b> the incentive works slowly, so high prices persist."]], "quiz": [{"s": "Demand", "q": "The price of a good falls. What happens?", "o": ["Demand increases", "Quantity demanded expands along the demand curve", "The demand curve shifts right", "Supply shifts left"], "c": 1, "e": "A change in the good's own price is a movement along D. \"Increase in demand\" means a shift."}, {"s": "Demand", "q": "Which of these shifts the demand curve for cars to the right?", "o": ["A fall in the price of cars", "A rise in the price of petrol", "A fall in the price of petrol", "A rise in the cost of steel"], "c": 2, "e": "Petrol is a complement: cheaper petrol raises demand for cars. A is a movement; B shifts D left; D shifts supply."}, {"s": "Demand", "q": "Bus tickets are an inferior good. Incomes rise. What happens to demand for bus tickets?", "o": ["It increases", "It decreases", "It stays the same", "Quantity demanded contracts along D"], "c": 1, "e": "For an inferior good, YED &lt; 0: higher income shifts demand left as people switch to cars."}, {"s": "Supply", "q": "A $2 specific tax is placed on a good. What happens to the supply curve?", "o": ["It shifts up by $2 at every quantity (parallel)", "It pivots, with the gap widening at higher prices", "It shifts down by $2", "It does not move; price rises by $2"], "c": 0, "e": "A specific tax is a fixed amount per unit, so supply shifts up in parallel. B describes an ad valorem tax."}, {"s": "Equilibrium", "q": "Qd = 50 − 5P and Qs = 2 + 3P. What is the equilibrium?", "o": ["P = $6, Q = 20", "P = $8, Q = 10", "P = $4, Q = 30", "P = $6, Q = 26"], "c": 0, "e": "50 − 5P = 2 + 3P → 8P = 48 → P = 6; Q = 50 − 30 = 20."}, {"s": "Equilibrium", "q": "Demand and supply both increase. What can be predicted with certainty?", "o": ["Price rises", "Price falls", "Quantity rises", "Quantity falls"], "c": 2, "e": "Both shifts raise quantity. Price depends on which shift is larger."}, {"s": "Equilibrium", "q": "Demand increases while supply decreases. What is certain?", "o": ["Price rises", "Price falls", "Quantity rises", "Quantity falls"], "c": 0, "e": "Both shifts push price up. Quantity depends on the relative size of the shifts."}, {"s": "PED", "q": "Price rises from $12 to $18; quantity demanded falls from 200,000 to 180,000. What is |PED|?", "o": ["0.2", "0.5", "2", "5"], "c": 0, "e": "%ΔQd = −10%, %ΔP = +50%, so PED = −0.2: inelastic."}, {"s": "PED", "q": "A firm's demand has PED of 0.4. If it raises price, what happens to total revenue?", "o": ["It rises", "It falls", "It stays the same", "It depends on supply"], "c": 0, "e": "Inelastic demand: quantity falls proportionally less than price rises, so TR rises."}, {"s": "PED", "q": "Where on a straight-line demand curve is PED equal to 1?", "o": ["At the price-axis intercept", "At the midpoint", "At the quantity-axis intercept", "Everywhere, because the slope is constant"], "c": 1, "e": "PED depends on P/Q as well as slope. It is 1 at the midpoint, where TR is maximised."}, {"s": "PED", "q": "Which tax is likely to raise the most revenue for a government?", "o": ["A tax on a good with elastic demand", "A tax on a good with inelastic demand", "A tax on a good with many close substitutes", "A tax on a luxury brand"], "c": 1, "e": "With inelastic demand quantity barely falls, so the tax base stays large."}, {"s": "YED", "q": "A good has YED of −0.5. What type of good is it?", "o": ["A luxury", "A necessity", "An inferior good", "A Giffen good necessarily"], "c": 2, "e": "Negative YED means demand falls as income rises: an inferior good. A Giffen good is a special case, not implied."}, {"s": "XED", "q": "Pencils rise in price by 30% and demand for erasers falls by 20%. What is the relationship?", "o": ["Close substitutes", "Weak substitutes", "Weak complements", "Unrelated"], "c": 2, "e": "XED = −20 ÷ 30 ≈ −0.67. Negative means complements; below 1 in size means weak."}, {"s": "PES", "q": "Which is most likely to make supply more price elastic?", "o": ["Perishable output", "Firms operating at full capacity", "Spare capacity and large stocks", "A very short time period"], "c": 2, "e": "Spare capacity and stocks let output respond quickly. The others make supply inelastic."}, {"s": "Surplus", "q": "Higher costs raise a good's price. When is the absolute loss of consumer surplus largest?", "o": ["When demand is price elastic", "When demand is price inelastic", "When supply is perfectly elastic", "When demand is perfectly elastic"], "c": 1, "e": "With inelastic demand price rises most, so existing buyers pay much more per unit."}, {"s": "Related markets", "q": "Demand for beef rises. What happens in the leather market?", "o": ["Demand for leather rises", "Supply of leather increases and its price falls", "Supply of leather decreases and its price rises", "Nothing changes"], "c": 1, "e": "Joint supply: more cattle slaughtered for beef means more leather, so leather supply shifts right."}, {"s": "Related markets", "q": "Car prices fall. Cars and petrol are complements. What happens in the petrol market?", "o": ["Petrol demand shifts right", "Petrol supply shifts right", "Petrol demand shifts left", "Movement along petrol demand"], "c": 0, "e": "More cars are bought, so demand for the complement petrol increases."}, {"s": "Pack Q9", "q": "Cod is overfished while pollock is plentiful. How might the price mechanism limit cod depletion?", "o": ["Cod price falls and pollock price rises", "Cod price rises and pollock price falls, so buyers switch", "Both prices rise", "The government fixes the cod price"], "c": 1, "e": "The rising cod price rations it and the falling pollock price encourages switching. D isn't the price mechanism."}, {"s": "Pack Q8", "q": "A disease kills many sheep. What happens in the wool market?", "o": ["Demand for wool shifts left", "Supply of wool shifts left", "Supply of wool shifts right", "Movement along the wool supply curve"], "c": 1, "e": "Fewer sheep is a non-price factor reducing supply."}, {"s": "Price mechanism", "q": "Demand for face masks rises sharply. Which shows the incentive function?", "o": ["A shift of the supply curve to the right", "A movement up the supply curve as firms expand output", "A movement down the demand curve", "A fall in the price of masks"], "c": 1, "e": "The higher price makes supplying more profitable, so quantity supplied extends along S."}]};</script>
+<script>
+(function(){
+var KEY=DECK.key, root=document.documentElement;
+function sget(k){try{return localStorage.getItem(KEY+':'+k)}catch(e){return null}}
+function sset(k,v){try{localStorage.setItem(KEY+':'+k,v)}catch(e){}}
+/* theme: dark by default, light on request */
+root.setAttribute('data-theme',sget('theme')||'dark');
+document.getElementById('themeBtn').addEventListener('click',function(){
+  var t=root.getAttribute('data-theme')==='dark'?'light':'dark';root.setAttribute('data-theme',t);sset('theme',t);});
+
+var track=document.getElementById('track'), cards=[].slice.call(track.querySelectorAll('.card'));
+var N=cards.length, cur=0, bar=document.getElementById('barFill'), cnt=document.getElementById('cnt');
+function width(){return track.clientWidth}
+function update(i){cur=i;bar.style.width=((i+1)/N*100)+'%';
+  cnt.textContent=(i+1)+' / '+N+' · '+cards[i].dataset.title;sset('pos',i);
+  document.getElementById('prevBtn').disabled=i===0;document.getElementById('nextBtn').disabled=i===N-1;}
+function go(i,smooth){i=Math.max(0,Math.min(N-1,i));
+  track.scrollTo({left:i*width(),behavior:smooth===false?'auto':'smooth'});update(i);}
+var t0;track.addEventListener('scroll',function(){clearTimeout(t0);t0=setTimeout(function(){
+  var i=Math.round(track.scrollLeft/width());if(i!==cur)update(i);},80);},{passive:true});
+window.addEventListener('resize',function(){track.scrollTo({left:cur*width(),behavior:'auto'});});
+document.getElementById('prevBtn').addEventListener('click',function(){go(cur-1)});
+document.getElementById('nextBtn').addEventListener('click',function(){go(cur+1)});
+document.addEventListener('keydown',function(e){
+  if(document.querySelector('.sheet:not([hidden])'))return;
+  if(e.key==='ArrowRight'||e.key==='PageDown'){go(cur+1);e.preventDefault();}
+  if(e.key==='ArrowLeft'||e.key==='PageUp'){go(cur-1);e.preventDefault();}});
+document.querySelectorAll('[data-goto]').forEach(function(b){b.addEventListener('click',function(){
+  var t=b.getAttribute('data-goto');for(var i=0;i<N;i++){if(cards[i].dataset.id===t){go(i);return;}}});});
+
+/* tap-to-reveal: worked-example steps */
+document.querySelectorAll('ol.steps').forEach(function(ol){
+  var li=[].slice.call(ol.children),shown=0;li.forEach(function(x){x.hidden=true});
+  var bar=document.createElement('div');bar.className='rvbar';
+  var nb=document.createElement('button');nb.className='btn pri';nb.type='button';
+  var ab=document.createElement('button');ab.className='btn';ab.type='button';ab.textContent='Show all';
+  function paint(){nb.textContent=shown<li.length?('Show step '+(shown+1)+' of '+li.length):'All steps shown';
+    nb.disabled=shown>=li.length;ab.hidden=shown>=li.length;}
+  nb.addEventListener('click',function(){if(shown<li.length){li[shown].hidden=false;shown++;paint();}});
+  ab.addEventListener('click',function(){li.forEach(function(x){x.hidden=false});shown=li.length;paint();});
+  bar.appendChild(nb);bar.appendChild(ab);ol.parentNode.insertBefore(bar,ol.nextSibling);paint();});
+/* tap-to-reveal: practice answers */
+document.querySelectorAll('.pq').forEach(function(q){
+  var a=q.querySelector('.ans');if(!a)return;a.hidden=true;
+  var b=document.createElement('button');b.className='btn';b.type='button';b.textContent='Show answer';
+  b.addEventListener('click',function(){a.hidden=!a.hidden;b.textContent=a.hidden?'Show answer':'Hide answer';});
+  q.insertBefore(b,a);});
+document.querySelectorAll('[data-revealall]').forEach(function(b){b.addEventListener('click',function(){
+  var c=b.closest('.card');c.querySelectorAll('.pq .ans').forEach(function(a){a.hidden=false});
+  c.querySelectorAll('.pq .btn').forEach(function(x){x.textContent='Hide answer'});});});
+
+/* sheets */
+function openSheet(id){document.getElementById(id).hidden=false;}
+function closeSheets(){document.querySelectorAll('.sheet').forEach(function(s){s.hidden=true});}
+document.querySelectorAll('[data-close]').forEach(function(b){b.addEventListener('click',closeSheets)});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeSheets();});
+
+/* contents */
+var toc=document.getElementById('tocList'),lastSec=null;
+cards.forEach(function(c,i){
+  var s=c.dataset.group;if(s!==lastSec){var g=document.createElement('div');g.className='tocgrp';g.textContent=s;toc.appendChild(g);lastSec=s;}
+  var b=document.createElement('button');b.className='tocitem';b.type='button';
+  b.innerHTML='<span class="no">'+(i+1)+'</span><span></span><span class="kd"></span>';
+  b.children[1].textContent=c.dataset.title;b.children[2].textContent=c.dataset.kind;
+  b.addEventListener('click',function(){closeSheets();go(i,false);});toc.appendChild(b);});
+document.getElementById('tocBtn').addEventListener('click',function(){
+  [].forEach.call(toc.querySelectorAll('.tocitem'),function(b,i){b.classList.toggle('cur',i===cur)});
+  openSheet('tocSheet');var c=toc.querySelector('.cur');if(c)c.scrollIntoView({block:'center'});});
+
+/* flashcards */
+var F=DECK.flash,topics=['All'];F.forEach(function(c){if(topics.indexOf(c[0])<0)topics.push(c[0])});topics.push('Again pile');
+var filt='All',order=[],fi=0,again={};
+var chipBox=document.getElementById('fcChips'),fc=document.getElementById('fc');
+topics.forEach(function(t){var b=document.createElement('button');b.className='chip';b.type='button';b.textContent=t;
+  b.setAttribute('aria-pressed',t===filt?'true':'false');
+  b.addEventListener('click',function(){filt=t;[].forEach.call(chipBox.children,function(x){x.setAttribute('aria-pressed',x===b?'true':'false')});build();});
+  chipBox.appendChild(b);});
+function build(){order=[];F.forEach(function(c,i){if(filt==='All'||c[0]===filt||(filt==='Again pile'&&again[i]))order.push(i)});fi=0;show();}
+function show(){fc.classList.remove('flip');var q=document.getElementById('fcQ'),a=document.getElementById('fcA');
+  if(!order.length){q.textContent=filt==='Again pile'?'Nothing in the Again pile yet.':'No cards.';a.textContent='';document.getElementById('fcN').textContent='0 cards';return;}
+  var c=F[order[fi]];q.innerHTML=c[1];a.innerHTML=c[2];
+  document.getElementById('fcT').textContent=c[0];document.getElementById('fcT2').textContent=c[0];
+  document.getElementById('fcN').textContent=(fi+1)+' / '+order.length;}
+fc.addEventListener('click',function(){fc.classList.toggle('flip')});
+document.getElementById('fcPrev').addEventListener('click',function(){if(order.length){fi=(fi-1+order.length)%order.length;show();}});
+document.getElementById('fcNext').addEventListener('click',function(){if(order.length){fi=(fi+1)%order.length;show();}});
+document.getElementById('fcShuf').addEventListener('click',function(){for(var i=order.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=order[i];order[i]=order[j];order[j]=t;}fi=0;show();});
+document.getElementById('fcAgain').addEventListener('click',function(){if(order.length){again[order[fi]]=1;fi=(fi+1)%order.length;show();}});
+document.getElementById('fcGot').addEventListener('click',function(){if(!order.length)return;delete again[order[fi]];
+  if(filt==='Again pile'){order.splice(fi,1);if(fi>=order.length)fi=0;}else fi=(fi+1)%order.length;show();});
+document.addEventListener('keydown',function(e){if(document.getElementById('fcSheet').hidden)return;
+  if(e.key===' '){fc.classList.toggle('flip');e.preventDefault();}
+  if(e.key==='ArrowRight')document.getElementById('fcNext').click();
+  if(e.key==='ArrowLeft')document.getElementById('fcPrev').click();});
+document.getElementById('fcBtn').addEventListener('click',function(){openSheet('fcSheet');});
+build();
+
+/* quiz */
+var Q=DECK.quiz,list=document.getElementById('qList'),right=0,done=0;
+function renderQ(){list.innerHTML='';right=0;done=0;paintS();
+  Q.forEach(function(it,qi){var box=document.createElement('div');box.className='mcq';
+    box.innerHTML='<div class="qh"><span>Q'+(qi+1)+'</span><span></span></div><p class="qt"></p><div class="opts"></div>';
+    box.querySelector('.qh span:last-child').textContent=it.s;box.querySelector('.qt').innerHTML=it.q;
+    var opts=box.querySelector('.opts');
+    it.o.forEach(function(t,oi){var b=document.createElement('button');b.type='button';b.className='opt';
+      b.innerHTML='<b>'+'ABCD'[oi]+'</b><span></span>';b.querySelector('span').innerHTML=t;
+      b.addEventListener('click',function(){if(box.classList.contains('done'))return;box.classList.add('done');done++;
+        var ok=oi===it.c;if(ok)right++;b.classList.add(ok?'right':'wrong');opts.children[it.c].classList.add('right');
+        var ex=document.createElement('div');ex.className='ex';
+        ex.innerHTML='<b style="color:var('+(ok?'--good':'--bad')+')">'+(ok?'Correct. ':'Answer: '+'ABCD'[it.c]+'. ')+'</b>'+it.e;box.appendChild(ex);paintS();});
+      opts.appendChild(b);});
+    list.appendChild(box);});}
+function paintS(){document.getElementById('qScore').textContent=right+' / '+done+' answered of '+Q.length;}
+document.getElementById('qReset').addEventListener('click',function(){renderQ();list.parentNode.parentNode.scrollTop=0;});
+document.getElementById('qBtn').addEventListener('click',function(){openSheet('qSheet');});
+renderQ();
+
+/* start where you left off */
+var start=parseInt(sget('pos')||'0',10);if(!(start>=0&&start<N))start=0;
+var h=(location.hash||'').slice(1);if(h){cards.forEach(function(c,i){if(c.dataset.id===h)start=i});}
+requestAnimationFrame(function(){go(start,false);});
+})();
+</script>
+
+<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(function(){});}</script>
+</body></html>

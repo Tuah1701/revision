@@ -1,0 +1,695 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
+</head><body>
+<title>Basic Economic Ideas Deck</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Econ Ch1">
+<meta name="theme-color" content="#11151C">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@500;600;700&display=swap">
+<style>
+/* Layout: one-card-per-screen swipe track (CSS scroll-snap) between a slim top bar and a bottom progress bar.
+   Each card scrolls vertically on its own; content column caps at ~680px so iPad landscape still reads like a page. */
+:root{
+  --bg:#11151C; --surface:#191E28; --surface2:#222937; --line:#2D3544;
+  --fg:#E7EAF0; --muted:#98A1B0; --accent:#F0B44A; --accent-soft:#3A2D12; --on-accent:#1B1404;
+  --teal:#5CC6BF; --teal-soft:#14302F; --good:#6FD39A; --good-soft:#15301F; --bad:#F2897F; --bad-soft:#3A1C1A;
+  --fill-a:rgba(240,180,74,.28); --fill-b:rgba(92,198,191,.26); --fill-c:rgba(242,137,127,.32);
+  --f-disp:"Bricolage Grotesque","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible","Segoe UI",system-ui,-apple-system,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){
+  --bg:#F4F5F8; --surface:#FFFFFF; --surface2:#ECEEF3; --line:#D7DBE3;
+  --fg:#171B23; --muted:#576070; --accent:#A66F07; --accent-soft:#FBEFD6; --on-accent:#FFFFFF;
+  --teal:#13807A; --teal-soft:#DDF2F0; --good:#1E7A47; --good-soft:#DDF1E5; --bad:#B23A30; --bad-soft:#F9E1DE;
+  --fill-a:rgba(214,150,30,.25); --fill-b:rgba(19,128,122,.20); --fill-c:rgba(178,58,48,.22);
+  color-scheme:light}}
+:root[data-theme="light"]{
+  --bg:#F4F5F8; --surface:#FFFFFF; --surface2:#ECEEF3; --line:#D7DBE3;
+  --fg:#171B23; --muted:#576070; --accent:#A66F07; --accent-soft:#FBEFD6; --on-accent:#FFFFFF;
+  --teal:#13807A; --teal-soft:#DDF2F0; --good:#1E7A47; --good-soft:#DDF1E5; --bad:#B23A30; --bad-soft:#F9E1DE;
+  --fill-a:rgba(214,150,30,.25); --fill-b:rgba(19,128,122,.20); --fill-c:rgba(178,58,48,.22);
+  color-scheme:light}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%;background:var(--bg);overscroll-behavior:none}
+body{margin:0;color:var(--fg);font:17px/1.55 var(--f-body);display:grid;grid-template-rows:auto 1fr auto;overflow:hidden;-webkit-text-size-adjust:100%}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* top bar */
+.top{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--line);background:var(--bg);min-width:0}
+.ib{all:unset;cursor:pointer;display:inline-grid;place-items:center;min-width:44px;height:44px;border-radius:10px;color:var(--fg)}
+.ib:hover{background:var(--surface2)}
+.ib svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.ttl{flex:1;min-width:0;line-height:1.15}
+.ttl b{display:block;font:700 15px/1.2 var(--f-disp);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ttl small{display:block;font:500 11.5px/1.3 var(--f-mono);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mode{all:unset;cursor:pointer;height:36px;padding:0 12px;border-radius:999px;border:1px solid var(--line);font:600 13.5px/36px var(--f-body);white-space:nowrap}
+.mode:hover{border-color:var(--accent)}
+@media (max-width:430px){.mode .lg{display:none}.mode{padding:0 10px}}
+
+/* track */
+.track{display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;min-height:0;overscroll-behavior-x:contain}
+.track::-webkit-scrollbar{display:none}
+.card{flex:0 0 100%;width:100%;scroll-snap-align:start;scroll-snap-stop:always;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-inline:16px}
+.ci{max-width:680px;margin:0 auto;padding-block:20px 48px;min-width:0}
+.ch{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px}
+.sec{font:600 11.5px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.kind{font:600 10.5px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:5px 8px}
+h1{font:800 clamp(34px,9vw,52px)/1.02 var(--f-disp);letter-spacing:-.02em;margin:.2em 0 .3em;text-wrap:balance}
+h2{font:750 clamp(25px,6.4vw,32px)/1.12 var(--f-disp);letter-spacing:-.01em;margin:0 0 .5em;text-wrap:balance}
+h3{font:700 19px/1.25 var(--f-disp);margin:1.4em 0 .45em;text-wrap:balance}
+p{margin:.5em 0} ul,ol{margin:.4em 0 .8em;padding-left:1.25em} li{margin:.28em 0}
+b,strong{font-weight:700}
+.lede{color:var(--muted);font-size:17.5px}
+.mono{font-family:var(--f-mono);font-size:.88em}
+.def{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 15px;margin:12px 0}
+.def .lab{display:flex;justify-content:space-between;gap:8px;font:600 11px/1.3 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+.def .lab i{font-style:normal;color:var(--muted)}
+.def p{margin:.2em 0}
+.note{border-radius:12px;padding:11px 14px;margin:12px 0;font-size:16px}
+.note>b:first-child{display:block;font:600 11px/1.3 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px}
+.note.trap{background:var(--bad-soft)} .note.trap>b:first-child{color:var(--bad)}
+.note.tip{background:var(--good-soft)} .note.tip>b:first-child{color:var(--good)}
+.note.link{background:var(--teal-soft)} .note.link>b:first-child{color:var(--teal)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:10px;margin:12px 0}
+.two>div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:11px 14px;min-width:0}
+.two h4{font:700 12px/1.3 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin:0 0 4px}
+.two h4.t{color:var(--teal)} .two h4.g{color:var(--good)} .two h4.r{color:var(--bad)}
+.two p,.two ul{margin:.2em 0;font-size:16px}
+.chain{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0;font:600 14.5px/1.3 var(--f-body)}
+.chain span{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 9px}
+.chain i{font-style:normal;color:var(--accent);font-weight:800}
+.formula{font:600 15px/1.5 var(--f-mono);background:var(--surface);border:1px dashed var(--muted);border-radius:10px;padding:9px 12px;margin:10px 0;overflow-x:auto}
+.tw{overflow-x:auto;margin:12px 0;border:1px solid var(--line);border-radius:12px;overscroll-behavior-x:contain}
+table{border-collapse:collapse;width:100%;font-size:15px;line-height:1.4;background:var(--surface)}
+.tw.wide table{min-width:560px}
+th,td{padding:8px 10px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+tr:last-child td{border-bottom:0}
+th{font:600 10.5px/1.3 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--surface2)}
+td.n,th.n{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-size:14px}
+td.k{font-weight:700}
+.tag{display:inline-block;font:600 10.5px/1 var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:4px 7px;border-radius:6px;margin-right:6px;vertical-align:2px}
+
+/* diagrams */
+figure.dg{margin:14px 0;display:grid;gap:10px}
+figure.dg.multi{grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr))}
+.pnl{min-width:0}
+.ptitle{font:600 11px/1.3 var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+figure.dg svg{width:100%;height:auto;display:block;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+figcaption{font-size:14.5px;color:var(--muted);grid-column:1/-1}
+svg text{font-family:var(--f-body);fill:var(--fg)}
+svg .ax{stroke:var(--fg);stroke-width:1.5;fill:none}
+svg .k{fill:none;stroke-width:2.6;stroke-linecap:round}
+svg .d{stroke:var(--accent)} svg .s{stroke:var(--teal)} svg .o{stroke:var(--muted);stroke-dasharray:6 4;stroke-width:2}
+svg .b{stroke:var(--bad)} svg .gr{stroke:var(--good)}
+svg .g{stroke:var(--muted);stroke-width:1;stroke-dasharray:3 3;fill:none}
+svg .ar{stroke:var(--fg);stroke-width:1.8} svg .arh{fill:var(--fg)}
+svg .pt{fill:var(--fg)} svg .pto{fill:var(--surface);stroke:var(--fg);stroke-width:1.6}
+svg .fa{fill:var(--fill-a)} svg .fb{fill:var(--fill-b)} svg .fc{fill:var(--fill-c)}
+svg .t-ax{font-size:12px;font-weight:700;fill:var(--muted)}
+svg .t-axl{font-size:12px;font-weight:700;fill:var(--fg)}
+svg .t-pt{font-size:13px;font-weight:700}
+svg .t-sm{font-size:11.5px;fill:var(--muted)}
+svg .t-d{fill:var(--accent);font-size:12.5px;font-weight:700} svg .t-s{fill:var(--teal);font-size:12.5px;font-weight:700}
+svg .t-o{fill:var(--muted);font-size:12.5px;font-weight:700} svg .t-b{fill:var(--bad);font-size:12.5px;font-weight:700}
+svg .t-gr{fill:var(--good);font-size:12.5px;font-weight:700}
+
+/* reveal: worked-example steps and practice answers */
+ol.steps{list-style:none;padding:0;margin:12px 0;counter-reset:st;display:grid;gap:8px}
+ol.steps>li{counter-increment:st;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 14px 10px 46px;position:relative;margin:0}
+ol.steps>li::before{content:counter(st);position:absolute;left:12px;top:10px;width:24px;height:24px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font:700 13px/24px var(--f-mono);text-align:center}
+.rvbar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.btn{all:unset;cursor:pointer;min-height:44px;padding:0 16px;border-radius:12px;display:inline-flex;align-items:center;gap:8px;font:700 15px/1 var(--f-body);border:1px solid var(--line);background:var(--surface)}
+.btn.pri{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.btn[disabled]{opacity:.45;cursor:default}
+.btn.good{border-color:var(--good);color:var(--good)} .btn.bad{border-color:var(--bad);color:var(--bad)}
+.pq{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:12px 0}
+.pq .qh{display:flex;justify-content:space-between;gap:8px;font:600 11px/1.3 var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.pq .qh .mk{color:var(--accent)}
+.pq .qt{margin:.35em 0 .5em}
+.pq .ans{border-top:1px dashed var(--line);margin-top:8px;padding-top:8px}
+.pq .ans>b:first-child{font:600 11px/1 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--good);margin-right:6px}
+.swipehint{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:14.5px;margin-top:22px}
+.toc-mini{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:8px;margin:14px 0}
+.toc-mini button{all:unset;cursor:pointer;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.toc-mini button:hover{border-color:var(--accent)}
+.toc-mini b{display:block;font:800 20px/1 var(--f-disp);color:var(--accent);margin-bottom:4px}
+.toc-mini span{font-size:14.5px;color:var(--muted)}
+.cover-k{font:800 clamp(80px,26vw,150px)/.85 var(--f-disp);color:var(--accent);letter-spacing:-.04em;margin:8px 0 0}
+.stat{display:flex;gap:18px;flex-wrap:wrap;margin:16px 0;font:600 14px/1.3 var(--f-mono);color:var(--muted)}
+.stat b{display:block;font:800 26px/1 var(--f-disp);color:var(--fg)}
+a{color:var(--accent)}
+
+/* bottom bar */
+.bot{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;padding:8px 12px;border-top:1px solid var(--line);background:var(--bg)}
+.prog{display:grid;gap:5px;min-width:0}
+.bar{height:4px;background:var(--surface2);border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+.cnt{font:600 12.5px/1 var(--f-mono);color:var(--muted);text-align:center;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* sheets (contents, flashcards, quiz) */
+.sheet{position:fixed;inset:0;z-index:20;background:var(--bg);display:grid;grid-template-rows:auto 1fr;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.sheet .top{border-bottom:1px solid var(--line)}
+.sbody{overflow-y:auto;padding-inline:16px;-webkit-overflow-scrolling:touch}
+.sbody>.in{max-width:680px;margin:0 auto;padding-block:14px 40px}
+.tocgrp{font:600 11px/1.3 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--accent);margin:18px 0 6px}
+.tocitem{all:unset;cursor:pointer;display:grid;grid-template-columns:32px 1fr auto;gap:8px;align-items:baseline;width:100%;box-sizing:border-box;padding:10px 8px;border-radius:10px}
+.tocitem:hover,.tocitem.cur{background:var(--surface)}
+.tocitem .no{font:600 12px/1 var(--f-mono);color:var(--muted)}
+.tocitem .kd{font:600 10px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 12px}
+.chip{all:unset;cursor:pointer;min-height:34px;padding:0 12px;border-radius:999px;border:1px solid var(--line);font:600 13.5px/34px var(--f-body)}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.fc{perspective:1200px;height:min(56vh,380px);cursor:pointer;margin:6px 0 12px}
+.fc-in{position:relative;width:100%;height:100%;transition:transform .45s;transform-style:preserve-3d}
+.fc.flip .fc-in{transform:rotateY(180deg)}
+.fc-f{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:18px;border:1px solid var(--line);background:var(--surface);padding:42px 22px 30px;display:flex;flex-direction:column;justify-content:center;overflow:auto;font-size:19px;line-height:1.45}
+.fc-f.back{transform:rotateY(180deg);background:var(--accent-soft);font-size:17.5px}
+.fc-f .ft{position:absolute;top:14px;left:18px;right:18px;display:flex;justify-content:space-between;font:600 11px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.fc-f.front .q{font:700 21px/1.3 var(--f-disp)}
+.fcrow{display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between}
+.mcq{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}
+.mcq .qh{display:flex;justify-content:space-between;gap:8px;font:600 11px/1.3 var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.mcq .qt{margin:.4em 0 .7em;font-weight:700}
+.opts{display:grid;gap:6px}
+.opt{all:unset;cursor:pointer;display:grid;grid-template-columns:26px 1fr;gap:8px;align-items:baseline;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font-size:16px;line-height:1.4}
+.opt b{font:700 13px/1 var(--f-mono);color:var(--accent)}
+.opt.right{background:var(--good-soft);border-color:var(--good)} .opt.wrong{background:var(--bad-soft);border-color:var(--bad)}
+.mcq.done .opt{cursor:default}
+.mcq .ex{margin-top:10px;font-size:15.5px;border-top:1px dashed var(--line);padding-top:10px}
+.score{position:sticky;top:0;z-index:2;background:var(--bg);padding-block:10px;display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px solid var(--line);font:600 14px var(--f-body)}
+.score .num{font:700 16px var(--f-mono);color:var(--accent);font-variant-numeric:tabular-nums}
+mjx-container{max-width:100%;overflow-x:auto;overflow-y:hidden}
+@media (prefers-reduced-motion:reduce){.fc-in,.bar i{transition:none}.track{scroll-behavior:auto}}
+</style>
+
+<header class="top">
+  <a class="ib" href="index.html" aria-label="Revision Hub"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7M6 9.5V20h12V9.5"/></svg></a><button class="ib" id="tocBtn" type="button" aria-label="Contents"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/></svg></button>
+  <div class="ttl"><b>Basic economic ideas</b><small>9708 · AS Chapter 1</small></div>
+  <button class="mode" id="fcBtn" type="button">Cards<span class="lg"> · 53</span></button>
+  <button class="mode" id="qBtn" type="button">Quiz<span class="lg"> · 22</span></button>
+  <button class="ib" id="themeBtn" type="button" aria-label="Switch light or dark"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4L6 18M18 6l1.4-1.4"/></svg></button>
+</header>
+<main class="track" id="track"><section class="card" data-id="cover" data-group="Start" data-title="Basic economic ideas" data-kind="Cover"><div class="ci"><div class="ch"><span class="sec">Start</span><span class="kind">Cover</span></div>
+<p class="sec" style="margin:0">CAIE 9708 · AS Level · Chapter 1</p>
+<p class="cover-k">Ch1</p>
+<h1>Basic economic ideas &amp; resource allocation</h1>
+<p class="lede">The vocabulary the rest of the course is written in. Built from Puan Zaihan's 15 Chapter 1 handouts.</p>
+<div class="stat"><div><b>6</b>syllabus sections</div><div><b>4</b>worked examples</div><div><b>53</b>flashcards</div><div><b>22</b>quiz questions</div></div>
+<p class="swipehint">Swipe left to start. Tap ☰ for contents.</p>
+<p><a href="index.html">← Back to Revision Hub</a></p></div></section><section class="card" data-id="big" data-group="Start" data-title="The big picture" data-kind="Overview"><div class="ci"><div class="ch"><span class="sec">Overview</span><span class="kind">Overview</span></div>
+<h2>One idea runs through the whole chapter</h2>
+<div class="chain"><span>Scarcity</span><i>→</i><span>Choice</span><i>→</i><span>Opportunity cost</span><i>→</i><span>What · How · For whom?</span><i>→</i><span>Economic system</span><i>→</i><span>Goods the market gets wrong</span></div>
+<p>Resources are scarce, so every agent must choose. Every choice has an opportunity cost. Society must decide what, how and for whom to produce, through a market, planned or mixed system. The market fails for public, merit and demerit goods. The <b>PPC</b> shows the first four links at once.</p>
+<div class="toc-mini">
+<button type="button" data-goto="s11"><b>1.1</b><span>Scarcity, choice, opportunity cost</span></button>
+<button type="button" data-goto="s12a"><b>1.2</b><span>Economic methodology</span></button>
+<button type="button" data-goto="s13a"><b>1.3</b><span>Factors of production</span></button>
+<button type="button" data-goto="s14a"><b>1.4</b><span>Economic systems</span></button>
+<button type="button" data-goto="s15a"><b>1.5</b><span>Production possibility curves</span></button>
+<button type="button" data-goto="s16a"><b>1.6</b><span>Classification of goods</span></button>
+</div></div></section><section class="card" data-id="exams" data-group="Start" data-title="Where it&#x27;s tested" data-kind="Overview"><div class="ci"><div class="ch"><span class="sec">Overview</span><span class="kind">Overview</span></div>
+<h2>Where Chapter 1 shows up in your exams</h2>
+<div class="tw"><table><tr><th>Paper</th><th>How Chapter 1 is tested</th></tr>
+<tr><td class="k">Paper 1<br><span class="mono">30 MCQs</span></td><td>PPC reading (which point, which shift, opportunity cost as a distance on an axis), "which is normative?", "which factor?", features of market and planned economies.</td></tr>
+<tr><td class="k">Paper 2 A<br><span class="mono">Data response · 20</span></td><td>Short parts like "explain the contribution of enterprise…" [4] or "discuss whether government intervention in a mixed economy…" [6], set in a real country.</td></tr>
+<tr><td class="k">Paper 2 B<br><span class="mono">Essay · 8 + 12</span></td><td>(a) explain with a diagram, then "consider" a claim. (b) "assess" a big claim, e.g. is the free market always desirable?</td></tr></table></div>
+<div class="note tip"><b>Study route</b>Read a section's cards, flip that section's flashcards (Cards → filter), then do the quiz. Plan your own essay before reading any model answer.</div></div></section><section class="card" data-id="s11" data-group="1.1 Scarcity &amp; choice" data-title="Scarcity &amp; opportunity cost" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">1.1 · Syllabus 1.1.1–1.1.3</span><span class="kind">Concept</span></div>
+<h2>Scarcity, choice and opportunity cost</h2>
+<div class="def"><span class="lab">Definition · Scarcity <i>1.1.1</i></span><p>A situation where there are insufficient resources to satisfy all the needs and wants of people. Resources are finite; wants are unlimited.</p></div>
+<ul><li>Applies to <b>every agent</b>: individuals, firms, governments, international agencies.</li>
+<li><b>Needs</b> are essentials (food, shelter, clothing). <b>Wants</b> are less important desires (a new TV).</li>
+<li>Scarcity is <b>relative</b>, not a shortage. Even rich countries face it because wants keep growing.</li></ul>
+<div class="def"><span class="lab">Definition · Opportunity cost <i>1.1.3</i></span><p>The benefit forgone from the <b>next best alternative</b> when a choice is made. One alternative, not the sum of all of them.</p></div>
+<div class="tw"><table><tr><th>Agent</th><th>Choice</th><th>Opportunity cost</th></tr>
+<tr><td class="k">Student</td><td>Movie, homework or friends; picks movie, homework 2nd</td><td>The homework</td></tr>
+<tr><td class="k">Government</td><td>$10m: hospital (1st) or university (2nd)</td><td>The university</td></tr>
+<tr><td class="k">Firm</td><td>New IT system or new factory; picks IT</td><td>The factory</td></tr></table></div>
+<div class="note trap"><b>Exam trap</b>"The opportunity cost of the movie is the homework <i>and</i> friends" is wrong: only the next best counts. And opportunity cost is not the money price: a free concert ticket still costs your time.</div></div></section><section class="card" data-id="s11b" data-group="1.1 Scarcity &amp; choice" data-title="The three questions" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">1.1 · Syllabus 1.1.4</span><span class="kind">Concept</span></div>
+<h2>The three basic questions of resource allocation</h2>
+<div class="two">
+<div><h4>What to produce?</h4><p>Which goods and how many. Consumer goods (give utility directly: phones, curry) vs capital goods (make other goods: machines, factories). Should Bata Malaysia make sports shoes, casual shoes or sandals?</p></div>
+<div><h4>How to produce?</h4><p>Which mix of factors. <b>Labour-intensive</b>: high labour relative to capital (hand-stitched shoes). <b>Capital-intensive</b>: high capital relative to labour (machine-made). Firms pick the cheapest efficient method.</p></div>
+<div><h4>For whom to produce?</h4><p>Who gets the output, which decides how equal society is. Market: whoever has purchasing power. Planned: whoever the state decides.</p></div>
+</div>
+<div class="note link"><b>Links to 1.4</b>The answers depend on the economic system: the price mechanism (market), a central planning authority (command), or both (mixed).</div></div></section><section class="card" data-id="s12a" data-group="1.2 Methodology" data-title="Economics as a social science" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">1.2 · Syllabus 1.2.1</span><span class="kind">Concept</span></div>
+<h2>How economists think</h2>
+<ul><li><b>Social</b>: it studies human behaviour and how society works.</li>
+<li><b>Science</b>: observe behaviour, form a theory, test it.</li>
+<li>A theory is usually expressed as a <b>model</b>: a simplified representation of reality. The PPC and demand–supply diagram are both models.</li></ul>
+<div class="note tip"><b>Evaluation hook</b>Economists can't run controlled experiments on whole economies and people don't always behave predictably, so predictions are less certain than in natural sciences. That's why assumptions like ceteris paribus are needed.</div>
+<div class="two">
+<div><h4>Micro · mikros, small</h4><p>Individual markets and decision-makers: households, firms, one labour market. Demand for durians; demand for nurses.</p></div>
+<div><h4 class="t">Macro · makros, large</h4><p>The whole economy via aggregates: AD, national output, inflation, unemployment, growth, trade.</p></div>
+</div>
+<p>The line is blurred: a rise in demand for cars (micro) can change a country's imports and exports (macro).</p></div></section><section class="card" data-id="s12b" data-group="1.2 Methodology" data-title="Positive vs normative" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">1.2 · Syllabus 1.2.2</span><span class="kind">Concept</span></div>
+<h2>Positive vs normative statements</h2>
+<div class="def"><span class="lab">Positive · fact-based</span><p>Objective; can be tested, verified or refuted by evidence. May be true or false. Often cause-and-effect. <i>"Malaysia's population in 2019 was over 30 million."</i></p></div>
+<div class="def"><span class="lab">Normative · value judgement</span><p>Subjective opinion about good/bad, fair/unfair. Cannot be tested. Often contains <b>should, ought, fair, better</b>. <i>"The government should spend more on education."</i></p></div>
+<div class="note trap"><b>Exam traps</b>
+(1) A positive statement can be false and still be positive. (2) A forecast is positive. (3) "If firms raise prices, profits will rise" is positive. (4) Questions too: "What is the impact of removing petrol subsidies?" is positive; "How <i>should</i> the government remove subsidies?" is normative.</div>
+<div class="note tip"><b>In essays</b>When a question asks whether something is "desirable" or "should" happen, say the answer partly depends on a value judgement about equity vs efficiency. That is AO3.</div></div></section><section class="card" data-id="s12c" data-group="1.2 Methodology" data-title="Ceteris paribus &amp; time" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">1.2 · Syllabus 1.2.3–1.2.4</span><span class="kind">Concept</span></div>
+<h2>Ceteris paribus and time periods</h2>
+<div class="def"><span class="lab">Definition · Ceteris paribus <i>Latin</i></span><p>"All other things remaining equal." The effect of one variable is considered in isolation while every other influence is held constant.</p></div>
+<p>It isolates one cause, e.g. a price change's effect on quantity demanded with income, tastes and other prices unchanged. In reality many things change at once: a standard limitation of any model.</p>
+<div class="tw"><table><tr><th>Period</th><th>Definition</th><th>How output rises</th></tr>
+<tr><td class="k">Short run</td><td>At least one factor fixed (usually capital or land)</td><td>Only by adding the variable factor, typically labour</td></tr>
+<tr><td class="k">Long run</td><td>All factors variable; technology constant</td><td>Change quantity and quality of all inputs</td></tr>
+<tr><td class="k">Very long run</td><td>Technology, regulation and social attitudes also change</td><td>Technical progress; policy change; social change (WW1 brought more women into work)</td></tr></table></div>
+<div class="note tip"><b>Most reusable evaluation</b>Short run vs long run. In Chapter 1: a PPC shift needs the long run; a transition economy suffers in the short run but may gain later; specialisation raises output now but can de-skill workers.</div></div></section><section class="card" data-id="s13a" data-group="1.3 Factors of production" data-title="Four factors and rewards" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">1.3 · Syllabus 1.3.1</span><span class="kind">Concept</span></div>
+<h2>Factors of production</h2>
+<div class="tw wide"><table><tr><th>Factor</th><th>Definition</th><th>Examples</th><th>Reward</th></tr>
+<tr><td class="k">Land</td><td>Natural resources, "gifts of nature", on and under the earth</td><td>Farmland, forests, oil, the flow of a river</td><td class="k">Rent</td></tr>
+<tr><td class="k">Labour</td><td>Physical and mental effort of workers, incl. skills</td><td>Factory workers, teachers, accountants</td><td class="k">Wages</td></tr>
+<tr><td class="k">Capital</td><td>Man-made physical resources used to produce other goods. <b>Not money.</b></td><td>Machinery, factories, IT, roads, pipelines</td><td class="k">Interest</td></tr>
+<tr><td class="k">Enterprise</td><td>The organising, risk-taking factor; a specialised form of labour</td><td>A founder starting a business with her savings</td><td class="k">Profit</td></tr></table></div>
+<div class="note trap"><b>Exam traps</b>$10,000 in a savings account is not capital (it's money). A robot is capital, not labour. A company accountant is labour, not enterprise. Training or changing industry is still labour; setting up a business is enterprise.</div></div></section><section class="card" data-id="s13b" data-group="1.3 Factors of production" data-title="Entrepreneur &amp; capital types" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">1.3 · Syllabus 1.3.2–1.3.5</span><span class="kind">Concept</span></div>
+<h2>The entrepreneur, and two kinds of capital</h2>
+<div class="two">
+<div><h4>1 · Organises</h4><p>Decides how to combine land, labour and capital to raise efficiency and output: the "how to produce" question at firm level.</p></div>
+<div><h4>2 · Bears risk</h4><p>Invests own funds under uncertainty. Risk-taking separates the entrepreneur from other workers; profit is the reward.</p></div>
+</div>
+<p>Enterprise drives innovation, jobs and growth, so an "enterprise culture" (start-up grants, easier regulation) shifts the PPC out. In Malaysia: SME and start-up support via MDEC and Cradle.</p>
+<div class="def"><span class="lab">Physical capital <i>1.3.2</i></span><p>Man-made factors: machinery, buildings, infrastructure. Often the main source of growth in low- and lower-middle-income countries.</p></div>
+<div class="def"><span class="lab">Human capital</span><p>Skills, knowledge and experience of the labour force, built through education and training.</p></div>
+<div class="note link"><b>Growth, two ways</b>Both raise labour productivity, so both shift the PPC outward. Human capital links to merit goods (education) in 1.6.</div></div></section><section class="card" data-id="s13c" data-group="1.3 Factors of production" data-title="Division of labour" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">1.3 · Syllabus 1.3.4</span><span class="kind">Concept</span></div>
+<h2>Specialisation and the division of labour</h2>
+<div class="def"><span class="lab">Definition · Specialisation</span><p>Individuals, firms, regions and economies concentrate on producing the goods and services where they have an advantage over others.</p></div>
+<p>By firm (tyre makers), by region (semiconductors around Penang), by country (Brazil and coffee), by individual = <b>division of labour</b>.</p>
+<div class="def"><span class="lab">Definition · Division of labour</span><p>Production is split into many small tasks and each worker specialises in one task.</p></div>
+<p><b>Adam Smith's pin factory (1776):</b> one worker doing every step makes about 1 pin a day; split into 18 operations, output rose to about <b>5,000 pins per worker per day</b>.</p>
+<div class="two">
+<div><h4 class="g">Advantages</h4><ul><li>Workers do what they're best at → higher productivity</li><li>Training in one task only → lower training costs</li><li>No time lost switching tasks</li><li>Production lines and machinery → lower average costs</li></ul></div>
+<div><h4 class="r">Disadvantages</h4><ul><li>Monotony can reduce productivity</li><li>Narrow skills if made redundant</li><li>One group's strike can halt the line</li><li>Identical, standardised products</li></ul></div>
+</div></div></section><section class="card" data-id="s14a" data-group="1.4 Economic systems" data-title="Three systems compared" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">1.4 · Syllabus 1.4.1</span><span class="kind">Concept</span></div>
+<h2>Resource allocation in different systems</h2>
+<div class="def"><span class="lab">Definition · Economic system</span><p>The way an economy allocates scarce resources to answer what, how and for whom to produce.</p></div>
+<div class="tw wide"><table><tr><th></th><th>Market</th><th>Planned</th><th>Mixed</th></tr>
+<tr><td class="k">Allocated by</td><td>Price mechanism, the "invisible hand"</td><td>Central planning authority</td><td>Both</td></tr>
+<tr><td class="k">Ownership</td><td>Private, protected by law</td><td>State owns all but labour</td><td>Private and state</td></tr>
+<tr><td class="k">Motivation</td><td>Self-interest: utility, profit</td><td>Common good</td><td>Both, by sector</td></tr>
+<tr><td class="k">Decisions</td><td>Decentralised; competition</td><td>Centralised; prices fixed</td><td>Choice in private sector</td></tr>
+<tr><td class="k">Examples</td><td>None pure; Singapore, Hong Kong closest</td><td>North Korea, Cuba</td><td>Every real economy, incl. Malaysia</td></tr></table></div>
+<p class="lede" style="font-size:14.5px">Swipe the table sideways on a phone.</p></div></section><section class="card" data-id="s14b" data-group="1.4 Economic systems" data-title="How each answers the 3 questions" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">1.4 · Syllabus 1.4.1</span><span class="kind">Concept</span></div>
+<h2>How each system answers the three questions</h2>
+<div class="tw wide"><table><tr><th></th><th>Market</th><th>Planned</th><th>Mixed</th></tr>
+<tr><td class="k">What?</td><td>Consumer demand: <b>consumer sovereignty</b></td><td>Planners, using statistics and national priorities</td><td>Mostly demand, plus public and merit goods</td></tr>
+<tr><td class="k">How?</td><td>Cheapest method: capital-intensive where labour is dear (UK), labour-intensive where cheap (India)</td><td>State chooses on social welfare, often labour-intensive for full employment</td><td>Firms minimise cost; government regulates pollution and waste</td></tr>
+<tr><td class="k">For whom?</td><td>Those with purchasing power</td><td>State distributes evenly: fixed prices and rationing</td><td>Income for private goods; redistribution via taxes and welfare</td></tr></table></div></div></section><section class="card" data-id="s14c" data-group="1.4 Economic systems" data-title="Market vs planned: pros &amp; cons" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">1.4 · Syllabus 1.4.1–1.4.2</span><span class="kind">Concept</span></div>
+<h2>Market vs planned economy</h2>
+<h3>Market economy</h3>
+<div class="two">
+<div><h4 class="g">Advantages</h4><ul><li><b>Efficiency</b>: profit motive cuts waste, drives R&amp;D</li><li><b>Consumer sovereignty</b></li><li>No allocating bureaucracy</li><li>More choice, increased by trade</li><li>Economic and political freedom</li></ul></div>
+<div><h4 class="r">Disadvantages (each a market failure)</h4><ul><li>Negative externalities (pollution, deforestation)</li><li>Monopoly power</li><li>Public goods not provided</li><li>Merit goods under-provided</li><li>Inequality: the rich have more "votes"</li><li>Instability: no full-employment guarantee</li></ul></div>
+</div>
+<h3>Planned economy</h3>
+<div class="two">
+<div><h4 class="g">Advantages</h4><ul><li>More equal distribution; minimum living standard</li><li>No private monopoly exploitation</li><li>Stability: low unemployment</li><li>More public and merit goods</li></ul></div>
+<div><h4 class="r">Disadvantages</h4><ul><li>No economic freedom</li><li>Inefficiency, little innovation, weak incentives</li><li>Bureaucracy and corruption</li><li>Planning errors without prices → shortages and surpluses</li></ul></div>
+</div></div></section><section class="card" data-id="s14d" data-group="1.4 Economic systems" data-title="Mixed economy" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">1.4 · Syllabus 1.4.2</span><span class="kind">Concept</span></div>
+<h2>Mixed economy</h2>
+<div class="def"><span class="lab">Definition · Mixed economy</span><p>Resources are allocated partly by the price mechanism in the <b>private sector</b> and partly by government planning in the <b>public sector</b>.</p></div>
+<p>All real economies are mixed; they differ in the degree of intervention.</p>
+<h3>What government does</h3>
+<ul><li>Protects property rights and contracts; keeps markets competitive</li><li>Provides public goods (defence, street lights)</li><li>Corrects information failure: encourages merit goods, discourages demerit goods (taxes, subsidies, information, regulation, direct provision)</li><li>Deals with externalities; redistributes income; stabilises the economy</li></ul>
+<div class="two">
+<div><h4 class="g">Advantages</h4><p>Market efficiency plus correction of market failure; less inequality; variety of private, public and merit goods; more stability.</p></div>
+<div><h4 class="r">Disadvantages</h4><p>Fear of nationalisation deters investment; higher taxes cut incentives; corruption and rent-seeking; <b>government failure</b>.</p></div>
+</div>
+<div class="note link"><b>Malaysian application</b>Private firms dominate manufacturing and services; the state controls strategic firms (Petronas, TNB, GLCs); public clinics and schools; price controls and subsidies. Targeted diesel (2024) and RON95 (2025) subsidies shift the balance back towards the price mechanism while protecting lower-income households.</div></div></section><section class="card" data-id="s14e" data-group="1.4 Economic systems" data-title="Transition economies" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">1.4 · Syllabus 1.4.2</span><span class="kind">Concept</span></div>
+<h2>Transition economies</h2>
+<div class="def"><span class="lab">Definition · Transition economy</span><p>An economy moving from central planning to a market-oriented system: Russia and Central/Eastern Europe after 1991, China from 1978, Vietnam (Đổi Mới) from 1986.</p></div>
+<div class="two">
+<div><h4 class="t">The process</h4><ul><li>Privatise; allow new firms and FDI</li><li>Liberalise trade (Poland, Russia, Estonia abolished tariffs in 1992)</li><li>Abolish planning; free prices</li><li>Build banks, a stock exchange</li><li>Enforce private property law</li></ul></div>
+<div><h4 class="r">Difficulties</h4><ul><li>Sharp fall in GDP</li><li>Lack of entrepreneurial skill</li><li>High unemployment (inside the PPC)</li><li>High inflation as prices are freed</li><li>Unfair privatisation, inequality</li><li>Less welfare; trade deficits</li></ul></div>
+</div>
+<div class="note tip"><b>Evaluation</b>Speed matters: "shock therapy" brings short-run unemployment and inflation but can raise long-run efficiency; China's gradual approach avoided Russia's deep fall in output.</div>
+<div class="note trap"><b>Handout correction</b>Economic System Part 2 says land and capital in a market economy are "predominantly owned by the public sector". It should read <b>private</b> sector. Check with Puan Zaihan.</div></div></section><section class="card" data-id="s15a" data-group="1.5 PPC" data-title="What a PPC shows" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">1.5 · Syllabus 1.5.1</span><span class="kind">Concept</span></div>
+<h2>Production possibility curves</h2>
+<div class="def"><span class="lab">Definition · PPC <i>1.5.1</i></span><p>A curve showing the maximum combinations of two goods an economy can produce when all resources are fully and efficiently employed, given the state of technology.</p></div>
+<p><b>Four assumptions:</b> full employment · fixed resources · constant technology · two goods only.</p>
+<figure class="dg"><div class="pnl"><svg viewBox="0 0 320 250" role="img" aria-label="PPC with points A to F on the curve, U inside and H outside"><defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0,0 L10,5 L0,10 z"/></marker></defs><path class="k d" d="M46.0,50.6 L51.5,50.7 L57.0,50.8 L62.5,51.1 L68.0,51.4 L73.5,51.9 L79.0,52.4 L84.5,53.1 L90.0,53.9 L95.5,54.8 L101.0,55.8 L106.5,56.9 L112.0,58.1 L117.6,59.5 L123.1,60.9 L128.6,62.5 L134.1,64.2 L139.6,66.1 L145.1,68.1 L150.6,70.2 L156.1,72.5 L161.6,74.9 L167.1,77.5 L172.6,80.3 L178.1,83.3 L183.6,86.4 L189.1,89.8 L194.6,93.4 L200.1,97.3 L205.6,101.5 L211.1,105.9 L216.6,110.7 L222.1,116.0 L227.6,121.7 L233.1,127.9 L238.6,134.9 L244.1,142.8 L249.6,151.9 L255.2,163.0 L260.7,177.7 L266.2,214.0"/><text class="t-d" x="253.4" y="130.4" text-anchor="start">PPC</text><circle class="pt" cx="46.0" cy="50.6" r="3.6"/><text class="t-pt" x="53.0" y="44.6" text-anchor="start">A</text><circle class="pt" cx="112.6" cy="58.2" r="3.6"/><text class="t-pt" x="119.6" y="52.2" text-anchor="start">B</text><circle class="pt" cx="158.6" cy="73.6" r="3.6"/><text class="t-pt" x="165.6" y="67.6" text-anchor="start">C</text><circle class="pt" cx="194.5" cy="93.4" r="3.6"/><text class="t-pt" x="201.5" y="87.4" text-anchor="start">D</text><circle class="pt" cx="230.3" cy="124.6" r="3.6"/><text class="t-pt" x="237.3" y="118.6" text-anchor="start">E</text><circle class="pt" cx="266.2" cy="214.0" r="3.6"/><text class="t-pt" x="258.2" y="206.0" text-anchor="end">F</text><circle class="pto" cx="127.9" cy="145.6" r="3.6"/><text class="t-pt" x="133.9" y="139.6" text-anchor="start">U</text><circle class="pto" cx="225.2" cy="73.4" r="3.6"/><text class="t-pt" x="231.2" y="67.4" text-anchor="start">H</text><path class="ax" d="M46,12 L46,214 L314,214"/><text class="t-axl" x="40" y="8" text-anchor="start">Capital goods</text><text class="t-axl" x="314" y="244" text-anchor="end">Consumer goods</text><text class="t-ax" x="40" y="229" text-anchor="end">O</text></svg></div><figcaption>On the curve (A–F): attainable and productively efficient. U inside: idle or wasted resources. H outside: unattainable, which shows scarcity.</figcaption></figure>
+<div class="note tip"><b>Diagram mark</b>Label axes with the two named goods ("Capital goods", "Consumer goods"), never X and Y. Label the curve PPC, the origin O, and every point you discuss.</div></div></section><section class="card" data-id="s15b" data-group="1.5 PPC" data-title="Six ideas on one curve" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">1.5 · Syllabus 1.5.1</span><span class="kind">Concept</span></div>
+<h2>What the PPC illustrates</h2>
+<div class="tw"><table><tr><th>Concept</th><th>How the PPC shows it</th></tr>
+<tr><td class="k">Scarcity</td><td>Points outside (H) can't be produced.</td></tr>
+<tr><td class="k">Choice</td><td>The economy must pick one point on the curve.</td></tr>
+<tr><td class="k">Opportunity cost</td><td>The negative slope: more of one good means less of the other.</td></tr>
+<tr><td class="k">Efficiency</td><td>Every point on the curve is productively efficient.</td></tr>
+<tr><td class="k">Unemployment</td><td>Points inside (U): idle or misused resources.</td></tr>
+<tr><td class="k">Growth</td><td>Short run: U towards the curve. Long run: the curve shifts out.</td></tr></table></div>
+<div class="formula">OC of 1 more X = units of Y given up ÷ units of X gained</div>
+<div class="note tip"><b>MCQ method</b>In diagram MCQs the opportunity cost is a <b>distance on the other axis</b>. Drop guide lines from the start and end points to the axis of the good given up and read off the gap.</div></div></section><section class="card" data-id="s15c" data-group="1.5 PPC" data-title="Shapes of the PPC" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">1.5 · Syllabus 1.5.2</span><span class="kind">Concept</span></div>
+<h2>The shape follows opportunity cost</h2>
+<figure class="dg multi"><div class="pnl"><p class="ptitle">Concave · rising OC</p><svg viewBox="0 0 320 250" role="img" aria-label="Concave PPC"><defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0,0 L10,5 L0,10 z"/></marker></defs><path class="k d" d="M46.0,54.4 L51.4,54.4 L56.8,54.6 L62.1,54.8 L67.5,55.2 L72.9,55.7 L78.3,56.2 L83.6,56.9 L89.0,57.6 L94.4,58.5 L99.8,59.5 L105.1,60.6 L110.5,61.8 L115.9,63.1 L121.3,64.5 L126.6,66.0 L132.0,67.7 L137.4,69.5 L142.8,71.5 L148.1,73.6 L153.5,75.8 L158.9,78.2 L164.3,80.7 L169.6,83.4 L175.0,86.3 L180.4,89.4 L185.8,92.7 L191.2,96.2 L196.5,100.0 L201.9,104.1 L207.3,108.4 L212.7,113.1 L218.0,118.2 L223.4,123.8 L228.8,129.9 L234.2,136.7 L239.5,144.4 L244.9,153.4 L250.3,164.2 L255.7,178.5 L261.0,214.0"/><path class="k o" d="M97.2,59.0 L97.2,73.7 L148.4,73.7"/><path class="k o" d="M148.4,73.7 L148.4,102.3 L199.6,102.3"/><path class="k o" d="M199.6,102.3 L199.6,165.3 L250.8,165.3"/><path class="ax" d="M46,12 L46,214 L314,214"/><text class="t-axl" x="40" y="8" text-anchor="start">Capital goods</text><text class="t-axl" x="314" y="244" text-anchor="end">Consumer goods</text><text class="t-ax" x="40" y="229" text-anchor="end">O</text></svg></div><div class="pnl"><p class="ptitle">Straight · constant OC</p><svg viewBox="0 0 320 250" role="img" aria-label="Straight-line PPC"><defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0,0 L10,5 L0,10 z"/></marker></defs><line class="k d" x1="46.0" y1="54.4" x2="261.0" y2="214.0"/><path class="k o" d="M97.2,92.4 L97.2,130.4 L148.4,130.4"/><path class="k o" d="M148.4,130.4 L148.4,168.4 L199.6,168.4"/><path class="k o" d="M199.6,168.4 L199.6,206.4 L250.8,206.4"/><path class="ax" d="M46,12 L46,214 L314,214"/><text class="t-axl" x="40" y="8" text-anchor="start">Capital goods</text><text class="t-axl" x="314" y="244" text-anchor="end">Consumer goods</text><text class="t-ax" x="40" y="229" text-anchor="end">O</text></svg></div><div class="pnl"><p class="ptitle">Convex · falling OC</p><svg viewBox="0 0 320 250" role="img" aria-label="Convex PPC"><defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0,0 L10,5 L0,10 z"/></marker></defs><path class="k d" d="M46.0,54.4 L51.4,89.9 L56.8,104.2 L62.1,115.0 L67.5,124.0 L72.9,131.7 L78.3,138.5 L83.6,144.6 L89.0,150.2 L94.4,155.3 L99.8,160.0 L105.1,164.3 L110.5,168.4 L115.9,172.2 L121.3,175.7 L126.6,179.0 L132.0,182.1 L137.4,185.0 L142.8,187.7 L148.1,190.2 L153.5,192.6 L158.9,194.8 L164.3,196.9 L169.6,198.9 L175.0,200.7 L180.4,202.4 L185.8,203.9 L191.2,205.3 L196.5,206.6 L201.9,207.8 L207.3,208.9 L212.7,209.9 L218.0,210.8 L223.4,211.5 L228.8,212.2 L234.2,212.7 L239.5,213.2 L244.9,213.6 L250.3,213.8 L255.7,214.0 L261.0,214.0"/><path class="k o" d="M97.2,157.8 L97.2,190.4 L148.4,190.4"/><path class="k o" d="M148.4,190.4 L148.4,207.3 L199.6,207.3"/><path class="k o" d="M199.6,207.3 L199.6,213.8 L250.8,213.8"/><path class="ax" d="M46,12 L46,214 L314,214"/><text class="t-axl" x="40" y="8" text-anchor="start">Capital goods</text><text class="t-axl" x="314" y="244" text-anchor="end">Consumer goods</text><text class="t-ax" x="40" y="229" text-anchor="end">O</text></svg></div><figcaption>The dashed steps show capital goods given up for each equal extra amount of consumer goods.</figcaption></figure>
+<div class="two">
+<div><h4>Concave · rising OC</h4><p>The usual case. Resources are specialised, so moving them to the good they suit less loses ever more of the other good.</p></div>
+<div><h4>Straight · constant OC</h4><p>Resources equally efficient at both goods. Handout Table 2: each extra X costs 2 Y.</p></div>
+<div><h4>Convex · falling OC</h4><p>Resources get better at X as more is made (economies of scale). Rare in exams.</p></div>
+</div></div></section><section class="card" data-id="s15d" data-group="1.5 PPC" data-title="Shifts of the PPC" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">1.5 · Syllabus 1.5.3</span><span class="kind">Concept</span></div>
+<h2>Shifts of the PPC</h2>
+<figure class="dg multi"><div class="pnl"><p class="ptitle">Outward · growth</p><svg viewBox="0 0 320 250" role="img" aria-label="Outward shift from PPC1 to PPC2"><defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0,0 L10,5 L0,10 z"/></marker></defs><path class="k o" d="M46.0,92.4 L50.1,92.4 L54.2,92.6 L58.3,92.7 L62.4,93.0 L66.5,93.4 L70.6,93.8 L74.7,94.3 L78.8,94.9 L82.9,95.5 L87.0,96.3 L91.1,97.1 L95.2,98.0 L99.2,99.0 L103.3,100.1 L107.4,101.3 L111.5,102.6 L115.6,103.9 L119.7,105.4 L123.8,107.0 L127.9,108.7 L132.0,110.5 L136.1,112.4 L140.2,114.5 L144.3,116.7 L148.4,119.1 L152.5,121.6 L156.6,124.3 L160.7,127.2 L164.8,130.2 L168.9,133.6 L173.0,137.2 L177.1,141.0 L181.2,145.3 L185.3,149.9 L189.4,155.1 L193.5,161.0 L197.6,167.8 L201.6,176.0 L205.7,187.0 L209.8,214.0"/><text class="t-o" x="207.8" y="228.0" text-anchor="end">PPC1</text><path class="k d" d="M46.0,50.6 L51.5,50.7 L57.0,50.8 L62.5,51.1 L68.0,51.4 L73.5,51.9 L79.0,52.4 L84.5,53.1 L90.0,53.9 L95.5,54.8 L101.0,55.8 L106.5,56.9 L112.0,58.1 L117.6,59.5 L123.1,60.9 L128.6,62.5 L134.1,64.2 L139.6,66.1 L145.1,68.1 L150.6,70.2 L156.1,72.5 L161.6,74.9 L167.1,77.5 L172.6,80.3 L178.1,83.3 L183.6,86.4 L189.1,89.8 L194.6,93.4 L200.1,97.3 L205.6,101.5 L211.1,105.9 L216.6,110.7 L222.1,116.0 L227.6,121.7 L233.1,127.9 L238.6,134.9 L244.1,142.8 L249.6,151.9 L255.2,163.0 L260.7,177.7 L266.2,214.0"/><text class="t-d" x="262.2" y="204.0" text-anchor="end">PPC2</text><line class="ar" x1="161.2" y1="126.6" x2="199.6" y2="96.2" marker-end="url(#ah)"/><path class="ax" d="M46,12 L46,214 L314,214"/><text class="t-axl" x="40" y="8" text-anchor="start">Capital goods</text><text class="t-axl" x="314" y="244" text-anchor="end">Consumer goods</text><text class="t-ax" x="40" y="229" text-anchor="end">O</text></svg></div><div class="pnl"><p class="ptitle">Inward · loss of resources</p><svg viewBox="0 0 320 250" role="img" aria-label="Inward shift from PPC1 to PPC2"><defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0,0 L10,5 L0,10 z"/></marker></defs><path class="k o" d="M46.0,50.6 L51.5,50.7 L57.0,50.8 L62.5,51.1 L68.0,51.4 L73.5,51.9 L79.0,52.4 L84.5,53.1 L90.0,53.9 L95.5,54.8 L101.0,55.8 L106.5,56.9 L112.0,58.1 L117.6,59.5 L123.1,60.9 L128.6,62.5 L134.1,64.2 L139.6,66.1 L145.1,68.1 L150.6,70.2 L156.1,72.5 L161.6,74.9 L167.1,77.5 L172.6,80.3 L178.1,83.3 L183.6,86.4 L189.1,89.8 L194.6,93.4 L200.1,97.3 L205.6,101.5 L211.1,105.9 L216.6,110.7 L222.1,116.0 L227.6,121.7 L233.1,127.9 L238.6,134.9 L244.1,142.8 L249.6,151.9 L255.2,163.0 L260.7,177.7 L266.2,214.0"/><text class="t-o" x="262.2" y="204.0" text-anchor="end">PPC1</text><path class="k b" d="M46.0,92.4 L50.1,92.4 L54.2,92.6 L58.3,92.7 L62.4,93.0 L66.5,93.4 L70.6,93.8 L74.7,94.3 L78.8,94.9 L82.9,95.5 L87.0,96.3 L91.1,97.1 L95.2,98.0 L99.2,99.0 L103.3,100.1 L107.4,101.3 L111.5,102.6 L115.6,103.9 L119.7,105.4 L123.8,107.0 L127.9,108.7 L132.0,110.5 L136.1,112.4 L140.2,114.5 L144.3,116.7 L148.4,119.1 L152.5,121.6 L156.6,124.3 L160.7,127.2 L164.8,130.2 L168.9,133.6 L173.0,137.2 L177.1,141.0 L181.2,145.3 L185.3,149.9 L189.4,155.1 L193.5,161.0 L197.6,167.8 L201.6,176.0 L205.7,187.0 L209.8,214.0"/><text class="t-b" x="207.8" y="228.0" text-anchor="end">PPC2</text><line class="ar" x1="199.6" y1="96.2" x2="161.2" y2="126.6" marker-end="url(#ah)"/><path class="ax" d="M46,12 L46,214 L314,214"/><text class="t-axl" x="40" y="8" text-anchor="start">Capital goods</text><text class="t-axl" x="314" y="244" text-anchor="end">Consumer goods</text><text class="t-ax" x="40" y="229" text-anchor="end">O</text></svg></div><div class="pnl"><p class="ptitle">Capital goods only</p><svg viewBox="0 0 320 250" role="img" aria-label="Non-parallel shift: only the capital goods intercept rises"><defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0,0 L10,5 L0,10 z"/></marker></defs><path class="k o" d="M46.0,81.0 L50.5,81.0 L55.0,81.2 L59.4,81.4 L63.9,81.7 L68.4,82.0 L72.9,82.5 L77.4,83.1 L81.8,83.7 L86.3,84.4 L90.8,85.2 L95.3,86.1 L99.8,87.1 L104.2,88.2 L108.7,89.4 L113.2,90.7 L117.7,92.1 L122.2,93.6 L126.6,95.2 L131.1,97.0 L135.6,98.8 L140.1,100.8 L144.6,102.9 L149.0,105.2 L153.5,107.6 L158.0,110.2 L162.5,112.9 L167.0,115.9 L171.4,119.0 L175.9,122.4 L180.4,126.0 L184.9,129.9 L189.4,134.2 L193.8,138.8 L198.3,143.9 L202.8,149.6 L207.3,156.0 L211.8,163.5 L216.2,172.5 L220.7,184.4 L225.2,214.0"/><text class="t-o" x="223.2" y="228.0" text-anchor="end">PPC1</text><path class="k d" d="M46.0,39.2 L50.5,39.3 L55.0,39.4 L59.4,39.7 L63.9,40.1 L68.4,40.6 L72.9,41.2 L77.4,41.9 L81.8,42.7 L86.3,43.7 L90.8,44.8 L95.3,45.9 L99.8,47.3 L104.2,48.7 L108.7,50.3 L113.2,52.0 L117.7,53.8 L122.2,55.8 L126.6,57.9 L131.1,60.2 L135.6,62.6 L140.1,65.2 L144.6,68.0 L149.0,71.0 L153.5,74.2 L158.0,77.5 L162.5,81.2 L167.0,85.0 L171.4,89.2 L175.9,93.6 L180.4,98.4 L184.9,103.5 L189.4,109.1 L193.8,115.2 L198.3,121.9 L202.8,129.4 L207.3,137.8 L211.8,147.6 L216.2,159.4 L220.7,175.2 L225.2,214.0"/><text class="t-d" x="231.2" y="174.0" text-anchor="start">PPC2</text><line class="ar" x1="58.8" y1="77.2" x2="58.8" y2="46.8" marker-end="url(#ah)"/><path class="ax" d="M46,12 L46,214 L314,214"/><text class="t-axl" x="40" y="8" text-anchor="start">Capital goods</text><text class="t-axl" x="314" y="244" text-anchor="end">Consumer goods</text><text class="t-ax" x="40" y="229" text-anchor="end">O</text></svg></div></figure>
+<div class="two">
+<div><h4 class="g">Outward: causes</h4><ul><li>Better technology, more capital-intensive methods</li><li>New resources (mineral deposits)</li><li>Bigger labour force: births, net immigration, later retirement</li><li>Better human capital</li><li>Enterprise culture</li></ul></div>
+<div><h4 class="r">Inward: causes</h4><ul><li>Disasters or war destroying capital</li><li>Depletion of natural resources</li><li>Net emigration; shorter legal working week</li><li>Cuts to education and training</li></ul></div>
+</div>
+<div class="note trap"><b>Shift vs movement</b>Higher unemployment does <b>not</b> shift the PPC; it moves the economy inside it. Reallocating resources is a movement along it. Only a change in the quantity or quality of resources, or technology, shifts it.</div>
+<p>If only one good's resources or technology improve, only that intercept moves. If working hours are cut by law, the PPC shifts in more for the more labour-intensive good.</p></div></section><section class="card" data-id="s15e" data-group="1.5 PPC" data-title="Inside the PPC &amp; growth" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">1.5 · Syllabus 1.5.4</span><span class="kind">Concept</span></div>
+<h2>A point inside the PPC</h2>
+<p>Inside the curve, resources are unemployed or used inefficiently. Output of <b>both</b> goods could rise at zero opportunity cost. Reducing unemployment is "free" growth in the short run; moving along the curve always costs something.</p>
+<figure class="dg"><div class="pnl"><svg viewBox="0 0 320 250" role="img" aria-label="Actual growth from U to V, potential growth from PPC1 to PPC2"><defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0,0 L10,5 L0,10 z"/></marker></defs><path class="k o" d="M46.0,81.0 L50.5,81.0 L55.0,81.2 L59.4,81.4 L63.9,81.7 L68.4,82.0 L72.9,82.5 L77.4,83.1 L81.8,83.7 L86.3,84.4 L90.8,85.2 L95.3,86.1 L99.8,87.1 L104.2,88.2 L108.7,89.4 L113.2,90.7 L117.7,92.1 L122.2,93.6 L126.6,95.2 L131.1,97.0 L135.6,98.8 L140.1,100.8 L144.6,102.9 L149.0,105.2 L153.5,107.6 L158.0,110.2 L162.5,112.9 L167.0,115.9 L171.4,119.0 L175.9,122.4 L180.4,126.0 L184.9,129.9 L189.4,134.2 L193.8,138.8 L198.3,143.9 L202.8,149.6 L207.3,156.0 L211.8,163.5 L216.2,172.5 L220.7,184.4 L225.2,214.0"/><text class="t-o" x="223.2" y="228.0" text-anchor="end">PPC1</text><path class="k d" d="M46.0,43.0 L51.8,43.1 L57.5,43.2 L63.3,43.5 L69.0,43.9 L74.8,44.3 L80.6,44.9 L86.3,45.6 L92.1,46.5 L97.8,47.4 L103.6,48.4 L109.4,49.6 L115.1,50.9 L120.9,52.3 L126.6,53.8 L132.4,55.5 L138.2,57.3 L143.9,59.2 L149.7,61.3 L155.4,63.5 L161.2,65.9 L167.0,68.5 L172.7,71.2 L178.5,74.1 L184.2,77.2 L190.0,80.5 L195.8,84.1 L201.5,87.8 L207.3,91.9 L213.0,96.2 L218.8,100.9 L224.6,105.9 L230.3,111.4 L236.1,117.4 L241.8,123.9 L247.6,131.2 L253.4,139.5 L259.1,149.0 L264.9,160.6 L270.6,176.0 L276.4,214.0"/><text class="t-d" x="272.4" y="204.0" text-anchor="end">PPC2</text><circle class="pto" cx="112.6" cy="157.0" r="3.6"/><text class="t-pt" x="104.6" y="171.0" text-anchor="end">U</text><circle class="pt" cx="153.5" cy="107.6" r="3.6"/><text class="t-pt" x="159.5" y="101.6" text-anchor="start">V</text><line class="ar" x1="117.7" y1="153.2" x2="148.4" y2="113.3" marker-end="url(#ah)"/><path class="ax" d="M46,12 L46,214 L314,214"/><text class="t-axl" x="40" y="8" text-anchor="start">Capital goods</text><text class="t-axl" x="314" y="244" text-anchor="end">Consumer goods</text><text class="t-ax" x="40" y="229" text-anchor="end">O</text></svg></div><figcaption>U → V is actual (short-run) growth at zero opportunity cost. PPC1 → PPC2 is potential (long-run) growth.</figcaption></figure>
+<h3>Capital vs consumer goods: today vs the future</h3>
+<p>More capital goods now means less consumption today, but the PPC shifts out further later. Mostly consumer goods means more now and slower growth.</p>
+<div class="note tip"><b>Evaluation</b>The "best" point depends on whether society values present or future consumption: a normative judgement.</div></div></section><section class="card" data-id="s16a" data-group="1.6 Classification of goods" data-title="Free, economic, private goods" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">1.6 · Syllabus 1.6.1</span><span class="kind">Concept</span></div>
+<h2>Free goods vs economic goods</h2>
+<div class="chain"><span>All goods</span><i>→</i><span>Free goods</span><span>Economic goods</span><i>→</i><span>Private · Public (pure / quasi) · Merit · Demerit</span></div>
+<div class="def"><span class="lab">Free good <i>1.6.1</i></span><p>Unlimited in supply, needs no factors of production, so zero opportunity cost and no price: air, sunlight, seawater.</p></div>
+<div class="def"><span class="lab">Economic good</span><p>Limited because it uses scarce resources, so it has an opportunity cost. Includes private, public, merit and demerit goods.</p></div>
+<div class="note trap"><b>Trap</b>"Free of charge" isn't a free good. A toy in a cereal box used materials and labour. Free public healthcare is an economic good, paid for by taxes.</div>
+<div class="def"><span class="lab">Definition · Private good</span><p><b>Excludable</b> (non-payers can be stopped) and <b>rival</b> (one person's use reduces what's left). Also rejectable. A plate of nasi goreng in the canteen.</p></div></div></section><section class="card" data-id="s16b" data-group="1.6 Classification of goods" data-title="Public goods &amp; free riders" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">1.6 · Syllabus 1.6.2</span><span class="kind">Concept</span></div>
+<h2>Public goods and the free rider problem</h2>
+<div class="def"><span class="lab">Definition · Public good <i>1.6.2</i></span><p><b>Non-excludable</b> (non-payers can't be stopped from benefiting) and <b>non-rival</b> (the marginal cost of an extra user is zero). Usually non-rejectable. Defence, street lights, flood control, lighthouses.</p></div>
+<div class="tw"><table><tr><th></th><th>Rival</th><th>Non-rival</th></tr>
+<tr><td class="k">Excludable</td><td><b>Private</b>: food, petrol</td><td><b>Club / toll</b>: pay-TV, uncongested toll road</td></tr>
+<tr><td class="k">Non-excludable</td><td><b>Common resource</b>: crowded beach, fish in the sea</td><td><b>Pure public</b>: defence, flood control</td></tr></table></div>
+<div class="chain"><span>Non-excludable</span><i>→</i><span>people free ride</span><i>→</i><span>no effective demand revealed</span><i>→</i><span>firms can't profit</span><i>→</i><span>missing market</span></div>
+<p>Non-rivalry adds to this: with zero marginal cost, the efficient price is zero, so no profit-seeking firm supplies it. Government provides public goods, financed by taxation.</p>
+<div class="def"><span class="lab">Definition · Free rider</span><p>Someone who enjoys a good's benefit without paying, because they can't be excluded.</p></div></div></section><section class="card" data-id="s16c" data-group="1.6 Classification of goods" data-title="Quasi-public goods" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">1.6 · Syllabus 1.6.2</span><span class="kind">Concept</span></div>
+<h2>Quasi-public goods</h2>
+<div class="def"><span class="lab">Definition · Quasi-public good</span><p>Some but not all features of a public good. <b>Semi-non-rival</b> (can become congested: parks, beaches, roads at peak times) and/or <b>semi-non-excludable</b> (exclusion possible but costly: fencing a beach, toll booths).</p></div>
+<p>Because exclusion is possible, the private sector can provide some quasi-public goods, such as the PLUS expressways.</p>
+<div class="note link"><b>Malaysian example</b>KL's SMART Tunnel: as a flood-diversion tunnel it acts like a public good, but its motorway section charges a toll, so that part is excludable.</div></div></section><section class="card" data-id="s16d" data-group="1.6 Classification of goods" data-title="Merit &amp; demerit goods" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">1.6 · Syllabus 1.6.3–1.6.4</span><span class="kind">Concept</span></div>
+<h2>Merit and demerit goods</h2>
+<div class="def"><span class="lab">Definition · Merit good <i>1.6.3</i></span><p>A private good considered desirable but <b>under-consumed</b> and under-provided by the free market because of <b>information failure</b>: consumers underestimate its benefits. Often has positive externalities (SB &gt; PB). Education, healthcare, vaccinations.</p></div>
+<p>Education: private benefits (skills, pay) plus external benefits (skilled workforce, growth) that individuals ignore. Vaccination protects others too.</p>
+<div class="def"><span class="lab">Definition · Demerit good <i>1.6.4</i></span><p>A private good considered undesirable that is <b>over-consumed</b> because consumers underestimate its harm. Often has negative externalities. Cigarettes, alcohol, junk food.</p></div>
+<p>Malaysian policy: excise duty on sugar-sweetened drinks (since 2019), cigarette taxes, the Control of Smoking Products for Public Health Act 2024.</p>
+<div class="note trap"><b>Don't confuse</b>Merit goods are <b>not</b> public goods. Education is rival and excludable. Public goods: the market provides <b>none</b>. Merit goods: it provides <b>too little</b>.</div>
+<div class="note link"><b>Forward link</b>1.6 is the entry point to Chapter 3 (market failure and government intervention).</div></div></section><section class="card" data-id="we1" data-group="Worked examples" data-title="Opportunity cost from a table" data-kind="Worked example"><div class="ci"><div class="ch"><span class="sec">Worked example 1 · 1.5</span><span class="kind">Worked example</span></div>
+<h2>Calculate opportunity cost from a PPC table</h2>
+<div class="tw"><table><tr><th>Point</th><th class="n">Good X</th><th class="n">Good Y</th></tr>
+<tr><td>A</td><td class="n">0</td><td class="n">15</td></tr><tr><td>B</td><td class="n">1</td><td class="n">14</td></tr>
+<tr><td>C</td><td class="n">2</td><td class="n">12</td></tr><tr><td>D</td><td class="n">3</td><td class="n">9</td></tr>
+<tr><td>E</td><td class="n">4</td><td class="n">5</td></tr><tr><td>F</td><td class="n">5</td><td class="n">0</td></tr></table></div>
+<p><b>Q:</b> What is the opportunity cost of moving from C to D? What happens to opportunity cost along the curve, and why?</p>
+<ol class="steps">
+<li>Write the formula: OC of one more X = Y given up ÷ X gained.</li>
+<li>C → D: Y falls from 12 to 9, so 3 units of Y are given up; X rises from 2 to 3, so 1 unit gained.</li>
+<li>OC = 3 ÷ 1 = <b>3 units of Y per unit of X</b>. State it as a positive amount of the good given up.</li>
+<li>Repeat for each step: A→B 1, B→C 2, C→D 3, D→E 4, E→F 5 units of Y.</li>
+<li>Each extra unit of X costs more Y: <b>increasing opportunity cost</b>, so the PPC is concave. Resources suited to Y are moved into X last.</li>
+</ol>
+<div class="note trap"><b>Handout note</b>The handout writes these as −1 … −5 (the slope). In an answer, write "the opportunity cost of the 3rd unit of X is 3 units of Y".</div></div></section><section class="card" data-id="we2" data-group="Worked examples" data-title="Straight-line PPC MCQ" data-kind="Worked example"><div class="ci"><div class="ch"><span class="sec">Worked example 2 · 1.5</span><span class="kind">Worked example</span></div>
+<h2>Straight-line PPC: what is given up?</h2>
+<p><b>Q (PPC pack Q8):</b> A PPC is a straight line from 1,000 units of Y (vertical intercept) to 2,000 units of X. The economy produces 1,200 X on the PPC. How much Y has it given up?</p>
+<ol class="steps">
+<li>Find the constant opportunity cost: 1,000 Y ÷ 2,000 X = <b>0.5 Y per unit of X</b>.</li>
+<li>Y given up for 1,200 X: 1,200 × 0.5 = <b>600 Y</b>.</li>
+<li>Check: it still produces 1,000 − 600 = 400 Y.</li>
+<li>Answer <b>600</b>. The trap option is 400: that's what it still makes, not what it gave up.</li>
+</ol></div></section><section class="card" data-id="we3" data-group="Worked examples" data-title="4-mark opportunity cost" data-kind="Worked example"><div class="ci"><div class="ch"><span class="sec">Worked example 3 · 1.1</span><span class="kind">Worked example</span></div>
+<h2>Apply opportunity cost to a government [4]</h2>
+<p><b>Q:</b> Malaysia's government has RM2 billion for either targeted fuel subsidies or new rural clinics. Explain opportunity cost using this example and say why it applies even though the government can borrow.</p>
+<ol class="steps">
+<li><b>Define [1]:</b> opportunity cost is the benefit of the next best alternative forgone.</li>
+<li><b>Apply [1]:</b> if clinics are first priority, the opportunity cost is the benefit the fuel subsidy would have given (lower transport costs for households).</li>
+<li><b>One alternative [1]:</b> it is that one next-best option, not every possible use of RM2 billion.</li>
+<li><b>Borrowing [1]:</b> borrowed funds must be repaid from future taxes, so future spending is forgone; and the doctors, builders and land used for clinics can't be used elsewhere at the same time.</li>
+</ol></div></section><section class="card" data-id="we4" data-group="Worked examples" data-title="8-mark plan: the beach" data-kind="Worked example"><div class="ci"><div class="ch"><span class="sec">Worked example 4 · 1.6 · Paper 2</span><span class="kind">Worked example</span></div>
+<h2>Is a beach a public good? [8]</h2>
+<p><b>Q:</b> Explain the difference between a public good and a private good and consider the extent to which a beach could be described as a public good.</p>
+<ol class="steps">
+<li><b>AO1:</b> define rival/non-rival and excludable/non-excludable.</li>
+<li><b>AO1:</b> apply: national defence (non-rival, non-excludable) vs nasi goreng (rival, excludable). Free rider → market provides no public goods.</li>
+<li><b>AO2:</b> a quiet public beach (Port Dickson on a weekday) is largely non-rival and hard to fence off: close to a public good.</li>
+<li><b>AO2:</b> but when crowded it becomes rival, and a resort-owned beach in Langkawi with entry fees is excludable: like a private good.</li>
+<li><b>AO3:</b> it doesn't fully meet both criteria. The extent depends on congestion and ownership. Judgement: a <b>quasi-public good</b>.</li>
+</ol></div></section><section class="card" data-id="ex1" data-group="Exam technique" data-title="How essays are marked" data-kind="Exam"><div class="ci"><div class="ch"><span class="sec">Paper 2 · Exam technique</span><span class="kind">Exam</span></div>
+<h2>Turning Chapter 1 into essay marks</h2>
+<div class="two">
+<div><h4>AO1 · Knowledge</h4><p>Precise definitions, correct terms, an accurate fully labelled diagram.</p></div>
+<div><h4 class="t">AO2 · Analysis</h4><p>Developed chains linking cause to effect, using the diagram.</p></div>
+<div><h4 class="g">AO3 · Evaluation</h4><p>Say what the outcome depends on and why, then a justified conclusion that answers the exact question.</p></div>
+</div>
+<div class="tw"><table><tr><th>Part</th><th>Marking</th></tr>
+<tr><td class="k">(a) 8 marks<br><span class="mono">Explain… and consider…</span></td><td>Point-based: AO1 3 · AO2 3 · AO3 2. One AO3 mark is reserved for a justified conclusion.</td></tr>
+<tr><td class="k">(b) 12 marks<br><span class="mono">Assess…</span></td><td>Levels: AO1+AO2 /8 (L3 6–8, L2 3–5, L1 1–2) and AO3 /4. <b>A one-sided answer gets 0 for AO3.</b></td></tr></table></div>
+<h3>Skeletons</h3>
+<div class="two">
+<div><h4>8-marker · ~20 min</h4><ul><li>Define every key term</li><li>Diagram with named axes, referred to</li><li>2–3 linked points from the diagram</li><li>One specific "however" + a one-line conclusion</li></ul></div>
+<div><h4>12-marker · ~30 min</h4><ul><li>Intro: define, say what it depends on</li><li>Side 1: 2–3 developed chains</li><li>Side 2: 2–3 chains against</li><li>Weigh: which matters more, when, for whom</li><li>Conclusion answering the exact words</li></ul></div>
+</div>
+<p class="lede" style="font-size:15px">Paper 2 is 1 h 45 min for 40 marks: about 2.5 minutes per mark.</p></div></section><section class="card" data-id="ex2" data-group="Exam technique" data-title="Analysis chains &amp; evaluation" data-kind="Exam"><div class="ci"><div class="ch"><span class="sec">Paper 2 · Exam technique</span><span class="kind">Exam</span></div>
+<h2>Build chains, then weigh them</h2>
+<div class="two">
+<div><h4 class="r">Weak · L1 assertion</h4><p>"Free markets cause pollution."</p></div>
+<div><h4 class="g">Strong · L3 chain</h4><p>Firms maximise profit, so they ignore costs imposed on third parties such as river pollution from palm oil mills. Because external costs aren't in the price, output is above the social optimum: resources are over-allocated.</p></div>
+</div>
+<h3>Evaluation bank: "it depends on…"</h3>
+<div class="tw wide"><table><tr><th>Topic</th><th>It depends on…</th><th>Because…</th></tr>
+<tr><td class="k">PPC shape</td><td>How specialised resources are</td><td>Specialised resources lose a lot of output when moved, so OC rises</td></tr>
+<tr><td class="k">PPC shifts</td><td>Time lags; quality vs quantity</td><td>Investment shifts the PPC only after a lag; more workers help only if employed and skilled</td></tr>
+<tr><td class="k">Free markets</td><td>Competition, information, externalities, type of good</td><td>Markets work for private goods; fail for public, merit, demerit goods</td></tr>
+<tr><td class="k">Intervention</td><td>Risk of government failure</td><td>Bureaucracy, poor information and tax's opportunity cost can make it worse</td></tr>
+<tr><td class="k">Merit goods</td><td>Cause of under-consumption</td><td>Information failure → campaigns; low income → subsidies or free provision</td></tr>
+<tr><td class="k">Transition</td><td>Speed of reform</td><td>Shock therapy hurts in SR, may help LR; China vs Russia</td></tr>
+<tr><td class="k">Any "should"</td><td>Value judgements</td><td>Efficiency vs equity is normative; say whose priorities you use</td></tr></table></div></div></section><section class="card" data-id="mist" data-group="Exam technique" data-title="Common mistakes" data-kind="Mistakes"><div class="ci"><div class="ch"><span class="sec">Paper 2 · Mistakes</span><span class="kind">Mistakes</span></div>
+<h2>Common examiner-report errors</h2>
+<ul>
+<li>Axes labelled X and Y, or "good A / good B", when the question names the goods.</li>
+<li>Saying unemployment shifts the PPC inward. It moves the economy <b>inside</b> the curve.</li>
+<li>Calling opportunity cost the money price, or listing all alternatives instead of the next best.</li>
+<li>Calling money "capital", or a merit good a public good.</li>
+<li>Defining a public good as "provided by the government". Use non-excludable and non-rival.</li>
+<li>Listing advantages and disadvantages without explaining any (stuck at L1–L2).</li>
+<li>A conclusion that doesn't answer the question. If it asks "always", say "not always" and when.</li>
+<li>One-sided 12-mark answers: AO3 = 0.</li>
+</ul>
+<div class="note tip"><b>Command words</b><b>Explain</b>: definition + chain + diagram, not a list. <b>Consider</b>: one reasoned "however" + a one-line judgement. <b>Assess</b>: both sides weighed, then a conclusion that answers "always?", "only?", "whether?".</div></div></section><section class="card" data-id="pr1" data-group="Practice" data-title="Practice: Paper 1 style" data-kind="Practice"><div class="ci"><div class="ch"><span class="sec">Practice · 1.2–1.5</span><span class="kind">Practice</span></div>
+<h2>Practice questions · Paper 1 style</h2>
+<button class="btn" type="button" data-revealall>Reveal all answers</button>
+<div class="pq"><div class="qh"><span>Q1 · 1.2</span><span class="mk">[1]</span></div>
+<p class="qt">Which is a normative statement? (A) If firms spend more on advertising, sales may not rise. (B) If firms raise prices, profits will rise. (C) The government should reduce taxes on spending so that economic welfare will rise. (D) Export volumes will rise if the government lowers the exchange rate.</p>
+<div class="ans"><b>C</b>"Should" signals a value judgement. A, B and D are cause-and-effect claims that can be tested, even if false.</div></div>
+<div class="pq"><div class="qh"><span>Q2 · 1.3</span><span class="mk">[1]</span></div>
+<p class="qt">Meera finished art college and starts a business making clay figures. Which factors of production must she buy from other businesses?</p>
+<div class="ans"><b>Land and capital</b>She supplies her own labour (artistic skill) and enterprise (organising, taking the risk). She rents premises and buys clay (land) and a kiln and tools (capital).</div></div>
+<div class="pq"><div class="qh"><span>Q3 · 1.4</span><span class="mk">[1]</span></div>
+<p class="qt">A country moving from a planned to a market economy sells its transport services to private firms. Most likely consequence? (A) Government ownership increases. (B) Public sector services increase. (C) Central planning increases. (D) Consumer sovereignty increases.</p>
+<div class="ans"><b>D</b>Privatisation moves allocation from planners to the price mechanism, so consumer spending decides what firms provide.</div></div>
+<div class="pq"><div class="qh"><span>Q4 · 1.5</span><span class="mk">[1]</span></div>
+<p class="qt">A PPC for capital and consumer goods shifts inward. Which could have caused it? (A) A rise in the retirement age. (B) More investment. (C) More net emigration. (D) Technological progress.</p>
+<div class="ans"><b>C</b>Net emigration cuts the quantity of labour, so productive capacity falls. A, B and D shift the PPC outward.</div></div></div></section><section class="card" data-id="pr2" data-group="Practice" data-title="Practice: essay plans" data-kind="Practice"><div class="ci"><div class="ch"><span class="sec">Practice · Paper 2</span><span class="kind">Practice</span></div>
+<h2>Practice · Paper 2 essays</h2>
+<p class="lede">Plan each in 5 minutes, then compare.</p>
+<div class="pq"><div class="qh"><span>Q5 · 1.5</span><span class="mk">[8]</span></div>
+<p class="qt">With the help of a PPC diagram, explain the difference between actual and potential economic growth and consider whether an economy should devote more resources to capital goods.</p>
+<div class="ans"><b>Plan</b>Define both; PPC with U → V (actual, zero OC) and PPC1 → PPC2 (potential). More capital goods: less consumption now, faster outward shift later. Consider: depends on time preference (normative) and whether the capital is productive; a poor economy may not afford lower consumption now.</div></div>
+<div class="pq"><div class="qh"><span>Q6 · 1.3</span><span class="mk">[8]</span></div>
+<p class="qt">Explain how the division of labour can increase productivity and consider whether it always benefits a firm.</p>
+<div class="ans"><b>Plan</b>Define; pin factory; expertise, no switching time, machinery. Consider: needs a large market for high volume; monotony and strikes can cut productivity; narrow skills. Conclude: benefits a firm with high volume and repetitive tasks, less so for small or creative output.</div></div>
+<div class="pq"><div class="qh"><span>Q7 · 1.4</span><span class="mk">[12]</span></div>
+<p class="qt">Assess whether a planned economy is more likely than a market economy to achieve a fair distribution of resources.</p>
+<div class="ans"><b>Plan</b>"Fair" is normative: define it (equality of outcome vs reward for effort). For: state distributes evenly, rations essentials, provides merit goods. Against: planning errors cause shortages, so fairness on paper isn't delivered; corruption favours insiders; mixed economies redistribute via tax and welfare while keeping incentives. Judge: planned systems aim at equal outcomes but often fail to deliver them; a mixed economy is more likely to achieve a fair <i>and</i> efficient result.</div></div>
+<div class="pq"><div class="qh"><span>Q8 · 1.6</span><span class="mk">[12]</span></div>
+<p class="qt">Assess whether governments should provide merit goods free of charge.</p>
+<div class="ans"><b>Plan</b>For: information failure and positive externalities mean under-consumption; free provision raises use and equity. Against: zero price → over-use and waiting lists; tax cost and its opportunity cost; government failure. Evaluate: depends on cause (information → campaigns may be enough; low income → subsidies or free provision). Judge with the cause in mind.</div></div></div></section><section class="card" data-id="pp" data-group="Practice" data-title="Past paper questions" data-kind="Past papers"><div class="ci"><div class="ch"><span class="sec">Practice · Past papers</span><span class="kind">Past papers</span></div>
+<h2>Real 9708 questions on Chapter 1</h2>
+<div class="tw wide"><table><tr><th>Paper</th><th>Question</th><th class="n">Marks</th></tr>
+<tr><td class="k">21 M/J 2020 Q2(a)</td><td>With a PPC diagram, explain why scarcity makes choice inevitable for <b>firms</b> and how each choice has an opportunity cost.</td><td class="n">8</td></tr>
+<tr><td class="k">21 M/J 2020 Q2(b)</td><td>Discuss the view that the only goods a government should produce are public goods.</td><td class="n">12</td></tr>
+<tr><td class="k">21 M/J 2020 Q1(c)</td><td>Explain the contribution of the factor enterprise to the transformation of Lagos.</td><td class="n">4</td></tr>
+<tr><td class="k">21 M/J 2020 Q1(e)</td><td>Discuss whether intervention to encourage private firms in a mixed economy is always likely to succeed.</td><td class="n">6</td></tr>
+<tr><td class="k">22 M/J 2018 Q2(a)</td><td>How resources are allocated in a free market vs a mixed economy (topic from mark scheme).</td><td class="n">8</td></tr></table></div>
+<div class="note trap"><b>2020 Q2(a) trap</b>It says <b>firms</b>, so draw a firm's PPC with two of its own products (tables and chairs), not capital vs consumer goods.</div>
+<div class="note link"><b>Model essays</b>Five full model answers with mark highlighting are in your original notes deck. <a href="https://claude.ai/code/artifact/f1636c3a-d24e-482e-8577-d8d7c8b138dc" target="_blank" rel="noopener">Open the full Chapter 1 notes</a></div></div></section><section class="card" data-id="sum" data-group="Summary" data-title="One-page summary" data-kind="Summary"><div class="ci"><div class="ch"><span class="sec">Summary</span><span class="kind">Summary</span></div>
+<h2>Chapter 1 on one card</h2>
+<div class="tw"><table>
+<tr><td class="k">Scarcity</td><td>Finite resources, unlimited wants</td></tr>
+<tr><td class="k">Opportunity cost</td><td>Benefit of the <b>next best</b> alternative forgone</td></tr>
+<tr><td class="k">3 questions</td><td>What · How · For whom</td></tr>
+<tr><td class="k">Positive / normative</td><td>Testable / value judgement ("should")</td></tr>
+<tr><td class="k">Ceteris paribus</td><td>All other things equal</td></tr>
+<tr><td class="k">SR / LR / VLR</td><td>≥1 factor fixed / all variable / + technology &amp; attitudes</td></tr>
+<tr><td class="k">Factor rewards</td><td>Land–rent · Labour–wages · Capital–interest · Enterprise–profit</td></tr>
+<tr><td class="k">Systems</td><td>Market (price) · Planned (state) · Mixed (both)</td></tr>
+<tr><td class="k">PPC assumptions</td><td>Full employment · fixed resources · fixed tech · 2 goods</td></tr>
+<tr><td class="k">PPC OC</td><td>Y given up ÷ X gained; concave = rising OC</td></tr>
+<tr><td class="k">Shift vs move</td><td>Resources/tech shift it; unemployment = point inside</td></tr>
+<tr><td class="k">Public good</td><td>Non-rival + non-excludable → free rider → missing market</td></tr>
+<tr><td class="k">Merit / demerit</td><td>Under / over-consumed due to information failure</td></tr>
+<tr><td class="k">Essay marks</td><td>(a) 3/3/2 points · (b) 8 + 4 levels; one-sided = 0 AO3</td></tr>
+</table></div>
+<p class="lede" style="font-size:15px">Screenshot this card for quick revision. Then open <b>Cards</b> or <b>Quiz</b> at the top.</p></div></section></main>
+<footer class="bot">
+  <button class="ib" id="prevBtn" type="button" aria-label="Previous card"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+  <div class="prog"><div class="bar"><i id="barFill"></i></div><div class="cnt" id="cnt">1 / 36</div></div>
+  <button class="ib" id="nextBtn" type="button" aria-label="Next card"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+</footer>
+
+<div class="sheet" id="tocSheet" hidden>
+  <header class="top"><div class="ttl"><b>Contents</b><small>36 cards · tap to jump</small></div>
+  <button class="ib" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></header>
+  <div class="sbody"><div class="in" id="tocList"></div></div>
+</div>
+<div class="sheet" id="fcSheet" hidden>
+  <header class="top"><div class="ttl"><b>Flashcards</b><small>Tap the card to flip · Space flips on a keyboard</small></div>
+  <button class="ib" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></header>
+  <div class="sbody"><div class="in">
+    <div class="chips" id="fcChips"></div>
+    <div class="fc" id="fc"><div class="fc-in">
+      <div class="fc-f front"><div class="ft"><span id="fcT"></span><span>Question</span></div><div class="q" id="fcQ"></div></div>
+      <div class="fc-f back"><div class="ft"><span id="fcT2"></span><span>Answer</span></div><div id="fcA"></div></div>
+    </div></div>
+    <div class="fcrow"><button class="btn bad" id="fcAgain" type="button">Again</button><span class="cnt" id="fcN" style="align-self:center"></span><button class="btn good" id="fcGot" type="button">Got it</button></div>
+    <div class="fcrow" style="margin-top:8px"><button class="btn" id="fcPrev" type="button">← Prev</button><button class="btn" id="fcShuf" type="button">Shuffle</button><button class="btn" id="fcNext" type="button">Next →</button></div>
+    <p class="lede" style="font-size:14.5px;margin-top:14px">"Again" puts the card in the Again pile so you can drill only the ones you missed.</p>
+  </div></div>
+</div>
+<div class="sheet" id="qSheet" hidden>
+  <header class="top"><div class="ttl"><b>Paper 1 quiz</b><small>Pick an answer to see the explanation</small></div>
+  <button class="ib" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></header>
+  <div class="sbody"><div class="in">
+    <div class="score"><span>Score <span class="num" id="qScore"></span></span><button class="btn" id="qReset" type="button">Reset</button></div>
+    <div id="qList"></div>
+  </div></div>
+</div>
+<script>var DECK={"key": "deck-9708-ch1", "flash": [["1.1", "Define scarcity.", "A situation where there are insufficient resources to satisfy all the needs and wants of people: resources are finite, wants are unlimited."], ["1.1", "Define opportunity cost.", "The benefit forgone from the <b>next best alternative</b> when a choice is made. One alternative only, and not necessarily a money cost."], ["1.1", "Need vs want?", "A need is essential for survival (food, shelter, clothing). A want is a desire for something less essential (a new TV or car)."], ["1.1", "What are the three basic economic questions?", "<b>What</b> to produce, <b>how</b> to produce, and <b>for whom</b> to produce."], ["1.1", "Consumer goods vs capital goods?", "Consumer goods give utility directly to consumers (phones, meals). Capital goods are used to produce other goods (machinery, factories)."], ["1.1", "Labour-intensive vs capital-intensive production?", "Labour-intensive uses a high proportion of labour relative to capital; capital-intensive uses a high proportion of capital relative to labour. Firms pick the cheapest efficient mix."], ["1.2", "Why is economics a social science?", "It studies human behaviour in society (social) and uses the scientific method: observe, form a theory or model, test it (science)."], ["1.2", "What is an economic model?", "A simplified representation of reality used to explain economic problems, e.g. the PPC or demand and supply."], ["1.2", "Microeconomics vs macroeconomics?", "Micro studies individual markets, consumers and firms. Macro studies the whole economy using aggregates: inflation, unemployment, growth, trade."], ["1.2", "Define a positive statement.", "An objective statement that can be tested or refuted by evidence. It can be false and still be positive. E.g. \"Malaysia's population exceeded 30 million in 2019.\""], ["1.2", "Define a normative statement.", "A subjective statement based on a value judgement that cannot be tested. Often contains <i>should, ought, fair</i>. E.g. \"The government should spend more on education.\""], ["1.2", "What does ceteris paribus mean, and why is it used?", "\"All other things remaining equal.\" It isolates the effect of one variable on another. Limitation: in reality many things change at once."], ["1.2", "Short run vs long run vs very long run?", "SR: at least one factor fixed. LR: all factors variable, technology constant. VLR: all factors plus technology, regulation and social attitudes can change."], ["1.3", "Name the four factors of production and their rewards.", "Land → rent · Labour → wages · Capital → interest · Enterprise → profit."], ["1.3", "Is money capital in economics?", "No. Capital is man-made physical goods used in production (machines, buildings, infrastructure). Money is a financial asset; interest is paid to those who lend funds to buy capital."], ["1.3", "Two roles of the entrepreneur?", "(1) <b>Organises</b> the other factors of production to raise efficiency. (2) <b>Bears risk</b> under uncertainty. Profit rewards the risk."], ["1.3", "Human capital vs physical capital?", "Human capital: skills, knowledge and experience of labour, built through education and training. Physical capital: man-made equipment, buildings and infrastructure."], ["1.3", "Define specialisation.", "Concentrating on producing the goods and services where an individual, firm, region or economy has an advantage over others."], ["1.3", "Define division of labour.", "Splitting production into many small tasks with each worker specialising in one specific task (Adam Smith's pin factory: 1 → about 5,000 pins per worker per day)."], ["1.3", "Two advantages and two disadvantages of the division of labour?", "+ higher productivity from expertise; lower training costs (also less time wasted, more machinery). − monotony and boredom; narrow skills if made redundant (also strike disruption, identical products)."], ["1.4", "Define an economic system.", "The way an economy allocates scarce resources to answer what, how and for whom to produce."], ["1.4", "Define a market economy.", "An economic system where resources are allocated by the price mechanism, with private ownership and minimal government intervention."], ["1.4", "Define consumer sovereignty.", "The idea that consumers, through their spending, decide what is produced; firms respond to consumer demand to make profit."], ["1.4", "Three disadvantages of a free market (each a market failure)?", "Negative externalities; no public goods / too few merit goods; monopoly power. Also inequality and instability (unemployment)."], ["1.4", "Define a planned (command) economy.", "An economic system in which resources are allocated by the government through a central planning process, with state ownership of resources."], ["1.4", "Main problem of central planning without prices?", "No price signals, so demand is hard to estimate → planning errors → shortages and surpluses. Also weak incentives, bureaucracy, little innovation."], ["1.4", "Define a mixed economy.", "An economy where resources are allocated partly by the price mechanism in the private sector and partly by government in the public sector."], ["1.4", "Five roles of government in a mixed economy?", "Protect property rights; provide public goods; correct information failure (merit/demerit goods); deal with externalities; redistribute income; stabilise the economy."], ["1.4", "Define a transition economy.", "An economy moving from central planning to a market-based system (Russia after 1991, China from 1978, Vietnam from 1986)."], ["1.4", "Four difficulties of transition?", "Sharp fall in GDP; high unemployment (economy inside its PPC); high inflation as prices are freed; unequal privatisation and reduced welfare services."], ["1.5", "Define a PPC.", "A curve showing the maximum combinations of two goods an economy can produce when all resources are fully and efficiently employed, given the state of technology."], ["1.5", "Four assumptions behind a PPC?", "Full employment; fixed resources; constant technology; only two goods."], ["1.5", "What does a point inside / on / outside the PPC show?", "Inside: attainable but inefficient (unemployed resources). On: attainable and productively efficient. Outside: unattainable (scarcity)."], ["1.5", "How do you calculate opportunity cost from a PPC?", "OC of one more X = units of Y given up ÷ units of X gained. State it as a positive amount of the other good."], ["1.5", "Why is a PPC usually concave to the origin?", "Increasing opportunity cost: resources are specialised, so moving them to the good they are less suited to sacrifices more and more of the other good."], ["1.5", "When is a PPC a straight line?", "When opportunity cost is constant because resources are equally efficient at producing both goods."], ["1.5", "Five causes of an outward PPC shift?", "Better technology; new resources; a larger labour force (births, immigration, later retirement); better human capital; an enterprise culture."], ["1.5", "Does a rise in unemployment shift the PPC inward?", "No. It moves the economy to a point <b>inside</b> the PPC. The curve shifts only if the quantity or quality of resources or technology changes."], ["1.5", "Actual vs potential growth on a PPC?", "Actual (short run): a move from inside the curve towards it. Potential (long run): an outward shift of the curve."], ["1.5", "When is a PPC shift non-parallel?", "When resources or technology change for only one good: only that good's intercept moves."], ["1.6", "Define a free good.", "A good unlimited in supply that needs no scarce resources to produce, so it has zero opportunity cost and no price (air, sunlight, seawater)."], ["1.6", "Define a private good.", "A good that is excludable and rival (and rejectable)."], ["1.6", "Define a public good.", "A good that is non-excludable and non-rival (and usually non-rejectable), e.g. national defence, street lights, flood control."], ["1.6", "Explain the free rider problem.", "Because a public good is non-excludable, people can benefit without paying, so they do not reveal demand; firms cannot charge or profit, so the market provides none."], ["1.6", "Define a quasi-public good.", "A good with some but not all features of a public good: it can become congested (semi-rival) and/or exclusion is possible but costly. E.g. beaches, parks, roads."], ["1.6", "Define a merit good.", "A good considered desirable that is under-consumed and under-provided in a free market due to information failure; often has positive externalities. E.g. education, healthcare."], ["1.6", "Define a demerit good.", "A good considered undesirable that is over-consumed and over-provided in a free market due to information failure; often has negative externalities. E.g. cigarettes, alcohol."], ["1.6", "Define information failure.", "When consumers lack the information needed to judge how good or bad a product is for them, so they make choices that do not maximise their welfare."], ["1.6", "Merit good vs public good: what's the key difference?", "Merit goods are rival and excludable, so markets do provide them, just too little. Public goods are non-rival and non-excludable, so markets provide none."], ["Exam", "How is an 8-mark part (a) marked?", "Point-based: AO1 3, AO2 3, AO3 2. One AO3 mark is reserved for a justified conclusion."], ["Exam", "How is a 12-mark part (b) marked?", "Levels: AO1+AO2 out of 8 (L1 1–2, L2 3–5, L3 6–8) and AO3 out of 4 (L1 1–2, L2 3–4). A one-sided answer gets 0 for AO3."], ["Exam", "What makes a PPC diagram earn its mark?", "Axes labelled with the two named goods from the question, origin O, the curve labelled PPC, and every point you discuss labelled and referred to in the text."], ["Exam", "What should a conclusion do?", "Answer the exact question (\"not always\", \"not only\") and give the deciding reason, e.g. it depends on whether market failure is significant."]], "quiz": [{"s": "PPC pack Q1", "q": "A country's PPC for capital and consumer goods shifts inward. What could have caused this?", "o": ["A rise in the retirement age", "An increase in investment", "An increase in net emigration", "A rise in technological progress"], "c": 2, "e": "Net emigration shrinks the labour force, so productive capacity falls. A, B and D add to the quantity or quality of resources and shift the PPC outward."}, {"s": "PPC pack Q5", "q": "An economy's PPC for capital goods (vertical) and consumer goods (horizontal) is bowed outward. Which statement explains this shape?", "o": ["More efficient workers are drawn away from consumer goods", "Resources cannot be switched between capital and consumer goods", "The economy is more efficient at producing capital goods", "The opportunity cost of capital goods increases the more capital goods are made"], "c": 3, "e": "A concave PPC means increasing opportunity cost. B is wrong because the downward slope shows resources can be switched. C can't be read from the diagram, which shows no costs."}, {"s": "PPC pack Q8", "q": "A straight-line PPC runs from 1,000 units of Y (vertical intercept) to 2,000 units of X. The economy produces 1,200 X on the PPC. How much Y has it given up?", "o": ["400", "600", "800", "1,000"], "c": 1, "e": "Each X costs 0.5 Y. 1,200 × 0.5 = 600 Y given up; it still makes 400 Y. The trap is A."}, {"s": "PPC pack Q7", "q": "An economy's PPC is LM. What might cause it to shift inward to NP?", "o": ["A higher retirement age", "A reallocation of resources", "The depletion of natural resources", "The underemployment of resources"], "c": 2, "e": "Fewer natural resources reduce capacity. A shifts the PPC out; B is a movement along it; D is a point inside it."}, {"s": "PPC pack Q6", "q": "Good X is more labour-intensive than good Y. A law reduces working hours. What happens to the PPC?", "o": ["It shifts inward equally on both axes", "It shifts inward, with maximum X falling proportionally more than Y", "It shifts inward, with maximum Y falling proportionally more than X", "It does not move; the economy moves inside it"], "c": 1, "e": "Less labour cuts capacity for both goods, more so for the labour-intensive X. D is wrong: the law reduces the quantity of labour available."}, {"s": "PPC pack Q10", "q": "A country at P on its PPC (consumer vs military goods) prepares for war; the war then destroys much of its infrastructure. Which sequence fits?", "o": ["Movement towards consumer goods, then an outward shift", "Movement towards military goods, then an inward shift", "Inward shift, then a movement towards military goods", "Movement inside the PPC, then an outward shift"], "c": 1, "e": "Preparing for war reallocates resources (movement along). Destroying infrastructure reduces capital (inward shift)."}, {"s": "PPC pack Q4", "q": "A straight-line PPC in Year 2 lies inside and parallel to the Year 1 PPC. What can be concluded?", "o": ["Cost of production was lower in Year 2", "Full-employment output was lower in Year 2", "Opportunity cost was lower in Year 2", "Unemployment rose between the years"], "c": 1, "e": "Every point on a PPC is full-employment output, so potential output fell. Parallel lines have the same OC; unemployment is a point inside, not a shift."}, {"s": "Systems Q1", "q": "What is likely to be greater in a planned economy than in a market economy?", "o": ["Efficiency", "Flexibility", "Innovation", "Stability"], "c": 3, "e": "The state controls output, prices and jobs, so it can offer more stability. The others are market strengths."}, {"s": "Systems Q4", "q": "In a market economy, what determines the allocation of factors of production?", "o": ["Companies' market share", "The needs of the country", "The pattern of consumers' spending", "The wealth of entrepreneurs"], "c": 2, "e": "Consumer sovereignty: spending changes prices and profits, pulling factors into favoured industries."}, {"s": "Systems Q5", "q": "What is an essential feature of a pure market economy?", "o": ["Buyers and sellers have perfect knowledge", "External costs are taxed", "Prices respond to the demands of consumers", "The government provides public goods"], "c": 2, "e": "The price mechanism defines a market economy. B and D are government intervention; perfect knowledge isn't required."}, {"s": "Systems Q6", "q": "What is the defining characteristic of a mixed economy?", "o": ["Resources are allocated partly by the state and partly by producers and consumers", "It has both monopolies and competitive industries", "It has features of both developed and developing economies", "It produces both agricultural and industrial goods"], "c": 0, "e": "\"Mixed\" refers to the method of allocation: price mechanism plus government planning."}, {"s": "Systems Q3", "q": "What are most likely to be disadvantages of a market economy?", "o": ["Economic growth and state-owned companies", "Merit goods and free competition", "Public goods and economic specialisation", "Unemployment and external costs"], "c": 3, "e": "Markets don't guarantee full employment and ignore external costs. The rest are advantages or belong to other systems."}, {"s": "Systems Q7", "q": "Which country has achieved most indicators of a successful transition? (prices / exchange rate / stock exchange / inward investment)", "o": ["Administered / managed / yes / allowed", "Administered / floating / no / controlled", "Liberalised / floating / no / allowed", "Liberalised / managed / yes / controlled"], "c": 2, "e": "Market indicators: liberalised prices, floating rate, a stock exchange, allowed FDI. C has three of four."}, {"s": "Systems Q10", "q": "Which change in system brings the greatest rise in unemployment with the greatest fall in regulation?", "o": ["Market to mixed", "Mixed to planned", "Planned to market", "Planned to mixed"], "c": 2, "e": "Planned to market removes the most regulation, and state firms kept open regardless of demand close or shed labour."}, {"s": "Systems Q8", "q": "In which types of economy might a government control prices?", "o": ["Market and mixed only", "Market and planned only", "Market, mixed and planned", "Mixed and planned only"], "c": 3, "e": "Price controls are intervention: central to planned, selective in mixed. A pure market leaves prices to demand and supply."}, {"s": "Factors Q2", "q": "What is the income received by the factor enterprise called?", "o": ["Capital", "Interest", "Profit", "Revenue"], "c": 2, "e": "Land–rent, labour–wages, capital–interest, enterprise–profit. Revenue is sales income."}, {"s": "Factors Q5", "q": "Which factor and example are correctly linked?", "o": ["Capital: $10,000 in a savings account", "Enterprise: a company accountant", "Labour: a robot", "Land: the flow of a river"], "c": 3, "e": "A river's flow is a natural resource. Money isn't capital, an accountant is labour, a robot is capital."}, {"s": "Factors Q4", "q": "Which action would NOT be an action of the factor labour?", "o": ["Leaving college to work on the land", "Moving to a capital-intensive industry to work", "Setting up a new IT business", "Taking a computer-skills course"], "c": 2, "e": "Setting up a business means organising and taking risk: enterprise."}, {"s": "Methodology Q1", "q": "\"A positive statement is ..(1).. and ..(2).. be tested; a normative statement is ..(3).. and ..(4).. be tested.\"", "o": ["objective / can / subjective / cannot", "objective / cannot / subjective / can", "subjective / can / objective / cannot", "subjective / cannot / objective / can"], "c": 0, "e": "Positive = objective and testable; normative = subjective and untestable."}, {"s": "Methodology Q2", "q": "A government subsidises milk farms. Which question is normative?", "o": ["How much will milk production increase?", "How should essential products such as milk be produced?", "How will employment in the milk industry change?", "How will milk prices change?"], "c": 1, "e": "\"Should\" asks for a value judgement; the others ask about measurable effects."}, {"s": "Classification", "q": "Which is a free good in the economic sense?", "o": ["Seawater on a remote coastline", "A toy given away in a cereal box", "Free treatment at a government clinic", "Free Wi-Fi in a café"], "c": 0, "e": "A free good uses no scarce resources. The toy, clinic and Wi-Fi all have an opportunity cost."}, {"s": "Classification", "q": "Why is a vaccination programme a merit good rather than a public good?", "o": ["It is provided by the government", "It creates external costs", "It is rival and excludable, but under-consumed due to information failure", "It is non-rival and non-excludable"], "c": 2, "e": "A dose given to one person can't go to another and non-payers can be refused. It's under-consumed because people underestimate its benefits."}]};</script>
+<script>
+(function(){
+var KEY=DECK.key, root=document.documentElement;
+function sget(k){try{return localStorage.getItem(KEY+':'+k)}catch(e){return null}}
+function sset(k,v){try{localStorage.setItem(KEY+':'+k,v)}catch(e){}}
+/* theme: dark by default, light on request */
+root.setAttribute('data-theme',sget('theme')||'dark');
+document.getElementById('themeBtn').addEventListener('click',function(){
+  var t=root.getAttribute('data-theme')==='dark'?'light':'dark';root.setAttribute('data-theme',t);sset('theme',t);});
+
+var track=document.getElementById('track'), cards=[].slice.call(track.querySelectorAll('.card'));
+var N=cards.length, cur=0, bar=document.getElementById('barFill'), cnt=document.getElementById('cnt');
+function width(){return track.clientWidth}
+function update(i){cur=i;bar.style.width=((i+1)/N*100)+'%';
+  cnt.textContent=(i+1)+' / '+N+' · '+cards[i].dataset.title;sset('pos',i);
+  document.getElementById('prevBtn').disabled=i===0;document.getElementById('nextBtn').disabled=i===N-1;}
+function go(i,smooth){i=Math.max(0,Math.min(N-1,i));
+  track.scrollTo({left:i*width(),behavior:smooth===false?'auto':'smooth'});update(i);}
+var t0;track.addEventListener('scroll',function(){clearTimeout(t0);t0=setTimeout(function(){
+  var i=Math.round(track.scrollLeft/width());if(i!==cur)update(i);},80);},{passive:true});
+window.addEventListener('resize',function(){track.scrollTo({left:cur*width(),behavior:'auto'});});
+document.getElementById('prevBtn').addEventListener('click',function(){go(cur-1)});
+document.getElementById('nextBtn').addEventListener('click',function(){go(cur+1)});
+document.addEventListener('keydown',function(e){
+  if(document.querySelector('.sheet:not([hidden])'))return;
+  if(e.key==='ArrowRight'||e.key==='PageDown'){go(cur+1);e.preventDefault();}
+  if(e.key==='ArrowLeft'||e.key==='PageUp'){go(cur-1);e.preventDefault();}});
+document.querySelectorAll('[data-goto]').forEach(function(b){b.addEventListener('click',function(){
+  var t=b.getAttribute('data-goto');for(var i=0;i<N;i++){if(cards[i].dataset.id===t){go(i);return;}}});});
+
+/* tap-to-reveal: worked-example steps */
+document.querySelectorAll('ol.steps').forEach(function(ol){
+  var li=[].slice.call(ol.children),shown=0;li.forEach(function(x){x.hidden=true});
+  var bar=document.createElement('div');bar.className='rvbar';
+  var nb=document.createElement('button');nb.className='btn pri';nb.type='button';
+  var ab=document.createElement('button');ab.className='btn';ab.type='button';ab.textContent='Show all';
+  function paint(){nb.textContent=shown<li.length?('Show step '+(shown+1)+' of '+li.length):'All steps shown';
+    nb.disabled=shown>=li.length;ab.hidden=shown>=li.length;}
+  nb.addEventListener('click',function(){if(shown<li.length){li[shown].hidden=false;shown++;paint();}});
+  ab.addEventListener('click',function(){li.forEach(function(x){x.hidden=false});shown=li.length;paint();});
+  bar.appendChild(nb);bar.appendChild(ab);ol.parentNode.insertBefore(bar,ol.nextSibling);paint();});
+/* tap-to-reveal: practice answers */
+document.querySelectorAll('.pq').forEach(function(q){
+  var a=q.querySelector('.ans');if(!a)return;a.hidden=true;
+  var b=document.createElement('button');b.className='btn';b.type='button';b.textContent='Show answer';
+  b.addEventListener('click',function(){a.hidden=!a.hidden;b.textContent=a.hidden?'Show answer':'Hide answer';});
+  q.insertBefore(b,a);});
+document.querySelectorAll('[data-revealall]').forEach(function(b){b.addEventListener('click',function(){
+  var c=b.closest('.card');c.querySelectorAll('.pq .ans').forEach(function(a){a.hidden=false});
+  c.querySelectorAll('.pq .btn').forEach(function(x){x.textContent='Hide answer'});});});
+
+/* sheets */
+function openSheet(id){document.getElementById(id).hidden=false;}
+function closeSheets(){document.querySelectorAll('.sheet').forEach(function(s){s.hidden=true});}
+document.querySelectorAll('[data-close]').forEach(function(b){b.addEventListener('click',closeSheets)});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeSheets();});
+
+/* contents */
+var toc=document.getElementById('tocList'),lastSec=null;
+cards.forEach(function(c,i){
+  var s=c.dataset.group;if(s!==lastSec){var g=document.createElement('div');g.className='tocgrp';g.textContent=s;toc.appendChild(g);lastSec=s;}
+  var b=document.createElement('button');b.className='tocitem';b.type='button';
+  b.innerHTML='<span class="no">'+(i+1)+'</span><span></span><span class="kd"></span>';
+  b.children[1].textContent=c.dataset.title;b.children[2].textContent=c.dataset.kind;
+  b.addEventListener('click',function(){closeSheets();go(i,false);});toc.appendChild(b);});
+document.getElementById('tocBtn').addEventListener('click',function(){
+  [].forEach.call(toc.querySelectorAll('.tocitem'),function(b,i){b.classList.toggle('cur',i===cur)});
+  openSheet('tocSheet');var c=toc.querySelector('.cur');if(c)c.scrollIntoView({block:'center'});});
+
+/* flashcards */
+var F=DECK.flash,topics=['All'];F.forEach(function(c){if(topics.indexOf(c[0])<0)topics.push(c[0])});topics.push('Again pile');
+var filt='All',order=[],fi=0,again={};
+var chipBox=document.getElementById('fcChips'),fc=document.getElementById('fc');
+topics.forEach(function(t){var b=document.createElement('button');b.className='chip';b.type='button';b.textContent=t;
+  b.setAttribute('aria-pressed',t===filt?'true':'false');
+  b.addEventListener('click',function(){filt=t;[].forEach.call(chipBox.children,function(x){x.setAttribute('aria-pressed',x===b?'true':'false')});build();});
+  chipBox.appendChild(b);});
+function build(){order=[];F.forEach(function(c,i){if(filt==='All'||c[0]===filt||(filt==='Again pile'&&again[i]))order.push(i)});fi=0;show();}
+function show(){fc.classList.remove('flip');var q=document.getElementById('fcQ'),a=document.getElementById('fcA');
+  if(!order.length){q.textContent=filt==='Again pile'?'Nothing in the Again pile yet.':'No cards.';a.textContent='';document.getElementById('fcN').textContent='0 cards';return;}
+  var c=F[order[fi]];q.innerHTML=c[1];a.innerHTML=c[2];
+  document.getElementById('fcT').textContent=c[0];document.getElementById('fcT2').textContent=c[0];
+  document.getElementById('fcN').textContent=(fi+1)+' / '+order.length;}
+fc.addEventListener('click',function(){fc.classList.toggle('flip')});
+document.getElementById('fcPrev').addEventListener('click',function(){if(order.length){fi=(fi-1+order.length)%order.length;show();}});
+document.getElementById('fcNext').addEventListener('click',function(){if(order.length){fi=(fi+1)%order.length;show();}});
+document.getElementById('fcShuf').addEventListener('click',function(){for(var i=order.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=order[i];order[i]=order[j];order[j]=t;}fi=0;show();});
+document.getElementById('fcAgain').addEventListener('click',function(){if(order.length){again[order[fi]]=1;fi=(fi+1)%order.length;show();}});
+document.getElementById('fcGot').addEventListener('click',function(){if(!order.length)return;delete again[order[fi]];
+  if(filt==='Again pile'){order.splice(fi,1);if(fi>=order.length)fi=0;}else fi=(fi+1)%order.length;show();});
+document.addEventListener('keydown',function(e){if(document.getElementById('fcSheet').hidden)return;
+  if(e.key===' '){fc.classList.toggle('flip');e.preventDefault();}
+  if(e.key==='ArrowRight')document.getElementById('fcNext').click();
+  if(e.key==='ArrowLeft')document.getElementById('fcPrev').click();});
+document.getElementById('fcBtn').addEventListener('click',function(){openSheet('fcSheet');});
+build();
+
+/* quiz */
+var Q=DECK.quiz,list=document.getElementById('qList'),right=0,done=0;
+function renderQ(){list.innerHTML='';right=0;done=0;paintS();
+  Q.forEach(function(it,qi){var box=document.createElement('div');box.className='mcq';
+    box.innerHTML='<div class="qh"><span>Q'+(qi+1)+'</span><span></span></div><p class="qt"></p><div class="opts"></div>';
+    box.querySelector('.qh span:last-child').textContent=it.s;box.querySelector('.qt').innerHTML=it.q;
+    var opts=box.querySelector('.opts');
+    it.o.forEach(function(t,oi){var b=document.createElement('button');b.type='button';b.className='opt';
+      b.innerHTML='<b>'+'ABCD'[oi]+'</b><span></span>';b.querySelector('span').innerHTML=t;
+      b.addEventListener('click',function(){if(box.classList.contains('done'))return;box.classList.add('done');done++;
+        var ok=oi===it.c;if(ok)right++;b.classList.add(ok?'right':'wrong');opts.children[it.c].classList.add('right');
+        var ex=document.createElement('div');ex.className='ex';
+        ex.innerHTML='<b style="color:var('+(ok?'--good':'--bad')+')">'+(ok?'Correct. ':'Answer: '+'ABCD'[it.c]+'. ')+'</b>'+it.e;box.appendChild(ex);paintS();});
+      opts.appendChild(b);});
+    list.appendChild(box);});}
+function paintS(){document.getElementById('qScore').textContent=right+' / '+done+' answered of '+Q.length;}
+document.getElementById('qReset').addEventListener('click',function(){renderQ();list.parentNode.parentNode.scrollTop=0;});
+document.getElementById('qBtn').addEventListener('click',function(){openSheet('qSheet');});
+renderQ();
+
+/* start where you left off */
+var start=parseInt(sget('pos')||'0',10);if(!(start>=0&&start<N))start=0;
+var h=(location.hash||'').slice(1);if(h){cards.forEach(function(c,i){if(c.dataset.id===h)start=i});}
+requestAnimationFrame(function(){go(start,false);});
+})();
+</script>
+
+<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(function(){});}</script>
+</body></html>
