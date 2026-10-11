@@ -66,6 +66,11 @@ body.running .setter, body.paused .setter{opacity:.45;pointer-events:none}
 #done .acts{display:flex;gap:10px;flex-wrap:wrap}
 a.log{font-weight:700;text-decoration:none;background:var(--accent);color:var(--bg);padding:.7em 1.3em;border-radius:4px}
 
+#setup{width:100%;box-sizing:border-box;background:var(--paper);border:1.5px solid var(--accent);border-radius:4px;padding:16px 18px;font-size:.95rem}
+#setup h2{font-size:1.05rem;margin:0 0 6px}
+#setup ol{margin:8px 0 12px;padding-left:1.3em;display:flex;flex-direction:column;gap:6px}
+#setup .acts{display:flex;gap:10px;flex-wrap:wrap}
+#setup .note{color:var(--muted);font-size:.88rem;margin:0 0 10px}
 footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 20px;font-size:.82rem;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}
 footer label{display:flex;align-items:center;gap:6px;cursor:pointer}
 code{font-family:var(--display);font-size:.78rem;background:var(--paper);border:1px solid var(--line);padding:1px 5px;border-radius:3px;color:var(--ink)}
@@ -109,11 +114,30 @@ code{font-family:var(--display);font-size:.78rem;background:var(--paper);border:
       <div class="acts"><a class="log" id="logLink" href="#" target="_blank" rel="noopener">Log in tracker →</a>
         <button id="newBtn">New test</button></div>
     </section>
+    <section id="setup" hidden>
+      <h2>iPad alerts · one-time setup</h2>
+      <p class="note">When you press Start, the timer hands your warnings to a Shortcut, which puts them in Reminders. They pop up even while you're in another app. Pause, Finish and Reset clear them.</p>
+      <ol>
+        <li>In <b>Reminders</b>, make a new list called <b>Exam Timer</b>.</li>
+        <li>In <b>Shortcuts</b>, tap <b>+</b> and name the shortcut <b>Exam Alerts</b> (exactly).</li>
+        <li>Add <b>Find Reminders</b>: tap <i>Add Filter</i> → <i>List is Exam Timer</i>. Then add <b>Remove Reminders</b> under it.</li>
+        <li>Add <b>If</b>: <i>Shortcut Input</i> → <i>has any value</i>. Put steps 5–9 inside the If.</li>
+        <li>Add <b>Split Text</b>: split <i>Shortcut Input</i> by <i>New Lines</i>.</li>
+        <li>Add <b>Repeat with Each</b> (item in <i>Split Text</i>). Put steps 7–9 inside it.</li>
+        <li>Add <b>Split Text</b>: split <i>Repeat Item</i> by <i>Custom</i> → type <code>|</code>. Then add <b>Get Item from List</b> → <i>First Item</i>.</li>
+        <li>Add <b>Adjust Date</b>: <i>Add</i> → tap the number and pick <i>Item from List</i>, unit <i>seconds</i>, to <i>Current Date</i>.</li>
+        <li>Add <b>Get Item from List</b> → <i>Last Item</i>, and tap its input to pick the <i>Split Text</i> from step 7. Then add <b>Add New Reminder</b>: title <i>Item from List</i>, list <i>Exam Timer</i>, turn on <i>Remind Me</i> → <i>At Time</i> → pick <i>Adjusted Date</i>.</li>
+        <li>In the shortcut's settings (ⓘ) → <b>Privacy</b>, allow deleting without asking. Check Reminders notifications are on in iPad Settings.</li>
+      </ol>
+      <p class="note">After each Start or Pause you'll briefly see Shortcuts; swipe back to the timer. Alerts land within about a minute of the exact time, and a Focus mode can silence them.</p>
+      <div class="acts"><button id="testAlert">Send test alert (20 s)</button><button id="hideSetup">Done</button></div>
+    </section>
   </main>
 
   <footer>
-    <span>Your session is saved on this device: it keeps time while you use other apps, and a paused test waits (even overnight) until you press Start again. Only Reset, New test or picking a different paper clears it.</span>
+    <span>Your session is saved on this device: it keeps time while you use other apps, and a paused test waits (even overnight) until you press Start again. Only Reset, New test or picking a different paper clears it. Turn on iPad alerts to get warnings while you're in other apps.</span>
     <label><input type="checkbox" id="sound" checked onchange="save()"> Sound</label>
+    <label><input type="checkbox" id="alerts" onchange="alertsChanged()"> iPad alerts</label>
     <span><code>Space</code> start/pause · <code>Enter</code> finish · <code>F</code> full screen</span>
   </footer>
 </div>
@@ -196,6 +220,7 @@ function render(){
 
 function setMinutes(m, quiet){
   m = Math.min(600, Math.max(1, Math.round(+m||0))); if(!m) return;
+  if(!quiet && startedAt && !finished && endTime) sendAlerts("");   // a running test is being cleared: drop its alerts
   stopTick(); totalMs = remainingMs = m*60000; fired.clear(); startedAt = null; finished = false;
   $("mins").value = m; $("allowed").textContent = words(m);
   $("startAt").textContent = $("endAt").textContent = "—";
@@ -211,11 +236,11 @@ function start(){
   document.body.classList.add("running"); document.body.classList.remove("paused");
   if(remainingMs > 0) $("status").textContent = "In progress";
   $("startBtn").textContent = "Pause"; $("finishBtn").hidden = false;
-  beep(1,880); requestWake(); tick = setInterval(render, 250); render(); save();
+  beep(1,880); requestWake(); tick = setInterval(render, 250); render(); save(); scheduleAlerts();
 }
 function pause(){
   remainingMs = endTime - Date.now(); stopTick();
-  showPaused(); save();
+  showPaused(); save(); sendAlerts("");
 }
 function showPaused(){
   document.body.classList.add("paused"); $("status").textContent = "Paused · press Start to continue"; $("endAt").textContent = "—";
@@ -226,7 +251,7 @@ function stopTick(){ clearInterval(tick); tick=null; endTime=null; document.body
 function finish(){
   if(!startedAt || finished) return;
   remainingMs = left(); stopTick(); finished = true;
-  showDone(); beep(2,520); save();
+  showDone(); beep(2,520); save(); sendAlerts("");
 }
 function showDone(){
   document.body.classList.remove("paused","running");
@@ -254,13 +279,13 @@ function save(){
   try{ localStorage.setItem(KEY, JSON.stringify({ subject, paper, totalMs,
     remainingMs: running() ? left() : remainingMs,
     endTime: running() ? endTime : null,                     // running: absolute finish time, so time away still counts
-    startedAt: startedAt ? +startedAt : null, finished, fired:[...fired], sound:$("sound").checked })); }catch(e){}
+    startedAt: startedAt ? +startedAt : null, finished, fired:[...fired], sound:$("sound").checked, alerts:$("alerts").checked })); }catch(e){}
 }
 function restore(){
   let st; try{ st = JSON.parse(localStorage.getItem(KEY)); }catch(e){ return false; }
   if(!st || !SUBJECTS[st.subject] || !SUBJECTS[st.subject].papers[st.paper] || !(st.totalMs > 0)) return false;
   subject = st.subject; paper = st.paper; renderPickers();
-  $("sound").checked = st.sound !== false;
+  $("sound").checked = st.sound !== false; $("alerts").checked = !!st.alerts;
   setMinutes(st.totalMs/60000, true);
   remainingMs = st.remainingMs; (st.fired||[]).forEach(w => fired.add(w));
   if(!st.startedAt){ render(); return true; }                // set up but never started
@@ -283,6 +308,24 @@ document.addEventListener("visibilitychange", () => {
 });
 window.addEventListener("pagehide", save);
 window.addEventListener("pageshow", () => render());
+
+// ---------- iPad alerts: hand warnings to the "Exam Alerts" Shortcut, which files them as timed Reminders ----------
+// Input is one line per alert: "<seconds from now>|<message>". Empty input = just clear old alerts.
+const SHORTCUT = "Exam Alerts";
+function runShortcut(text){
+  location.href = "shortcuts://run-shortcut?name=" + encodeURIComponent(SHORTCUT) + "&input=text&text=" + encodeURIComponent(text);
+}
+function sendAlerts(text){ if($("alerts").checked) runShortcut(text); }
+function scheduleAlerts(){
+  if(!$("alerts").checked) return;
+  const l = left(), S = SUBJECTS[subject], name = `${S.name} ${paper==="T" ? "Topical" : paper}`, lines = [];
+  for(const w of [30,10,5]) if(totalMs > w*60000 && l > w*60000 + 30000) lines.push(`${Math.round((l - w*60000)/1000)}|${w} minutes left · ${name}`);
+  if(l > 0) lines.push(`${Math.round(l/1000)}|Time up · ${name}. Pens down`);
+  runShortcut(lines.join("\n"));
+}
+function alertsChanged(){ $("setup").hidden = !$("alerts").checked; save(); }
+$("testAlert").onclick = () => runShortcut("20|Test alert from Exam Timer. It works!");
+$("hideSetup").onclick = () => { $("setup").hidden = true; };
 
 async function requestWake(){ try{ wakeLock = await navigator.wakeLock?.request("screen"); }catch(e){} }
 function releaseWake(){ try{ wakeLock?.release(); }catch(e){} wakeLock=null; }
