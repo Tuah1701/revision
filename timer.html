@@ -31,7 +31,7 @@ header{display:flex;flex-direction:column;gap:10px;border-bottom:2px solid var(-
 .pick .lbl{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600;min-width:4.5em}
 .seg{font-size:.88rem;padding:.38em .85em;border:1.5px solid var(--line);border-radius:4px;background:transparent;color:var(--muted);font-weight:600;cursor:pointer;font-family:var(--body)}
 .seg[aria-pressed="true"]{border-color:var(--ink);background:var(--ink);color:var(--bg)}
-body.running .pick, body.paused .pick{opacity:.45;pointer-events:none}
+body.running .pick{opacity:.45;pointer-events:none}
 
 main{display:flex;flex-direction:column;align-items:center;gap:clamp(10px,2.2vh,20px);flex:1;justify-content:center}
 .status{font-size:.8rem;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:var(--state);display:flex;align-items:center;gap:8px}
@@ -112,8 +112,8 @@ code{font-family:var(--display);font-size:.78rem;background:var(--paper);border:
   </main>
 
   <footer>
-    <span>The clock keeps running past zero until you press Finish test. Warnings at 30, 10 and 5 minutes.</span>
-    <label><input type="checkbox" id="sound" checked> Sound</label>
+    <span>Your session is saved on this device: it keeps time while you use other apps, and a paused test waits (even overnight) until you press Start again. Only Reset, New test or picking a different paper clears it.</span>
+    <label><input type="checkbox" id="sound" checked onchange="save()"> Sound</label>
     <span><code>Space</code> start/pause · <code>Enter</code> finish · <code>F</code> full screen</span>
   </footer>
 </div>
@@ -162,8 +162,12 @@ function renderPickers(){
   $("subjectCode").textContent = S.code;
   $("paperTitle").textContent = `${S.name} · ${paper==="T" ? P[0] : paper+" "+P[0]}`;
 }
-function choose(sub, pap, mins){
-  if(running() || (startedAt && !finished)) return;          // can't swap papers mid-test
+function choose(sub, pap, mins, fromLink){
+  if(running()) return;                                       // can't swap papers while the clock runs
+  if(startedAt && !finished){                                 // paused test in progress
+    if(fromLink) return;                                      // a link never wipes a saved session
+    if(!confirm("Switch paper? Your paused progress on this one will be cleared.")) return;
+  }
   subject = sub; paper = pap && SUBJECTS[sub].papers[pap] ? pap : Object.keys(SUBJECTS[sub].papers)[0];
   renderPickers(); setMinutes(mins || SUBJECTS[subject].papers[paper][1]);
 }
@@ -179,19 +183,24 @@ function render(){
   b.classList.toggle("over", l<=0 && !!startedAt);
   document.title = startedAt && !finished ? `${fmt(l)} · Exam Timer` : "Exam Timer";
   if(running()){
-    for(const w of [30,10,5]) if(min<=w && totalMs/60000>w && !fired.has(w)){ fired.add(w); beep(w===5?3:2,660); $("status").textContent=`${w} minutes remaining`; }
-    if(l<=0 && !fired.has(0)){ fired.add(0); beep(5,990); }
+    let hit = null;
+    for(const w of [30,10,5]) if(min<=w && totalMs/60000>w && !fired.has(w)){ fired.add(w); hit = w; }
+    if(l<=0 && !fired.has(0)){ fired.add(0); hit = 0; }
+    if(hit !== null){                                       // beep once for the latest threshold crossed
+      if(hit === 0) beep(5,990); else { beep(hit===5?3:2,660); $("status").textContent=`${hit} minutes remaining`; }
+      save();
+    }
     if(l<=0) $("status").textContent = "Over time · keep going, press Finish test when done";
   }
 }
 
-function setMinutes(m){
+function setMinutes(m, quiet){
   m = Math.min(600, Math.max(1, Math.round(+m||0))); if(!m) return;
   stopTick(); totalMs = remainingMs = m*60000; fired.clear(); startedAt = null; finished = false;
   $("mins").value = m; $("allowed").textContent = words(m);
   $("startAt").textContent = $("endAt").textContent = "—";
   document.body.className = ""; $("done").hidden = true; $("finishBtn").hidden = true;
-  $("startBtn").textContent = "Start"; $("status").textContent = "Ready · press Start to begin"; render();
+  $("startBtn").textContent = "Start"; $("status").textContent = "Ready · press Start to begin"; render(); if(!quiet) save();
 }
 function start(){
   if(finished) return;
@@ -202,17 +211,24 @@ function start(){
   document.body.classList.add("running"); document.body.classList.remove("paused");
   if(remainingMs > 0) $("status").textContent = "In progress";
   $("startBtn").textContent = "Pause"; $("finishBtn").hidden = false;
-  beep(1,880); requestWake(); tick = setInterval(render, 250); render();
+  beep(1,880); requestWake(); tick = setInterval(render, 250); render(); save();
 }
 function pause(){
   remainingMs = endTime - Date.now(); stopTick();
-  document.body.classList.add("paused"); $("status").textContent = "Paused"; $("endAt").textContent = "—";
+  showPaused(); save();
+}
+function showPaused(){
+  document.body.classList.add("paused"); $("status").textContent = "Paused · press Start to continue"; $("endAt").textContent = "—";
+  $("finishBtn").hidden = false; render();
 }
 function stopTick(){ clearInterval(tick); tick=null; endTime=null; document.body.classList.remove("running"); $("startBtn").textContent="Start"; releaseWake(); }
 
 function finish(){
   if(!startedAt || finished) return;
   remainingMs = left(); stopTick(); finished = true;
+  showDone(); beep(2,520); save();
+}
+function showDone(){
   document.body.classList.remove("paused","running");
   const usedMs = totalMs - remainingMs, takenMin = Math.max(1, Math.round(usedMs/60000)), allowedMin = Math.round(totalMs/60000);
   $("status").textContent = "Finished"; $("startBtn").textContent = "Start"; $("finishBtn").hidden = true;
@@ -222,7 +238,7 @@ function finish(){
   const S=SUBJECTS[subject]; $("dPaper").textContent = `${S.name} ${S.code} · ${paper==="T"?"Topical":paper}`;
   // the tracker opens its log form pre-filled from this link — nothing is saved until you press Save there
   $("logLink").href = `${TRACKER}#log-${subject}-${paper.toLowerCase()}-a${allowedMin}-t${takenMin}`;
-  $("done").hidden = false; beep(2,520);
+  $("done").hidden = false; render();
 }
 
 let resetArmed = false;
@@ -231,6 +247,42 @@ function reset(){
     setTimeout(()=>{ resetArmed=false; $("resetBtn").textContent="Reset"; }, 3000); return; }
   resetArmed = false; $("resetBtn").textContent = "Reset"; setMinutes($("mins").value);
 }
+
+// ---------- saved session: survives app switching, iPadOS closing the app, reloads, next day ----------
+const KEY = "examTimer.v1";
+function save(){
+  try{ localStorage.setItem(KEY, JSON.stringify({ subject, paper, totalMs,
+    remainingMs: running() ? left() : remainingMs,
+    endTime: running() ? endTime : null,                     // running: absolute finish time, so time away still counts
+    startedAt: startedAt ? +startedAt : null, finished, fired:[...fired], sound:$("sound").checked })); }catch(e){}
+}
+function restore(){
+  let st; try{ st = JSON.parse(localStorage.getItem(KEY)); }catch(e){ return false; }
+  if(!st || !SUBJECTS[st.subject] || !SUBJECTS[st.subject].papers[st.paper] || !(st.totalMs > 0)) return false;
+  subject = st.subject; paper = st.paper; renderPickers();
+  $("sound").checked = st.sound !== false;
+  setMinutes(st.totalMs/60000, true);
+  remainingMs = st.remainingMs; (st.fired||[]).forEach(w => fired.add(w));
+  if(!st.startedAt){ render(); return true; }                // set up but never started
+  startedAt = new Date(st.startedAt); $("startAt").textContent = clockTime(startedAt);
+  if(st.finished){ finished = true; showDone(); }
+  else if(st.endTime){ remainingMs = st.endTime - Date.now(); resume(st.endTime); }
+  else showPaused();
+  return true;
+}
+function resume(end){                                        // pick a running clock back up without restarting it
+  endTime = end; $("endAt").textContent = clockTime(new Date(endTime));
+  document.body.classList.add("running"); document.body.classList.remove("paused");
+  $("status").textContent = "In progress"; $("startBtn").textContent = "Pause"; $("finishBtn").hidden = false;
+  requestWake(); clearInterval(tick); tick = setInterval(render, 250); render();
+}
+// iPad: timers freeze while you're in another app; the clock is wall-time based, so just redraw on return
+document.addEventListener("visibilitychange", () => {
+  if(document.visibilityState === "visible"){ render(); if(running()) requestWake(); }
+  else save();
+});
+window.addEventListener("pagehide", save);
+window.addEventListener("pageshow", () => render());
 
 async function requestWake(){ try{ wakeLock = await navigator.wakeLock?.request("screen"); }catch(e){} }
 function releaseWake(){ try{ wakeLock?.release(); }catch(e){} wakeLock=null; }
@@ -254,11 +306,14 @@ function fromHash(){
   const h = location.hash.slice(1).toLowerCase(); if(!h) return;
   const parts = h.split("-"), mins = parts.find(p => /^\d+$/.test(p));
   const sub = parts.find(p => SUBJECTS[p]), pap = parts.find(p => /^(p\d|t)$/.test(p));
-  if(sub) choose(sub, pap ? pap.toUpperCase() : null, mins);
+  if(startedAt && !finished) return;                        // keep the saved test
+  const P = sub ? (pap && SUBJECTS[sub].papers[pap.toUpperCase()] ? pap.toUpperCase() : Object.keys(SUBJECTS[sub].papers)[0]) : paper;
+  if((sub || subject) === subject && P === paper && (!mins || +mins*60000 === totalMs)) return;   // same setup: leave it as it is
+  if(sub) choose(sub, pap ? pap.toUpperCase() : null, mins, true);
   else if(mins) setMinutes(mins);
 }
 window.addEventListener("hashchange", fromHash);
-renderPickers(); setMinutes(110); fromHash();
+renderPickers(); if(!restore()) setMinutes(110); fromHash();
 </script>
 
 <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(function(r){document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')r.update().catch(function(){});});}).catch(function(){});var had=!!navigator.serviceWorker.controller,done=false;navigator.serviceWorker.addEventListener('controllerchange',function(){if(had&&!done){done=true;location.reload();}});}</script></body></html>
