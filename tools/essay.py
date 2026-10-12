@@ -28,7 +28,7 @@ def build():
 <div><h4 class="t">AO2 · Analysis</h4><p>Developed chains of reasoning from cause to effect, using the diagram.</p></div>
 <div><h4 class="g">AO3 · Evaluation</h4><p>What the answer depends on and why, then a justified conclusion to the exact question.</p></div>
 </div>
-<div class="note tip"><b>Timing</b>Paper 2 is 1 h 45 min for 40 marks: about 2.5 minutes per mark. Roughly 18–20 minutes for (a) and 28–30 for (b), with planning time inside that.</div>""", sec="Overview"))
+<div class="note tip"><b>Timing</b>The paper is 2 hours for 60 marks: 2 minutes per mark. About 16 minutes for an 8-mark part and 24 for a 12-mark part, with planning time inside that.</div>""", sec="Overview"))
 
     C.append(card("mark8", "Marking", "How (a) 8 is marked", "Concept", """
 <h2>Part (a): 8 marks, point-based</h2>
@@ -223,7 +223,7 @@ def build():
 <div class="tw"><table>
 <tr><td class="k">(a) 8</td><td>Explain… consider · AO 3/3/2 · conclusion mark reserved</td></tr>
 <tr><td class="k">(b) 12</td><td>Assess · L3 6–8 + AO3 4 · one-sided = 0 AO3</td></tr>
-<tr><td class="k">Timing</td><td>~2.5 min per mark · plan 2 min</td></tr>
+<tr><td class="k">Timing</td><td>2 min per mark · plan 2 min</td></tr>
 <tr><td class="k">12-mark shape</td><td>Intro · For · Against · Evaluate · Conclude</td></tr>
 <tr><td class="k">Paragraph</td><td>Point → Explain → Example → Link</td></tr>
 <tr><td class="k">Chain words</td><td>because · so · which leads to · therefore</td></tr>
@@ -243,7 +243,7 @@ FLASH = [
     ["Marking", "What is AO1?", "Knowledge and understanding: precise definitions, correct terms, an accurate labelled diagram."],
     ["Marking", "What is AO2?", "Analysis: developed chains of reasoning linking cause to effect, using the diagram."],
     ["Marking", "What is AO3?", "Evaluation: what the answer depends on and why, plus a justified conclusion to the exact question."],
-    ["Marking", "Roughly how long per mark in Paper 2?", "About 2.5 minutes (1 h 45 min for 40 marks)."],
+    ["Marking", "Roughly how long per mark in Paper 2?", "2 minutes (2 hours for 60 marks)."],
     ["Structure", "Five parts of a 12-mark answer?", "Intro (define) · case for · case against · evaluation · conclusion."],
     ["Structure", "Three steps for \"Explain… and consider whether…\"?", "Define/distinguish A with an example; define/distinguish B with an example; consider: market alone vs what government adds, then one limit."],
     ["Structure", "Which command words need a judgement?", "Assess, evaluate, discuss (and consider in part a). \"Explain\" doesn't."],
@@ -274,7 +274,7 @@ QUIZ = [
     {"s": "Evaluation", "q": "Which is the strongest evaluation?", "o": ["It depends.", "There are pros and cons.", "How far consumption falls depends on PED: with inelastic demand quantity barely falls.", "Some people may disagree."], "c": 2, "e": "It names the factor and explains how it changes the outcome."},
     {"s": "Conclusion", "q": "The question asks \"Are producers the only ones to benefit from more investment?\" Best conclusion opening?", "o": ["Investment leads to a more inclusive growth model.", "No, because consumers also gain from lower prices, though producers gain most in the short run.", "There are many stakeholders.", "Investment is important for growth."], "c": 1, "e": "It answers \"only\" directly with a reason and a qualification."},
     {"s": "Mistakes", "q": "Why are public goods underprovided by the market? (most precise)", "o": ["They make no profit", "The government owns them", "Non-excludability lets people free ride, so no effective demand is revealed", "They are too expensive to produce"], "c": 2, "e": "Use the free-rider problem, not just \"no profit\"."},
-    {"s": "Timing", "q": "Roughly how long should a 12-mark part (b) take?", "o": ["About 10 minutes", "About 28–30 minutes", "About 45 minutes", "About 1 hour"], "c": 1, "e": "About 2.5 minutes per mark, including a quick plan."},
+    {"s": "Timing", "q": "Roughly how long should a 12-mark part (b) take?", "o": ["About 10 minutes", "About 24 minutes", "About 45 minutes", "About 1 hour"], "c": 1, "e": "2 minutes per mark (2 hours for 60 marks), including a quick plan."},
 ]
 
 

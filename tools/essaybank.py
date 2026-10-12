@@ -20,8 +20,8 @@ from engine import card
 HERE = pathlib.Path(__file__).parent
 WPM = 22  # realistic handwriting speed under exam pressure
 
-# Minutes per mark: AS Paper 2 = 105 min / 40 marks; A Level Paper 4 = 120 min / 60 marks.
-MIN_PER_MARK = {"AS": 2.6, "A2": 2.0}
+# Minutes per mark: 2 hours for 60 marks (Tuah's confirmed paper format).
+MIN_PER_MARK = {"AS": 2.0, "A2": 2.0}
 
 EXTRA_CSS = """<style>
 mark{background:var(--accent-soft);color:var(--fg);padding:0 .18em;border-radius:4px;-webkit-box-decoration-break:clone;box-decoration-break:clone;font-weight:600}
