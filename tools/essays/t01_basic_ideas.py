@@ -1,0 +1,107 @@
+from essays import figs
+
+TOPIC = {
+    "no": 1, "level": "AS", "short": "1 Basic ideas",
+    "title": "Basic economic ideas and resource allocation",
+    "syllabus": "Scarcity · PPC · factors · systems · goods",
+    "why": "Scarcity and opportunity cost sit underneath every essay in the course. If you can define them precisely and draw the PPC, you have an intro and a diagram for half the paper.",
+    "recycle": {
+        "defs": [
+            ("Scarcity", "Unlimited wants but finite resources, so not every want can be satisfied and <mark>choices must be made</mark>."),
+            ("Opportunity cost", "The <mark>value of the next best alternative forgone</mark> when a choice is made."),
+            ("Production possibility curve", "The <mark>maximum combinations</mark> of two goods an economy can produce when all resources are <mark>fully and efficiently employed</mark>, with given technology."),
+            ("Market economy", "Resources allocated by the <mark>price mechanism</mark>, with private ownership and minimal government intervention."),
+            ("Planned economy", "The <mark>state decides</mark> what, how and for whom to produce; resources are mostly state-owned."),
+            ("Mixed economy", "Resources allocated partly by the price mechanism (private sector) and partly by the state (public sector)."),
+            ("Public good", "<mark>Non-excludable and non-rival</mark>, so consumers can <mark>free ride</mark>; no effective demand is revealed, so the market provides none."),
+            ("Merit good", "A good the free market <mark>under-consumes</mark> because consumers <mark>underestimate its benefits</mark> (information failure); it often has external benefits."),
+        ],
+        "chains": [
+            ("Price mechanism", ["Demand rises", "Shortage at old price", "Price rises", "<b>Signal</b> + <b>profit incentive</b>", "Resources move to that good", "Higher price <b>rations</b> what's left"]),
+            ("Investment and the PPC", ["More capital goods now", "Fewer consumer goods (opportunity cost)", "Movement along PPC", "Capital stock grows", "PPC shifts outward later"]),
+            ("Public goods", ["Non-excludable", "Free-rider problem", "No effective demand revealed", "Firms can't charge", "Missing market → state provides"]),
+            ("Planned economy weakness", ["No price signals", "Planners must forecast demand", "Errors → shortages and surpluses", "No profit incentive", "Productive inefficiency (inside PPC)"]),
+        ],
+        "diagrams": [
+            ("PPC: movement along", "Opportunity cost of a choice; reallocating resources"),
+            ("PPC: point inside", "Unemployment, inefficiency, recession"),
+            ("PPC: outward shift", "Growth, investment, education, technology"),
+            ("Concave PPC", "Increasing opportunity cost (resources are specialised)"),
+        ],
+        "eval": [
+            ("Time period", "In the short run investment costs consumer goods, but in the long run it shifts the PPC outward, so consumers gain too."),
+            ("Degree of market failure", "Markets work well for private goods in competitive markets, but fail badly for public and merit goods."),
+            ("Government failure", "State allocation only improves on the market if the government has good information, the right incentives and little corruption."),
+            ("Value judgement", "Whether an allocation is 'desirable' depends on whether society puts more weight on efficiency or on equity."),
+        ],
+        "examples": [
+            ("Malaysia: mixed economy", "Private firms produce most goods; the state runs Klinik Kesihatan, schools, and holds stakes in GLCs such as Petronas and TNB."),
+            ("Public goods", "Street lighting, national defence, flood-mitigation schemes."),
+            ("Merit goods", "Vaccinations, education, health screenings."),
+            ("Point inside the PPC", "The 2020 Movement Control Order left labour and capital idle."),
+        ],
+        "traps": [
+            "Saying public goods aren't provided because 'there's no profit'. Use the <b>free-rider problem</b>.",
+            "Labelling PPC axes X and Y. Use the goods named in the question (or 'capital goods' and 'consumer goods').",
+            "Confusing a movement along the PPC (reallocation) with a shift (change in capacity).",
+        ],
+    },
+    "questions": [
+        {
+            "id": "t1q1", "marks": 8, "title": "Why the PPC bows outwards",
+            "q": "Explain why a production possibility curve is usually drawn concave to the origin and consider whether an economy will always produce on its production possibility curve.",
+            "src": "Past-paper style",
+            "keys": [
+                ("AO1", "Define the PPC: <mark>maximum output combinations</mark> with resources <mark>fully and efficiently employed</mark>."),
+                ("AO1", "<mark>Accurate diagram</mark>: concave PPC, named axes, points showing a reallocation."),
+                ("AO2", "<mark>Resources are not equally suited</mark> to producing both goods (specialised)."),
+                ("AO2", "So each extra unit of one good costs <mark>increasing amounts</mark> of the other: <mark>increasing opportunity cost</mark>."),
+                ("AO3", "Consider: points <mark>inside</mark> the PPC from unemployment or inefficiency; trade lets consumption go <mark>outside</mark>."),
+                ("AO3", "<mark>Conclusion</mark> answering 'always': no."),
+            ],
+            "plan": ["Define PPC", "Diagram A→B→C", "Specialised resources → rising opportunity cost", "Consider: inside (unemployment, inefficiency)", "Verdict: not always"],
+            "fig": figs.ppc(),
+            "answer": [
+                ("i", "Define", "A production possibility curve (PPC) shows the <mark>maximum combinations of two goods</mark> an economy can produce when all its resources are <mark>fully and efficiently employed</mark>, given current technology."),
+                ("a", "Explain", "The PPC is usually concave because <mark>resources are not equally suited</mark> to producing both goods. In the figure, moving from A to B, the first resources switched to consumer goods are those best suited to them, so little capital output is lost. Moving from B to C, the economy must now use resources such as engineers and specialist machinery that are much better at producing capital goods, so <mark>each extra unit of consumer goods costs more capital goods</mark>. This <mark>increasing opportunity cost</mark> makes the curve bow outwards. If all resources were equally suited, the opportunity cost would be constant and the PPC would be a straight line."),
+                ("e", "Consider", "However, an economy will <mark>not always produce on its PPC</mark>. If there is <mark>unemployment</mark>, as when Malaysia's 2020 Movement Control Order left labour and factories idle, it produces at a point inside the curve such as U. Output can also be inside the PPC because of <mark>productive inefficiency</mark>, for example when state firms in a planned economy lack a profit incentive to minimise costs. Points outside such as X cannot be produced, although trade allows a country to <mark>consume</mark> outside its PPC."),
+                ("c", "Conclusion", "So the PPC is concave because of increasing opportunity cost, but it shows potential output. In practice most economies produce <mark>slightly inside</mark> it, because some unemployment and inefficiency always exist."),
+            ],
+            "why": "The diagram and definition secure AO1 quickly. The key AO2 step is <i>why</i> opportunity cost rises (specialised resources), not just that it does. 'Consider' is answered with two distinct reasons for being inside, then a one-line verdict on 'always'.",
+        },
+        {
+            "id": "t1q2", "marks": 12, "title": "Is a mixed economy always best?",
+            "q": "Assess whether a mixed economy is always the best way to allocate scarce resources.",
+            "src": "Past-paper style",
+            "keys": [
+                ("AO1", "Define <mark>scarcity</mark> and the three questions (what, how, for whom); define a <mark>mixed economy</mark>."),
+                ("AO2", "Market side: the <mark>price mechanism</mark> signals, gives incentives and rations, leading to <mark>efficiency and consumer sovereignty</mark>."),
+                ("AO2", "Government side corrects <mark>market failure</mark>: <mark>free-rider problem</mark> for public goods, under-consumption of merit goods, inequality."),
+                ("AO2", "Compare with a planned economy: no price signals, weak incentives, shortages."),
+                ("AO3", "Against: <mark>government failure</mark>, distorting subsidies, inefficient state firms; 'best' depends on the <mark>balance</mark> and <mark>quality of government</mark>."),
+                ("AO3", "<mark>Justified conclusion</mark>: usually best, but not always."),
+            ],
+            "plan": ["Define scarcity + mixed economy", "For: market efficiency", "For: state fixes public/merit goods", "Against: government failure, wrong balance", "Depends on: quality of government", "Verdict: usually, not always"],
+            "answer": [
+                ("i", "Intro", "Because of <mark>scarcity</mark>, every economy must decide what to produce, how and for whom. In a <mark>mixed economy</mark>, such as Malaysia's, these decisions are made partly by the price mechanism and partly by the government. Whether this is always best depends on how well each sector does its job."),
+                ("a", "For: markets", "A mixed economy keeps the <mark>price mechanism</mark> for most private goods. When demand for a good rises, its price rises, which <mark>signals</mark> to producers that consumers want more and gives them a <mark>profit incentive</mark> to move resources into it, while the higher price <mark>rations</mark> the limited supply. Competition pushes firms to cut costs, so resources are used efficiently and output follows consumer preferences (<mark>consumer sovereignty</mark>). A planned economy lacks these signals, so planners must guess demand, which tends to cause shortages and surpluses."),
+                ("a", "For: government", "The government sector corrects what markets get wrong. Public goods such as street lighting are <mark>non-excludable</mark>, so people can <mark>free ride</mark>; no effective demand is revealed and the market provides none. Merit goods such as vaccinations are <mark>under-consumed</mark> because people underestimate their benefits. By providing these, and by using taxes and transfers to reduce <mark>inequality</mark>, a mixed economy achieves outcomes neither a pure market nor pure planning would."),
+                ("e", "Against", "However, a mixed economy is only as good as its government. Intervention can cause <mark>government failure</mark>: blanket fuel subsidies, for example, kept petrol cheap for rich and poor alike, encouraged over-consumption and smuggling, and cost billions that could have funded schools. State-linked firms protected from competition may be <mark>productively inefficient</mark>. If the balance tilts too far towards the state, the mixed economy can suffer the same problems as a planned one."),
+                ("e", "Depends on", "So 'best' <mark>depends on the balance</mark> and the <mark>quality of government</mark>. Economies with very different mixes, from lightly regulated Singapore to high-tax Nordic countries, have all done well, because their governments intervened where markets fail and left the rest to markets."),
+                ("c", "Conclusion", "Overall, a mixed economy is <mark>usually</mark> the best way to allocate resources because it combines the efficiency of markets with correction of market failure. However, it is <mark>not always</mark> best: where government failure is serious, a greater role for the market is likely to allocate resources better."),
+            ],
+            "why": "Both sides are developed as chains (signal → incentive → reallocation; non-excludable → free ride → missing market), which secures Level 3. The 'against' side isn't just 'governments are bad': it names a specific failure and its cost. The conclusion answers 'always' directly and says when the answer would change.",
+        },
+    ],
+    "flash": [
+        ["T1 Basic ideas", "Define opportunity cost.", "The value of the <b>next best alternative forgone</b> when a choice is made."],
+        ["T1 Basic ideas", "Why is a PPC usually concave?", "Resources are <b>not equally suited</b> to both goods, so opportunity cost <b>increases</b> as more of one good is produced."],
+        ["T1 Basic ideas", "Three functions of the price mechanism?", "<b>Signalling</b>, <b>incentive</b> (profit), <b>rationing</b>."],
+        ["T1 Basic ideas", "Why does the market not provide public goods? (precise)", "Non-excludable → <b>free-rider problem</b> → no effective demand → firms can't charge → missing market."],
+        ["T1 Basic ideas", "Two reasons an economy produces inside its PPC.", "<b>Unemployment</b> of resources; <b>productive inefficiency</b>."],
+    ],
+    "quiz": [
+        {"s": "T1 Basic ideas", "q": "A straight-line PPC means…", "o": ["Increasing opportunity cost", "Constant opportunity cost", "Zero opportunity cost", "The economy is inefficient"], "c": 1, "e": "If resources are equally suited to both goods, each unit always costs the same amount of the other."},
+        {"s": "T1 Basic ideas", "q": "Which best explains why a free market under-provides public goods?", "o": ["They are too expensive", "Consumers don't want them", "Non-excludability allows free riding", "Governments ban private provision"], "c": 2, "e": "Free riding means no effective demand is revealed, so firms cannot charge."},
+    ],
+}

@@ -6,7 +6,7 @@ Tuah's A-Level revision app: swipeable decks for 9708 Economics (more subjects c
 
 ## Layout
 - `index.html` — the hub (home screen)
-- `econ-ch1.html`, `econ-ch2.html` — decks
+- `econ-ch1.html`, `econ-ch2.html`, `econ-essays.html`, `econ-essay-bank.html` — decks (the Essay Bank grows with `/deck essay <topic>`; see `tools/essays/README.md`)
 - `timer.html` — Exam Timer
 - `sw.js`, `manifest.webmanifest`, `icon-*.png`, `mathjax/` — what makes it installable and offline
 - `tools/` — the generator Claude uses to build decks (`build.py`, `app_build.py`, `engine.py`) and the deck content

@@ -12,6 +12,10 @@ DECKS = {  # published artifact URL -> local file in the app
     "https://claude.ai/artifact/HdT6C7aKQLs4S4wVd3Pp4f": ("deck-econ-ch2.html", "econ-ch2.html"),
     "https://claude.ai/code/artifact/31acac57-ce47-4e2f-9fb6-be4a409e475c": ("deck-econ-essays.html", "econ-essays.html"),
 }
+# decks that live only in the app (no separate artifact): built file -> local file; the hub links to the local file directly
+APP_DECKS = {
+    "deck-econ-essaybank.html": "econ-essay-bank.html",
+}
 
 TIMER = SRC / "data/timer-source.html"
 TIMER_URL = "https://claude.ai/code/artifact/f3cef93e-1ff7-49d0-8358-6c072def1db6"
@@ -69,7 +73,7 @@ def main(mathjax):
                       '<p class="sub">A-Level · Econ · Phys · Maths · FM · works offline</p>')
     (OUT / "index.html").write_text(page(hub), encoding="utf8")
 
-    for url, (src, local) in DECKS.items():
+    for url, (src, local) in list(DECKS.items()) + [(None, v) for v in APP_DECKS.items()]:
         h = (SRC / src).read_text(encoding="utf8")
         h = h.replace(f'href="{HUB_URL}" target="_blank" rel="noopener">Open Revision Hub', 'href="index.html">← Back to Revision Hub')
         h = h.replace("https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js", "mathjax/tex-svg.js")
@@ -78,7 +82,7 @@ def main(mathjax):
     # in-app home button on every deck (standalone apps have no browser back button)
     home = ('<a class="ib" href="index.html" aria-label="Revision Hub"><svg viewBox="0 0 24 24">'
             '<path d="M4 11l8-7 8 7M6 9.5V20h12V9.5"/></svg></a>')
-    for _, local in DECKS.values():
+    for local in [l for _, l in DECKS.values()] + list(APP_DECKS.values()):
         p = OUT / local
         p.write_text(p.read_text(encoding="utf8").replace('<button class="ib" id="tocBtn"', home + '<button class="ib" id="tocBtn"', 1), encoding="utf8")
 

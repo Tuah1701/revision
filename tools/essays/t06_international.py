@@ -1,0 +1,105 @@
+from essays import figs
+
+TOPIC = {
+    "no": 6, "level": "AS", "short": "6 International",
+    "title": "International economic issues",
+    "syllabus": "Trade · protection · balance of payments · exchange rates",
+    "why": "Malaysia is a very open economy, so trade questions reward real examples. The two ideas you'll reuse most are comparative advantage (why trade happens) and elasticity of exports and imports (what exchange rate changes do).",
+    "recycle": {
+        "defs": [
+            ("Absolute advantage", "When a country can produce <mark>more of a good with the same resources</mark> than another country."),
+            ("Comparative advantage", "When a country can produce a good at a <mark>lower opportunity cost</mark> than another country."),
+            ("Terms of trade", "<mark>Index of export prices ÷ index of import prices × 100</mark>."),
+            ("Protectionism", "Measures that <mark>restrict imports</mark> to protect domestic producers: tariffs, quotas, subsidies, embargoes, administrative barriers."),
+            ("Current account", "Records <mark>trade in goods and services, primary income and secondary income</mark> flows."),
+            ("Depreciation", "A <mark>fall in the value of a floating currency</mark> against other currencies, caused by market forces."),
+        ],
+        "chains": [
+            ("Specialisation", ["Countries specialise by comparative advantage", "Resources used where opportunity cost is lowest", "Total world output rises", "Trade → both consume beyond their PPC"]),
+            ("Tariff", ["Import price rises", "Domestic producers expand", "Imports fall", "Consumers pay more; government gains revenue"]),
+            ("Depreciation", ["Exports cheaper in foreign currency", "Imports dearer in ringgit", "Export volume ↑, import volume ↓", "Current account improves if demand is elastic enough"]),
+            ("Imported inflation", ["Currency depreciates", "Import prices rise", "Firms' costs rise", "Cost-push inflation"]),
+        ],
+        "diagrams": [
+            ("Tariff diagram (world price + tariff)", "Effects of protection on consumers, producers, government"),
+            ("Currency demand and supply", "Why a currency appreciates or depreciates"),
+            ("J-curve", "Why a depreciation may first worsen the current account"),
+            ("PPC with trade", "Gains from specialisation"),
+        ],
+        "eval": [
+            ("Elasticities", "A depreciation only improves the current account if demand for exports and imports is sufficiently price elastic."),
+            ("Time", "In the short run trade volumes adjust slowly, so the current account can worsen before it improves (J-curve)."),
+            ("Retaliation", "Protection invites retaliation, so exporters may lose more than import-competing firms gain."),
+            ("Import content", "Malaysia's electronics exports use many imported components, so a weaker ringgit raises their costs too."),
+            ("Assumptions", "Comparative advantage assumes no transport costs, perfect factor mobility and constant costs."),
+        ],
+        "examples": [
+            ("Malaysia's exports", "Electrical and electronic goods (semiconductors), palm oil, LNG, petroleum products."),
+            ("Trade agreements", "ASEAN Free Trade Area, RCEP, CPTPP."),
+            ("Ringgit", "The ringgit weakened sharply in 2015 and again in 2023, raising import costs."),
+            ("Protection", "Import duties on cars historically protected Proton."),
+        ],
+        "traps": [
+            "Confusing absolute and comparative advantage: comparative is about <b>opportunity cost</b>.",
+            "Saying a depreciation 'always' improves the current account.",
+            "Mixing up the current account and the financial account.",
+        ],
+    },
+    "questions": [
+        {
+            "id": "t6q1", "marks": 8, "title": "Comparative advantage and winners",
+            "q": "Explain the theory of comparative advantage and consider whether free trade benefits everyone in a country.",
+            "src": "Past-paper style",
+            "keys": [
+                ("AO1", "Define comparative advantage: <mark>lower opportunity cost</mark>."),
+                ("AO2", "<mark>Numerical example</mark>: work out opportunity costs, show who specialises in what."),
+                ("AO2", "Specialisation + trade → <mark>higher total output</mark> → both <mark>consume outside their PPC</mark>."),
+                ("AO3", "Consider: <mark>losers</mark> in import-competing industries (structural unemployment); consumers gain from lower prices."),
+                ("AO3", "Conclusion: gains to the country overall, but <mark>not to everyone</mark>."),
+            ],
+            "plan": ["Define", "Table: opportunity costs", "Specialise → more output → gains", "Consider: winners vs losers", "Verdict: country gains, not everyone"],
+            "answer": [
+                ("i", "Define", "A country has a <mark>comparative advantage</mark> in a good when it can produce it at a <mark>lower opportunity cost</mark> than another country."),
+                ("a", "Example", "Suppose one worker in Malaysia can make 10 chips or 5 tonnes of rice, while one worker in Thailand can make 4 chips or 4 tonnes of rice. Malaysia has an absolute advantage in both. But the <mark>opportunity cost</mark> of one chip is 0.5 tonnes of rice in Malaysia and 1 tonne in Thailand, so <mark>Malaysia has a comparative advantage in chips</mark>. The opportunity cost of one tonne of rice is 2 chips in Malaysia but only 1 chip in Thailand, so <mark>Thailand has a comparative advantage in rice</mark>."),
+                ("a", "Gains", "If each country <mark>specialises</mark> in the good with the lower opportunity cost, resources are used where they are relatively most productive, so <mark>total world output rises</mark>. By trading at a rate between their opportunity costs, for example 1 chip for 0.75 tonnes of rice, both countries can <mark>consume combinations outside their own PPC</mark>."),
+                ("e", "Consider", "However, free trade does not benefit everyone. <mark>Consumers</mark> gain from lower prices and more choice, and exporting firms and their workers gain. But producers in <mark>import-competing industries</mark>, such as Malaysian rice farmers in this example, lose sales, and their workers may face <mark>structural unemployment</mark> if their skills don't transfer to the growing sectors."),
+                ("c", "Conclusion", "So free trade raises a country's total output and consumption, but it creates <mark>winners and losers</mark>: it benefits the country as a whole, not every person in it, unless the government compensates the losers through retraining."),
+            ],
+            "why": "A worked numerical example is the clearest way to show comparative advantage (AO2) and protects you from the absolute/comparative mix-up. The 'consider' section names specific winners and losers rather than saying 'some people lose'.",
+        },
+        {
+            "id": "t6q2", "marks": 12, "title": "Does depreciation fix the current account?",
+            "q": "Assess whether a depreciation of a country's currency will always improve its current account.",
+            "src": "Past-paper style",
+            "keys": [
+                ("AO1", "Define <mark>depreciation</mark> and the <mark>current account</mark>."),
+                ("AO2", "Chain: exports <mark>cheaper abroad</mark>, imports <mark>dearer at home</mark> → export volume up, import volume down."),
+                ("AO3", "Depends on <mark>PED for exports and imports</mark> (Marshall–Lerner: sum &gt; 1)."),
+                ("AO3", "<mark>J-curve</mark>: worse before better, because contracts and habits fix volumes in the short run."),
+                ("AO3", "<mark>Imported inflation</mark> and high <mark>import content</mark> of exports erode the gain; depends on world demand and non-price competitiveness."),
+                ("AO3", "Verdict: <mark>not always</mark>."),
+            ],
+            "plan": ["Define", "Chain: prices → volumes", "Depends: elasticities (M–L)", "J-curve time lag", "Inflation, import content, world demand", "Verdict: not always"],
+            "fig": figs.j_curve(),
+            "answer": [
+                ("i", "Intro", "A <mark>depreciation</mark> is a fall in the value of a floating currency, such as the ringgit, against other currencies. The <mark>current account</mark> records trade in goods and services plus primary and secondary income flows. Whether a depreciation improves it depends mainly on how buyers respond to the price changes it causes."),
+                ("a", "For", "After a depreciation, Malaysian exports become <mark>cheaper in foreign currencies</mark>, so foreign buyers should buy more of them, while imports become <mark>dearer in ringgit</mark>, so Malaysians switch to domestic substitutes. If export volumes rise and import volumes fall enough, export revenue rises and import spending falls, so the <mark>current account improves</mark>. The depreciation acts like a cut in the price of all of a country's goods relative to foreign goods."),
+                ("e", "Elasticities", "However, this depends on the <mark>price elasticity of demand</mark> for exports and imports. Each export now earns less foreign currency and each import costs more ringgit, so volumes must change by enough to outweigh these price effects. The <mark>Marshall–Lerner condition</mark> states that the current account improves only if the sum of the PEDs for exports and imports is greater than 1. If demand is inelastic, for example for essential imported fuel and food, the import bill rises and the balance worsens."),
+                ("e", "Time", "Even when the condition holds in the long run, the current account often <mark>worsens first</mark>, as the J-curve shows. In the short run, volumes are fixed by existing contracts and habits, so the higher import prices simply raise the import bill; only later do buyers switch."),
+                ("e", "Other factors", "The gain may also be eroded. Dearer imports raise firms' costs and cause <mark>imported inflation</mark>, which reduces the price advantage over time. Malaysia's electronics exports have a high <mark>import content</mark>, so a weaker ringgit also makes their components dearer. Finally, exports depend on <mark>world demand</mark> and quality, not just price: if trading partners are in recession, cheaper exports may not sell."),
+                ("c", "Conclusion", "Overall, a depreciation will <mark>not always</mark> improve the current account. It is most likely to work in the long run if demand for exports and imports is price elastic and inflation is controlled, but in the short run, or where trade is dominated by essential imports and import-intensive exports, the current account may worsen."),
+            ],
+            "why": "The answer explains <i>why</i> elasticities matter (price effect vs volume effect) before naming Marshall–Lerner, which shows understanding rather than recall. Evaluation is developed across three separate factors, and the conclusion states exactly when depreciation would work.",
+        },
+    ],
+    "flash": [
+        ["T6 International", "Define comparative advantage.", "Producing a good at a <b>lower opportunity cost</b> than another country."],
+        ["T6 International", "Terms of trade formula?", "Index of export prices ÷ index of import prices × 100."],
+        ["T6 International", "Marshall–Lerner condition?", "A depreciation improves the current account only if <b>PEDx + PEDm &gt; 1</b>."],
+        ["T6 International", "Why does the J-curve happen?", "Short-run trade volumes are fixed by contracts and habits, so dearer imports raise the import bill before buyers switch."],
+    ],
+    "quiz": [
+        {"s": "T6 International", "q": "Country A: 1 worker → 6 cloth or 3 wheat. Country B: 1 worker → 2 cloth or 2 wheat. Who has comparative advantage in wheat?", "o": ["A, because it makes more wheat", "B: OC of 1 wheat is 1 cloth vs 2 cloth in A", "Neither", "Both"], "c": 1, "e": "Compare opportunity costs, not absolute output."},
+        {"s": "T6 International", "q": "After a depreciation, the current account first worsens then improves. This is the…", "o": ["Multiplier", "J-curve", "Laffer curve", "Phillips curve"], "c": 1, "e": "The J-curve reflects slow adjustment of trade volumes."},
+    ],
+}

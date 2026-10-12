@@ -1,0 +1,98 @@
+TOPIC = {
+    "no": 9, "level": "A2", "short": "9 Growth & money",
+    "title": "The macroeconomy (A Level)",
+    "syllabus": "Growth · development · multiplier · money · unemployment",
+    "why": "A Level macro adds two big recyclable ideas: the multiplier (how far any change in spending spreads) and the difference between growth and development. Both turn up as evaluation in policy essays too.",
+    "recycle": {
+        "defs": [
+            ("Multiplier", "The process by which an injection leads to a <mark>proportionately larger</mark> rise in national income. k = 1 ÷ MPW, where <mark>MPW = MPS + MPT + MPM</mark>."),
+            ("Accelerator", "Investment depends on the <mark>rate of change</mark> of output: rising output growth raises investment."),
+            ("Economic growth", "An increase in <mark>real GDP</mark> (actual) or in <mark>productive capacity</mark> (potential)."),
+            ("Economic development", "An improvement in <mark>living standards and welfare</mark>: income, health, education, freedom, not only output."),
+            ("HDI", "Human Development Index: combines <mark>life expectancy, education (years of schooling) and GNI per capita (PPP)</mark>."),
+            ("Natural rate of unemployment", "Unemployment that remains when the labour market is in equilibrium: <mark>frictional + structural</mark>."),
+            ("Quantity theory of money", "<mark>MV = PT</mark>; if V and T are constant, a rise in M raises P."),
+        ],
+        "chains": [
+            ("Multiplier", ["Injection (e.g. G) rises", "Incomes rise", "Part spent (MPC)", "Others' incomes rise", "Repeated rounds", "Final ΔY = k × ΔJ"]),
+            ("Leakages shrink k", ["Each round, part of income is saved, taxed or spent on imports", "Less re-spent", "Smaller multiplier"]),
+            ("GDP ≠ welfare", ["GDP rises", "But distribution, environment, leisure, quality, informal sector not counted", "Welfare may not rise"]),
+        ],
+        "diagrams": [
+            ("AD shift with multiplier", "Final change in output larger than the injection"),
+            ("Injections = withdrawals", "Equilibrium national income"),
+            ("Lorenz curve", "Inequality when GDP per capita hides distribution"),
+        ],
+        "eval": [
+            ("Size of leakages", "In a very open economy with a high propensity to import, much of each round of spending leaks abroad, so the multiplier is small."),
+            ("Spare capacity", "The multiplier raises real output only if there is spare capacity; otherwise it raises prices."),
+            ("Distribution", "Average income can rise while most households see little gain if the extra income goes to the richest."),
+            ("Sustainability", "Growth that depletes resources or pollutes may reduce future living standards."),
+            ("PPP", "Comparisons between countries need purchasing power parity, as the same income buys different amounts."),
+        ],
+        "examples": [
+            ("High-income goal", "Malaysia aims to cross the World Bank's high-income threshold (GNI per capita)."),
+            ("Open economy", "Trade is larger than GDP in Malaysia, so the propensity to import is high."),
+            ("Informal economy", "Gig work, home businesses and unrecorded cash trade understate GDP."),
+            ("Environment", "Deforestation for plantations adds to GDP but reduces natural capital."),
+        ],
+        "traps": [
+            "Writing k = 1/(1 − MPC) for an open economy with taxes. Use <b>1/MPW</b>.",
+            "Treating growth and development as the same thing.",
+            "Comparing GDP between countries without adjusting for population, inflation or PPP.",
+        ],
+    },
+    "questions": [
+        {
+            "id": "t9q1", "marks": 8, "title": "The multiplier in an open economy",
+            "q": "Explain how the multiplier process works and consider why its size may be smaller in an open economy such as Malaysia.",
+            "src": "Past-paper style",
+            "keys": [
+                ("AO1", "Define the multiplier; <mark>k = 1/MPW</mark>."),
+                ("AO2", "Rounds of spending: injection → <mark>income</mark> → <mark>induced consumption</mark> → more income, each round smaller."),
+                ("AO2", "<mark>Numerical example</mark>."),
+                ("AO3", "Consider: high <mark>MPM</mark> in an open economy → more leakage → <mark>smaller k</mark>; also high saving or tax rates."),
+                ("AO3", "Conclusion: smaller, but local-content spending can raise it."),
+            ],
+            "plan": ["Define + formula", "Rounds of spending", "Numbers: closed vs open", "Consider: imports leak", "Verdict: small k in Malaysia"],
+            "answer": [
+                ("i", "Define", "The multiplier is the process by which an increase in an injection, such as government spending, investment or exports, causes a <mark>proportionately larger increase in national income</mark>. Its size is k = 1 ÷ MPW, where <mark>MPW = MPS + MPT + MPM</mark>."),
+                ("a", "Explain", "Suppose the government spends RM1 billion on a new road. This becomes <mark>income</mark> for construction firms and workers. They spend part of it on goods and services (<mark>induced consumption</mark>), which becomes income for shopkeepers and suppliers, who also spend part of it. Each round is smaller because some income <mark>leaks out</mark> as saving, tax or imports. The total rise in income is the sum of all the rounds. If MPS = 0.1 and MPT = 0.2 with no imports, k = 1/0.3 ≈ <mark>3.3</mark>, so national income rises by about RM3.3 billion."),
+                ("e", "Consider", "In an open economy like Malaysia, households and firms spend a large share of extra income on <mark>imports</mark>, such as cars, electronics components and food. If MPM = 0.4 as well, MPW = 0.7 and k ≈ <mark>1.4</mark>, so the same RM1 billion raises income by only about RM1.4 billion. The spending on imports raises incomes abroad, not at home. High saving rates and taxes reduce k further."),
+                ("c", "Conclusion", "So the multiplier is likely to be <mark>much smaller in Malaysia</mark> than in a closed economy, mainly because of import leakage. Government spending that uses local labour and materials leaks less, so it has a larger multiplier effect."),
+            ],
+            "why": "Numbers make the AO2 explanation concrete and show you can use the formula correctly. The comparison closed vs open answers 'consider' directly with the same numbers, and the conclusion adds a policy-relevant qualification.",
+        },
+        {
+            "id": "t9q2", "marks": 12, "title": "Is GDP per capita the best measure?",
+            "q": "Assess whether GDP per capita is the best measure of a country's standard of living.",
+            "src": "Past-paper style",
+            "keys": [
+                ("AO1", "Define <mark>real GDP per capita</mark>; standard of living."),
+                ("AO2", "For: measures <mark>average output/income</mark> available; widely available, comparable using <mark>PPP</mark>; strongly linked to health and education spending."),
+                ("AO2", "Against: ignores <mark>distribution</mark>, <mark>informal economy</mark>, <mark>externalities and sustainability</mark>, <mark>leisure</mark>, quality of goods, <mark>non-market output</mark>."),
+                ("AO3", "Alternatives: <mark>HDI</mark>, MEW, happiness indices; their own weaknesses (arbitrary weights, data quality)."),
+                ("AO3", "Verdict: useful starting point, <mark>not the best on its own</mark>."),
+            ],
+            "plan": ["Define", "For: income, data, PPP, link to welfare", "Against: distribution, informal, environment, leisure", "Alternatives: HDI and its limits", "Verdict: necessary, not sufficient"],
+            "answer": [
+                ("i", "Intro", "<mark>Real GDP per capita</mark> is the total value of goods and services produced in a country in a year, adjusted for inflation, divided by the population. The <mark>standard of living</mark> is the level of material welfare and quality of life people enjoy. Whether GDP per capita is the best measure depends on how closely income tracks these wider aspects of welfare."),
+                ("a", "For", "GDP per capita measures the <mark>average quantity of goods and services</mark> available to each person, which is a major part of living standards: more output means more food, housing and consumer goods. The data are collected in almost every country using standard methods, and when converted using <mark>purchasing power parity</mark> they allow fair comparisons between countries. Higher GDP per capita is also closely associated with better health and education, because richer countries can spend more on them."),
+                ("a", "Against", "However, GDP per capita is an <mark>average</mark>, so it hides <mark>inequality</mark>: if growth goes mainly to the richest, most people's living standards may barely change. It ignores the <mark>informal economy</mark> and <mark>non-market output</mark> such as unpaid care work, which are large in developing countries. It counts output that harms welfare: clearing forest for plantations raises GDP but causes <mark>pollution and loss of natural resources</mark>, reducing future living standards. It also ignores <mark>leisure</mark> and working hours, and the quality of goods and public services."),
+                ("e", "Alternatives", "Composite measures address some of these problems. The <mark>Human Development Index</mark> combines GNI per capita with life expectancy and years of schooling, so it captures health and education directly. However, the HDI gives <mark>arbitrary equal weights</mark> to its components, still ignores inequality and the environment, and relies on data that may be poor in low-income countries. Wider measures such as happiness surveys are subjective and hard to compare."),
+                ("c", "Conclusion", "Overall, GDP per capita is <mark>not the best measure on its own</mark>, because it ignores distribution, sustainability and non-market welfare. However, it remains the most widely available and comparable indicator, so it is best used <mark>alongside</mark> the HDI and measures of inequality such as the Gini coefficient, especially when comparing countries at similar levels of income."),
+            ],
+            "why": "The 'for' side is developed as well as the 'against' side, which many answers neglect. Evaluation goes further than listing GDP's flaws by assessing the alternative's flaws too, so the conclusion ('not best alone, but most comparable') is genuinely justified.",
+        },
+    ],
+    "flash": [
+        ["T9 Growth & money", "Multiplier formula in an open economy with government?", "k = 1 ÷ MPW, where MPW = <b>MPS + MPT + MPM</b>."],
+        ["T9 Growth & money", "Why is the multiplier small in Malaysia?", "High <b>propensity to import</b>: much of each round of spending leaks abroad."],
+        ["T9 Growth & money", "Three components of the HDI.", "Life expectancy · education (schooling) · GNI per capita (PPP)."],
+        ["T9 Growth & money", "Four reasons GDP per capita misstates living standards.", "Inequality · informal/non-market output · environment · leisure (and quality)."],
+    ],
+    "quiz": [
+        {"s": "T9 Growth & money", "q": "MPS = 0.1, MPT = 0.2, MPM = 0.2. The multiplier is…", "o": ["2", "5", "10", "1.25"], "c": 0, "e": "MPW = 0.5, so k = 1/0.5 = 2."},
+        {"s": "T9 Growth & money", "q": "Which is NOT part of the HDI?", "o": ["Life expectancy", "Years of schooling", "GNI per capita", "Gini coefficient"], "c": 3, "e": "The HDI doesn't directly measure inequality."},
+    ],
+}

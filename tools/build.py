@@ -29,6 +29,8 @@ if __name__ == "__main__":
     build_bei()
     import essay
     essay.write()
+    import essaybank
+    essaybank.write()
     try:
         import price
         price.write(SCRATCH, js_array)

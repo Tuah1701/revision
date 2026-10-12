@@ -1,0 +1,106 @@
+from essays import figs
+
+TOPIC = {
+    "no": 7, "level": "A2", "short": "7 Firms & markets",
+    "title": "The price system and the microeconomy (A Level)",
+    "syllabus": "Utility · costs · efficiency · market structures · objectives",
+    "why": "A Level micro essays almost always come back to one question: is this market structure efficient? Learn the efficiency definitions and the 'it depends' factors (economies of scale, contestability, dynamic efficiency) and every market-structure essay has its evaluation ready.",
+    "recycle": {
+        "defs": [
+            ("Productive efficiency", "Output produced at the <mark>lowest point of the average cost curve</mark> (minimum AC)."),
+            ("Allocative efficiency", "Output where <mark>price equals marginal cost</mark> (P = MC): resources allocated to what society values most."),
+            ("Dynamic efficiency", "Efficiency <mark>over time</mark> through investment in new products and processes (R&amp;D, innovation)."),
+            ("Normal profit", "The <mark>minimum profit</mark> needed to keep a firm in the industry; included in costs (AR = AC)."),
+            ("Supernormal profit", "Profit <mark>above normal profit</mark> (AR &gt; AC)."),
+            ("Barriers to entry", "Obstacles that <mark>prevent new firms entering</mark>: economies of scale, patents, high sunk costs, control of resources, legal barriers."),
+            ("Contestable market", "A market with <mark>low barriers to entry and exit</mark> (low sunk costs), so the threat of entry disciplines existing firms."),
+            ("Profit maximisation", "Output where <mark>MC = MR</mark>."),
+        ],
+        "chains": [
+            ("Perfect competition long run", ["Supernormal profit", "No barriers + perfect information", "New firms enter", "Industry supply rises, price falls", "Normal profit at min AC, P = MC"]),
+            ("Monopoly", ["High barriers", "Price maker", "Sets MC = MR", "P > MC: allocative inefficiency, deadweight loss", "Supernormal profit persists"]),
+            ("Monopoly upside", ["Supernormal profit", "Funds R&amp;D", "Dynamic efficiency", "+ economies of scale → lower costs"]),
+            ("Oligopoly", ["Few interdependent firms", "Price rigidity (kinked demand)", "Non-price competition", "Risk of collusion"]),
+        ],
+        "diagrams": [
+            ("Monopoly with DWL", "Inefficiency, profit, regulation"),
+            ("Perfect competition: firm + industry", "Long-run adjustment to normal profit"),
+            ("Natural monopoly", "Why one firm is cheapest; regulation problem"),
+            ("Kinked demand curve", "Price rigidity in oligopoly"),
+        ],
+        "eval": [
+            ("Economies of scale", "A monopoly's lower average costs may mean a lower price than many small firms could offer."),
+            ("Contestability", "If barriers are low, the threat of entry keeps prices close to cost even with one firm."),
+            ("Dynamic efficiency", "Supernormal profits can fund innovation that benefits consumers in the long run."),
+            ("Objectives", "Firms that aim for sales or revenue rather than profit produce more and charge less than the profit-maximising level."),
+            ("Regulation", "Outcomes depend on whether the government regulates prices or competition effectively."),
+        ],
+        "examples": [
+            ("Natural monopoly", "Tenaga Nasional Berhad (electricity grid)."),
+            ("Oligopoly", "Mobile networks; airlines; car makers."),
+            ("Monopolistic competition", "Hawker stalls, cafés, hair salons."),
+            ("Competition policy", "After Grab took over Uber's Southeast Asian business, MyCC proposed a large fine over its conduct towards drivers."),
+        ],
+        "traps": [
+            "Mixing up productive (min AC) and allocative (P = MC) efficiency.",
+            "Saying a monopoly 'charges the highest price possible'. It charges the price where MC = MR.",
+            "Drawing MR with the same slope as AR. MR is twice as steep for a straight-line demand curve.",
+        ],
+    },
+    "questions": [
+        {
+            "id": "t7q1", "marks": 8, "title": "Perfect competition: normal profit",
+            "q": "Explain why a firm in perfect competition earns only normal profit in the long run and consider whether perfect competition is the most efficient market structure.",
+            "src": "Past-paper style",
+            "keys": [
+                ("AO1", "Characteristics: <mark>many firms, homogeneous product, perfect information, no barriers</mark>; price taker."),
+                ("AO2", "Supernormal profit → <mark>entry</mark> → industry supply shifts right → price falls until <mark>AR = AC</mark>."),
+                ("AO2", "Long-run equilibrium: <mark>P = MC = min AC</mark> → productively and allocatively efficient."),
+                ("AO3", "Consider: <mark>no supernormal profit for R&amp;D</mark> → weak dynamic efficiency; small firms miss <mark>economies of scale</mark>."),
+                ("AO3", "Conclusion: statically efficient, not necessarily the most efficient overall."),
+            ],
+            "plan": ["Characteristics", "Supernormal → entry → price falls", "LR: P = MC = min AC", "Consider: no R&amp;D, no scale economies", "Verdict: static yes, dynamic no"],
+            "answer": [
+                ("i", "Define", "Perfect competition is a market with <mark>many small firms selling an identical product</mark>, with <mark>perfect information</mark> and <mark>no barriers to entry or exit</mark>, so each firm is a price taker."),
+                ("a", "Explain", "If firms are making <mark>supernormal profit</mark> in the short run, this is visible to everyone because of perfect information, and there are no barriers to stop new firms entering. As they enter, <mark>industry supply shifts right</mark>, so the market price falls. Each firm's demand (AR) curve shifts down with it, and entry continues until price equals average cost at its minimum, where only <mark>normal profit</mark> is made. If firms made losses, some would leave, raising price back to the same point. So in the long run, <mark>P = MC = minimum AC</mark>."),
+                ("e", "Consider", "This makes perfect competition <mark>productively efficient</mark> (minimum AC) and <mark>allocatively efficient</mark> (P = MC). However, with only normal profit, firms have <mark>no funds for research and development</mark>, so it may lack <mark>dynamic efficiency</mark>. Small firms also cannot exploit <mark>economies of scale</mark>, so a larger firm might produce at a lower cost even if it isn't at the minimum of its own AC curve."),
+                ("c", "Conclusion", "So perfect competition is the most efficient structure in a <mark>static</mark> sense, but not necessarily over time, where larger firms with profits to invest may deliver lower costs and better products."),
+            ],
+            "why": "The entry mechanism is explained step by step, including why information and no barriers are essential, which is where AO2 marks are won. The evaluation distinguishes static from dynamic efficiency, which is the standard sophisticated point at A Level.",
+        },
+        {
+            "id": "t7q2", "marks": 12, "title": "Is monopoly always bad for consumers?",
+            "q": "Assess whether monopoly is always against the interests of consumers.",
+            "src": "Past-paper style",
+            "keys": [
+                ("AO1", "Define <mark>monopoly</mark> (single seller / dominant firm, high barriers); <mark>diagram</mark> comparing with competition."),
+                ("AO2", "<mark>MC = MR</mark> → <mark>higher price, lower output</mark>, P &gt; MC → <mark>allocative inefficiency</mark>, <mark>deadweight loss</mark>; consumer surplus transferred to profit."),
+                ("AO2", "Lack of competition → <mark>X-inefficiency</mark>, less choice and quality."),
+                ("AO3", "But: <mark>economies of scale</mark>, <mark>natural monopoly</mark>, <mark>dynamic efficiency</mark> from R&amp;D, <mark>contestability</mark>, regulation."),
+                ("AO3", "Verdict: <mark>not always</mark>; depends on barriers, costs and regulation."),
+            ],
+            "plan": ["Define + diagram", "Against: higher P, lower Q, DWL", "Against: X-inefficiency", "For: scale, natural monopoly, R&amp;D", "Depends: contestability, regulation", "Verdict: not always"],
+            "fig": figs.monopoly(),
+            "answer": [
+                ("i", "Intro", "A <mark>monopoly</mark> is a market dominated by a single seller, protected by <mark>high barriers to entry</mark> such as patents, economies of scale or control of resources. Whether it harms consumers depends on how its costs and behaviour compare with those of a competitive market."),
+                ("a", "Against", "A profit-maximising monopolist produces where <mark>MC = MR</mark>, at Qm in the figure, and charges the price consumers will pay for that output, Pm. A competitive industry with the same costs would produce where price equals marginal cost, at Qc and Pc. So consumers face a <mark>higher price and lower output</mark>. Because <mark>P &gt; MC</mark>, the monopoly is <mark>allocatively inefficient</mark>: consumers value extra units more than they cost to make, but they are not produced, creating a <mark>deadweight loss</mark>. Part of what was consumer surplus becomes <mark>supernormal profit</mark>, which persists because barriers stop entry."),
+                ("a", "Against", "Without competitive pressure, a monopolist may also become <mark>X-inefficient</mark>, allowing costs to rise through slack management, and has less incentive to improve quality or service, so consumers get less choice and worse products."),
+                ("e", "For", "However, monopoly is not always against consumers. A large firm can exploit <mark>economies of scale</mark>, so its costs may be far lower than those of many small firms; its price can then be <mark>lower than in competition</mark>. In a <mark>natural monopoly</mark> such as the electricity grid run by TNB, one firm can supply the whole market more cheaply than two. Supernormal profits can fund <mark>research and development</mark>, giving <mark>dynamic efficiency</mark>: new products and lower costs over time, as in pharmaceuticals, where patents create temporary monopolies that reward innovation."),
+                ("e", "Depends on", "The outcome also depends on <mark>contestability</mark> and <mark>regulation</mark>. If barriers to entry are low, the threat of new entrants forces a monopolist to keep prices close to cost. Where barriers are high, regulators can cap prices, as the Energy Commission does for electricity tariffs, and the Competition Commission can act against abuse of dominance."),
+                ("c", "Conclusion", "Overall, monopoly is <mark>not always</mark> against consumers' interests. It is most harmful where barriers are high, there are no significant economies of scale and regulation is weak; but where economies of scale are large, the market is contestable or profits fund innovation, consumers may gain from lower prices and better products."),
+            ],
+            "why": "The diagram is used to explain three separate harms (price, output, DWL) in one chain. The evaluation isn't a list: each point explains how it could reverse the result (lower costs → lower price). The conclusion names the specific conditions under which monopoly is harmful.",
+        },
+    ],
+    "flash": [
+        ["T7 Firms & markets", "Allocative vs productive efficiency.", "Allocative: <b>P = MC</b>. Productive: output at <b>minimum AC</b>."],
+        ["T7 Firms & markets", "Profit-maximising rule?", "<b>MC = MR</b>."],
+        ["T7 Firms & markets", "Why can't a perfectly competitive firm keep supernormal profit?", "No barriers + perfect information → <b>entry</b> → price falls to min AC."],
+        ["T7 Firms & markets", "Three arguments that monopoly can benefit consumers.", "Economies of scale · natural monopoly · dynamic efficiency (R&amp;D)."],
+        ["T7 Firms & markets", "What makes a market contestable?", "Low barriers to entry and exit, especially <b>low sunk costs</b>."],
+    ],
+    "quiz": [
+        {"s": "T7 Firms & markets", "q": "A monopolist is allocatively inefficient because…", "o": ["It makes a loss", "Price exceeds marginal cost", "It produces at minimum AC", "It has no barriers"], "c": 1, "e": "P > MC: consumers value extra units more than they cost, but they aren't produced."},
+        {"s": "T7 Firms & markets", "q": "In long-run perfect competition, which is true?", "o": ["P > MC", "P = MC = minimum AC", "Supernormal profit", "MR > AR"], "c": 1, "e": "Entry and exit drive price to minimum average cost."},
+    ],
+}

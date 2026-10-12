@@ -1,0 +1,105 @@
+from essays import figs
+
+TOPIC = {
+    "no": 8, "level": "A2", "short": "8 Market failure",
+    "title": "Government microeconomic intervention (A Level)",
+    "syllabus": "Externalities · policy tools · equity · labour markets · government failure",
+    "why": "This topic is about weighing tools against each other. Learn the externality diagram and the four standard tools (tax, subsidy, regulation, permits), plus government failure as your universal counter-argument.",
+    "recycle": {
+        "defs": [
+            ("Negative externality", "A <mark>cost imposed on a third party</mark> not involved in the transaction, not reflected in the price. MSC = MPC + MEC."),
+            ("Social optimum", "Output where <mark>MSB = MSC</mark>."),
+            ("Deadweight welfare loss", "The <mark>loss of welfare</mark> from producing where MSB ≠ MSC."),
+            ("Tradable pollution permits", "Permits allowing a <mark>set quantity of pollution</mark>; firms can <mark>buy and sell</mark> them, so the total is capped but reductions happen where they're cheapest."),
+            ("Government failure", "When intervention leads to a <mark>less efficient allocation</mark> of resources than before."),
+            ("Monopsony", "A market with a <mark>single (or dominant) buyer</mark>, e.g. one big employer in a town."),
+            ("MRP", "Marginal revenue product: the <mark>extra revenue</mark> from employing one more worker (MPP × MR). The firm's demand curve for labour."),
+            ("Gini coefficient", "A measure of <mark>income inequality</mark> from 0 (perfect equality) to 1, from the Lorenz curve."),
+        ],
+        "chains": [
+            ("Negative externality", ["MSC > MPC", "Market produces where MPB = MPC", "Over-production Q1 > Q*", "Deadweight welfare loss"]),
+            ("Pigouvian tax", ["Tax = MEC at Q*", "MPC shifts up to MSC", "Firms internalise the externality", "Output falls to Q*"]),
+            ("Permits", ["Cap total pollution", "Price emerges for the right to pollute", "Low-cost cleaners sell permits", "Pollution cut where cheapest"]),
+            ("Minimum wage (competitive)", ["Wage set above equilibrium", "Firms demand less labour (MRP)", "More people want to work", "Unemployment = Ls − Ld"]),
+        ],
+        "diagrams": [
+            ("Negative externality (MPC, MSC, DWL)", "Pollution, taxes, permits, regulation"),
+            ("Positive externality (MPB, MSB)", "Education, vaccination, subsidies"),
+            ("Labour market with minimum wage", "Competitive vs monopsony outcomes"),
+            ("Lorenz curve", "Inequality and redistribution"),
+        ],
+        "eval": [
+            ("Measurement", "Setting the right tax or permit cap requires measuring the external cost in money, which is very difficult."),
+            ("Government failure", "Intervention may cause unintended consequences, administration costs or regulatory capture."),
+            ("Elasticity", "The effect of a tax on output, or of a minimum wage on jobs, depends on the elasticity of demand."),
+            ("Enforcement", "Regulations and permits only work if pollution can be monitored and penalties are enforced."),
+            ("Market structure", "In a monopsony a minimum wage can raise employment; in a competitive market it reduces it."),
+        ],
+        "examples": [
+            ("Permits", "EU Emissions Trading System; Bursa Carbon Exchange (voluntary market, launched 2022)."),
+            ("Carbon pricing", "Malaysia has announced plans for a carbon tax, starting with iron, steel and energy."),
+            ("Minimum wage", "Malaysia's minimum wage rose to RM1,500 a month in 2022."),
+            ("Regulation", "Department of Environment limits on factory and palm-oil-mill effluent."),
+        ],
+        "traps": [
+            "Drawing the externality diagram without labelling MPC, MSC and the DWL triangle.",
+            "Claiming permits 'eliminate' pollution. They <b>cap</b> it.",
+            "Assuming a minimum wage always causes unemployment: it depends on the market structure and where it's set.",
+        ],
+    },
+    "questions": [
+        {
+            "id": "t8q1", "marks": 8, "title": "Pollution permits vs a tax",
+            "q": "Explain how tradable pollution permits can reduce pollution and consider whether they are better than a pollution tax.",
+            "src": "Past-paper style",
+            "keys": [
+                ("AO1", "Define <mark>negative externality</mark> and <mark>tradable permits</mark>."),
+                ("AO2", "<mark>Cap</mark> on total pollution; firms that cut pollution <mark>cheaply sell</mark> permits; high-cost firms buy → cut achieved at <mark>lowest total cost</mark>."),
+                ("AO2", "Permits create a <mark>price on pollution</mark> → incentive to invest in cleaner technology; cap can be <mark>tightened</mark> over time."),
+                ("AO3", "Vs tax: permits give <mark>certainty of quantity</mark>; tax gives <mark>certainty of price</mark> and revenue; permits need monitoring, risk of <mark>over-allocation</mark>."),
+                ("AO3", "Conclusion: better when the <mark>quantity</mark> of pollution matters most."),
+            ],
+            "plan": ["Define", "Cap + trade → cheapest cuts", "Price of pollution → incentive to innovate", "Consider: quantity vs price certainty", "Verdict: depends on goal"],
+            "answer": [
+                ("i", "Define", "Pollution is a <mark>negative externality</mark>: a cost imposed on third parties that is not included in the market price, so output is above the social optimum. <mark>Tradable pollution permits</mark> allow a firm to emit a set amount of pollution and can be bought and sold."),
+                ("a", "Explain", "The government sets a <mark>cap on total emissions</mark> and issues permits up to that amount, so pollution is limited directly. Because permits can be traded, a firm that can cut pollution cheaply, for example by switching fuel, will do so and <mark>sell its spare permits</mark>; a firm for which cutting is very costly will buy them. So the total reduction is achieved at the <mark>lowest possible cost</mark> to the economy. The permit price acts as a <mark>cost of polluting</mark>, giving every firm an incentive to invest in cleaner technology, and the government can <mark>reduce the cap</mark> each year."),
+                ("e", "Consider", "Compared with a tax, permits give <mark>certainty over the quantity</mark> of pollution, which matters if there is a dangerous threshold. A tax gives <mark>certainty over the price</mark> of polluting and raises revenue, while a permit price can swing sharply. Permits need accurate <mark>monitoring</mark>, and if too many are issued, as in the early years of the EU scheme, the price collapses and pollution barely falls."),
+                ("c", "Conclusion", "So permits are better than a tax when the government needs to <mark>guarantee a level of emissions</mark>, as with carbon targets, provided the cap is set tightly and monitored; a tax is simpler where monitoring capacity is weak."),
+            ],
+            "why": "The AO2 point markers want is <i>why trading</i> lowers the cost of cutting pollution, not just that permits limit it. The comparison with a tax uses a clear criterion (certainty of quantity vs price), and the conclusion picks a side with a condition.",
+        },
+        {
+            "id": "t8q2", "marks": 12, "title": "Does a minimum wage cost jobs?",
+            "q": "Assess whether the introduction of a national minimum wage will always increase unemployment.",
+            "src": "Past-paper style",
+            "keys": [
+                ("AO1", "Define <mark>national minimum wage</mark>; <mark>diagrams</mark>: competitive market and monopsony."),
+                ("AO2", "Competitive: wage above equilibrium → <mark>labour demanded falls</mark> (MRP), <mark>labour supplied rises</mark> → <mark>unemployment</mark>."),
+                ("AO2", "Monopsony: employer pays below MRP; a minimum wage <mark>removes the incentive to restrict hiring</mark> → wage <mark>and</mark> employment can rise."),
+                ("AO3", "Depends on: <mark>level set</mark> relative to equilibrium, <mark>wage elasticity of demand</mark> for labour, <mark>productivity</mark> response, AD effect of higher spending."),
+                ("AO3", "Verdict: <mark>not always</mark>."),
+            ],
+            "plan": ["Define + 2 diagrams", "Competitive: Ls − Ld unemployed", "Monopsony: wage and jobs rise", "Depends: level, elasticity, productivity, AD", "Verdict: not always"],
+            "fig": figs.min_wage(),
+            "answer": [
+                ("i", "Intro", "A <mark>national minimum wage</mark> is a legal minimum hourly or monthly pay, such as Malaysia's, which was raised to RM1,500 a month in 2022. Its effect on unemployment depends on the <mark>structure of the labour market</mark> and the <mark>level</mark> at which it is set."),
+                ("a", "Competitive", "In a competitive labour market, the wage is set where the demand for labour (the <mark>MRP</mark> curve) meets supply, at We. A minimum wage set above We raises the cost of each worker above the value some workers add, so firms <mark>reduce the quantity of labour demanded</mark> from Le to Ld. At the same time, the higher wage attracts more people into the labour force, raising the <mark>quantity supplied</mark> to Ls. The gap Ls − Ld is <mark>unemployment</mark>, falling especially on low-skilled and young workers."),
+                ("a", "Monopsony", "However, many low-paid jobs are in markets with a <mark>monopsony</mark> employer, such as a single large plantation or factory in a rural area. A monopsonist knows that hiring an extra worker means raising the wage for all, so its marginal cost of labour is above the wage; it hires only Lm and pays Wm, below the value of workers' output. A minimum wage set at the competitive level makes the marginal cost of labour equal to the wage, so the firm <mark>no longer gains by restricting hiring</mark>: both the <mark>wage and employment rise</mark>, to L*."),
+                ("e", "Depends on", "Even in competitive markets, the size of any job loss depends on the <mark>wage elasticity of demand for labour</mark>. Where labour is a small share of costs or hard to replace with machines, demand is inelastic and few jobs are lost. Higher pay can also <mark>raise productivity</mark> by improving motivation and reducing staff turnover, shifting MRP to the right. Low-paid workers spend most of their extra income, so <mark>aggregate demand rises</mark>, creating jobs elsewhere. But if the minimum wage is set <mark>far above</mark> the market wage, or firms can easily automate or relocate, unemployment will rise."),
+                ("c", "Conclusion", "Overall, a national minimum wage will <mark>not always</mark> increase unemployment. It is most likely to cost jobs when set well above the equilibrium wage in competitive markets with elastic labour demand; set moderately, and especially where employers have monopsony power, it can raise pay with little or no loss of jobs."),
+            ],
+            "why": "Two diagrams give opposite results, which builds balance into the analysis itself. The monopsony explanation states <i>why</i> the employer restricts hiring (MCL above wage), which is the step most answers skip. The evaluation uses four distinct factors and the conclusion names the exact conditions for job losses.",
+        },
+    ],
+    "flash": [
+        ["T8 Market failure", "Where is the social optimum?", "Where <b>MSB = MSC</b>."],
+        ["T8 Market failure", "Why do tradable permits cut pollution at the lowest cost?", "Firms that can cut cheaply do so and <b>sell</b> spare permits; high-cost firms buy them."],
+        ["T8 Market failure", "Permits vs tax: what certainty does each give?", "Permits: certainty of <b>quantity</b>. Tax: certainty of <b>price</b>."],
+        ["T8 Market failure", "How can a minimum wage raise employment?", "In a <b>monopsony</b>: it removes the employer's incentive to restrict hiring to hold wages down."],
+        ["T8 Market failure", "Define government failure.", "Intervention that leads to a <b>less efficient</b> allocation of resources."],
+    ],
+    "quiz": [
+        {"s": "T8 Market failure", "q": "A Pigouvian tax on pollution should be set equal to…", "o": ["The firm's profit", "The marginal external cost at the social optimum", "The market price", "Zero"], "c": 1, "e": "That shifts MPC up to MSC so output falls to Q*."},
+        {"s": "T8 Market failure", "q": "In a competitive labour market, a minimum wage above equilibrium causes…", "o": ["Higher employment", "Excess supply of labour (unemployment)", "No change", "A shortage of labour"], "c": 1, "e": "Ld falls and Ls rises, so Ls − Ld are unemployed."},
+    ],
+}
