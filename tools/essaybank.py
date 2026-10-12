@@ -111,7 +111,8 @@ def words(html):
 
 def question_html(t, q):
     mins = round(q["marks"] * MIN_PER_MARK[t["level"]])
-    paper = "Paper 2" if t["level"] == "AS" else "Paper 4"
+    # Sections: A = data response, B = micro essay, C = macro essay (Paper 2 AS, Paper 4 A Level)
+    paper = ("Paper 2" if t["level"] == "AS" else "Paper 4") + (" · Sect B" if t["no"] in (1, 2, 3, 7, 8) else " · Sect C")
     keys = "".join(f'<li><span class="ao {AO_CLASS[ao]}">{ao}</span>{txt}</li>' for ao, txt in q["keys"])
     plan = '<div class="chain">' + "<i>→</i>".join(f"<span>{s}</span>" for s in q["plan"]) + "</div>"
     paras = "".join(f'<p><span class="pl {PL_CLASS[k]}">{lab}</span>{txt}</p>' for k, lab, txt in q["answer"])
@@ -119,7 +120,7 @@ def question_html(t, q):
     write_min = round(n / WPM)
     src = f'<span>{q["src"]}</span>' if q.get("src") else ""
     return f"""<h2>{q['title']}</h2>
-<div class="qbox"><div class="meta"><span>{q['marks']} marks</span><span>{t['level']} · {paper}</span><span>~{mins} min</span>{src}</div>
+<div class="qbox"><div class="meta"><span>{q['marks']} marks</span><span>{paper}</span><span>~{mins} min</span>{src}</div>
 <p>{q['q']}</p></div>
 <h3>Key points the examiner wants</h3>
 <ul class="keys">{keys}</ul>
@@ -157,6 +158,7 @@ def build():
 <li><b>Attempt it before you look.</b> Plan for 2 minutes, then write against the timer on the card. Tap <i>Write your working</i> to use Apple Pencil.</li>
 <li><b>Reveal the model and compare.</b> Each paragraph is tagged: <span class="pl i">Intro</span><span class="pl">Analysis</span><span class="pl e">Evaluation</span><span class="pl c">Conclusion</span>. Check you hit every highlighted point.</li>
 </ol>
+<div class="note link"><b>Where these sit in the paper</b>2 hours, 60 marks, 2 minutes per mark. Section A is the data response (20). Section B is one micro essay (topics 1–3 at AS, 7–8 at A Level) and Section C one macro essay (topics 4–6, 9–11), each (a) 8 + (b) 12. So each essay gets about 40 minutes: ~16 for (a), ~24 for (b).</div>
 <div class="note tip"><b>Length is a skill</b>Model answers are about 200–260 words for an 8-marker and 320–400 for a 12-marker: what you can hand-write in the time with planning, and every sentence earns something. Your teacher's sample PED/YED essay is about 1,500 words, which would take over an hour to write by hand.</div>
 <div class="note link"><b>Adding more</b>Type <b>/deck essay</b> and a topic (e.g. <i>/deck essay elasticity</i> or <i>/deck essay monopoly</i>) to add new questions and model answers to that topic in this deck.</div>""", sec="Start"))
 

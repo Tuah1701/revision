@@ -9,7 +9,7 @@ ORIG = "https://claude.ai/code/artifact/31acac57-ce47-4e2f-9fb6-be4a409e475c"
 def build():
     C = []
     C.append(card("cover", "Start", "Essay technique", "Cover", """
-<p class="sec" style="margin:0">CAIE 9708 · AS Level · Paper 2 Section B</p>
+<p class="sec" style="margin:0">CAIE 9708 · AS Level · Paper 2 Sections B and C</p>
 <p class="cover-k">8+12</p>
 <h1>Writing Economics essays that score</h1>
 <p class="lede">Your Essay Framework as a deck: structure, the paragraph unit, evaluation, conclusions and the exam checklist.</p>
@@ -19,7 +19,7 @@ def build():
 
     C.append(card("format", "Start", "What you're writing", "Overview", """
 <h2>AS essays are 8 + 12, not 25</h2>
-<p>Section B: choose one essay. Every essay has two parts, and everything in this deck is built for that length.</p>
+<p>Paper 2 is 2 hours for 60 marks: <b>Section A</b> data response (20), then one essay from <b>Section B</b> (micro, 20) and one from <b>Section C</b> (macro, 20). Every essay has two parts, (a) 8 and (b) 12, and everything in this deck is built for that length.</p>
 <div class="tw"><table><tr><th>Part</th><th>Command words</th><th class="n">AO1</th><th class="n">AO2</th><th class="n">AO3</th><th>Marking</th></tr>
 <tr><td class="k">(a) 8</td><td>Explain… and consider…</td><td class="n">3</td><td class="n">3</td><td class="n">2</td><td>Point-based</td></tr>
 <tr><td class="k">(b) 12</td><td>Assess… (older papers: Discuss)</td><td class="n" colspan="2">8, levels</td><td class="n">4</td><td>Levels-based</td></tr></table></div>
@@ -280,7 +280,7 @@ QUIZ = [
 
 def write():
     meta = {"title": "Essay Technique Deck", "short": "Econ Essays", "bar": "Essay technique",
-            "code": "9708 · Paper 2 Section B", "key": "deck-9708-essays"}
+            "code": "9708 · Paper 2 Sections B and C", "key": "deck-9708-essays"}
     out = engine.render(meta, build(), FLASH, QUIZ)
     pathlib.Path("deck-econ-essays.html").write_text(out, encoding="utf8")
     print("essays", len(out), "bytes,", len(FLASH), "flashcards,", len(QUIZ), "quiz")
