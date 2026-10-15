@@ -1,0 +1,1055 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
+</head><body>
+<title>Mechanics Paper 4 Deck</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Mechanics P4">
+<meta name="theme-color" content="#11151C">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@500;600;700&display=swap">
+<style>
+/* Layout: one-card-per-screen swipe track (CSS scroll-snap) between a slim top bar and a bottom progress bar.
+   Each card scrolls vertically on its own; content column caps at ~680px so iPad landscape still reads like a page. */
+:root{
+  --bg:#11151C; --surface:#191E28; --surface2:#222937; --line:#2D3544;
+  --fg:#E7EAF0; --muted:#98A1B0; --accent:#F0B44A; --accent-soft:#3A2D12; --on-accent:#1B1404;
+  --teal:#5CC6BF; --teal-soft:#14302F; --good:#6FD39A; --good-soft:#15301F; --bad:#F2897F; --bad-soft:#3A1C1A;
+  --fill-a:rgba(240,180,74,.28); --fill-b:rgba(92,198,191,.26); --fill-c:rgba(242,137,127,.32);
+  --f-disp:"Bricolage Grotesque","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible","Segoe UI",system-ui,-apple-system,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){
+  --bg:#F4F5F8; --surface:#FFFFFF; --surface2:#ECEEF3; --line:#D7DBE3;
+  --fg:#171B23; --muted:#576070; --accent:#A66F07; --accent-soft:#FBEFD6; --on-accent:#FFFFFF;
+  --teal:#13807A; --teal-soft:#DDF2F0; --good:#1E7A47; --good-soft:#DDF1E5; --bad:#B23A30; --bad-soft:#F9E1DE;
+  --fill-a:rgba(214,150,30,.25); --fill-b:rgba(19,128,122,.20); --fill-c:rgba(178,58,48,.22);
+  color-scheme:light}}
+:root[data-theme="light"]{
+  --bg:#F4F5F8; --surface:#FFFFFF; --surface2:#ECEEF3; --line:#D7DBE3;
+  --fg:#171B23; --muted:#576070; --accent:#A66F07; --accent-soft:#FBEFD6; --on-accent:#FFFFFF;
+  --teal:#13807A; --teal-soft:#DDF2F0; --good:#1E7A47; --good-soft:#DDF1E5; --bad:#B23A30; --bad-soft:#F9E1DE;
+  --fill-a:rgba(214,150,30,.25); --fill-b:rgba(19,128,122,.20); --fill-c:rgba(178,58,48,.22);
+  color-scheme:light}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%;background:var(--bg);overscroll-behavior:none}
+body{margin:0;color:var(--fg);font:17px/1.55 var(--f-body);display:grid;grid-template-rows:auto 1fr auto;overflow:hidden;-webkit-text-size-adjust:100%}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* top bar */
+.top{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--line);background:var(--bg);min-width:0}
+.ib{all:unset;cursor:pointer;display:inline-grid;place-items:center;min-width:44px;height:44px;border-radius:10px;color:var(--fg)}
+.ib:hover{background:var(--surface2)}
+.ib svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.ttl{flex:1;min-width:0;line-height:1.15}
+.ttl b{display:block;font:700 15px/1.2 var(--f-disp);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ttl small{display:block;font:500 11.5px/1.3 var(--f-mono);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mode{all:unset;cursor:pointer;height:36px;padding:0 12px;border-radius:999px;border:1px solid var(--line);font:600 13.5px/36px var(--f-body);white-space:nowrap}
+.mode:hover{border-color:var(--accent)}
+@media (max-width:430px){.mode .lg{display:none}.mode{padding:0 10px}}
+
+/* track */
+.track{display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;min-height:0;overscroll-behavior-x:contain}
+.track::-webkit-scrollbar{display:none}
+.card{flex:0 0 100%;width:100%;scroll-snap-align:start;scroll-snap-stop:always;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-inline:16px}
+.ci{max-width:680px;margin:0 auto;padding-block:20px 48px;min-width:0}
+.ch{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px}
+.sec{font:600 11.5px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.kind{font:600 10.5px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:5px 8px}
+h1{font:800 clamp(34px,9vw,52px)/1.02 var(--f-disp);letter-spacing:-.02em;margin:.2em 0 .3em;text-wrap:balance}
+h2{font:750 clamp(25px,6.4vw,32px)/1.12 var(--f-disp);letter-spacing:-.01em;margin:0 0 .5em;text-wrap:balance}
+h3{font:700 19px/1.25 var(--f-disp);margin:1.4em 0 .45em;text-wrap:balance}
+p{margin:.5em 0} ul,ol{margin:.4em 0 .8em;padding-left:1.25em} li{margin:.28em 0}
+b,strong{font-weight:700}
+.lede{color:var(--muted);font-size:17.5px}
+.mono{font-family:var(--f-mono);font-size:.88em}
+.def{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 15px;margin:12px 0}
+.def .lab{display:flex;justify-content:space-between;gap:8px;font:600 11px/1.3 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+.def .lab i{font-style:normal;color:var(--muted)}
+.def p{margin:.2em 0}
+.note{border-radius:12px;padding:11px 14px;margin:12px 0;font-size:16px}
+.note>b:first-child{display:block;font:600 11px/1.3 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px}
+.note.trap{background:var(--bad-soft)} .note.trap>b:first-child{color:var(--bad)}
+.note.tip{background:var(--good-soft)} .note.tip>b:first-child{color:var(--good)}
+.note.link{background:var(--teal-soft)} .note.link>b:first-child{color:var(--teal)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:10px;margin:12px 0}
+.two>div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:11px 14px;min-width:0}
+.two h4{font:700 12px/1.3 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin:0 0 4px}
+.two h4.t{color:var(--teal)} .two h4.g{color:var(--good)} .two h4.r{color:var(--bad)}
+.two p,.two ul{margin:.2em 0;font-size:16px}
+.chain{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0;font:600 14.5px/1.3 var(--f-body)}
+.chain span{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 9px}
+.chain i{font-style:normal;color:var(--accent);font-weight:800}
+.formula{font:600 15px/1.5 var(--f-mono);background:var(--surface);border:1px dashed var(--muted);border-radius:10px;padding:9px 12px;margin:10px 0;overflow-x:auto}
+.tw{overflow-x:auto;margin:12px 0;border:1px solid var(--line);border-radius:12px;overscroll-behavior-x:contain}
+table{border-collapse:collapse;width:100%;font-size:15px;line-height:1.4;background:var(--surface)}
+.tw.wide table{min-width:560px}
+th,td{padding:8px 10px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+tr:last-child td{border-bottom:0}
+th{font:600 10.5px/1.3 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--surface2)}
+td.n,th.n{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-size:14px}
+td.k{font-weight:700}
+.tag{display:inline-block;font:600 10.5px/1 var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:4px 7px;border-radius:6px;margin-right:6px;vertical-align:2px}
+
+/* diagrams */
+figure.dg{margin:14px 0;display:grid;gap:10px}
+figure.dg.multi{grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr))}
+.pnl{min-width:0}
+.ptitle{font:600 11px/1.3 var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+figure.dg svg{width:100%;height:auto;display:block;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+figcaption{font-size:14.5px;color:var(--muted);grid-column:1/-1}
+svg text{font-family:var(--f-body);fill:var(--fg)}
+svg .ax{stroke:var(--fg);stroke-width:1.5;fill:none}
+svg .k{fill:none;stroke-width:2.6;stroke-linecap:round}
+svg .d{stroke:var(--accent)} svg .s{stroke:var(--teal)} svg .o{stroke:var(--muted);stroke-dasharray:6 4;stroke-width:2}
+svg .b{stroke:var(--bad)} svg .gr{stroke:var(--good)}
+svg .g{stroke:var(--muted);stroke-width:1;stroke-dasharray:3 3;fill:none}
+svg .ar{stroke:var(--fg);stroke-width:1.8} svg .arh{fill:var(--fg)}
+svg .pt{fill:var(--fg)} svg .pto{fill:var(--surface);stroke:var(--fg);stroke-width:1.6}
+svg .fa{fill:var(--fill-a)} svg .fb{fill:var(--fill-b)} svg .fc{fill:var(--fill-c)}
+svg .t-ax{font-size:12px;font-weight:700;fill:var(--muted)}
+svg .t-axl{font-size:12px;font-weight:700;fill:var(--fg)}
+svg .t-pt{font-size:13px;font-weight:700}
+svg .t-sm{font-size:11.5px;fill:var(--muted)}
+svg .t-d{fill:var(--accent);font-size:12.5px;font-weight:700} svg .t-s{fill:var(--teal);font-size:12.5px;font-weight:700}
+svg .t-o{fill:var(--muted);font-size:12.5px;font-weight:700} svg .t-b{fill:var(--bad);font-size:12.5px;font-weight:700}
+svg .t-gr{fill:var(--good);font-size:12.5px;font-weight:700}
+
+/* reveal: worked-example steps and practice answers */
+ol.steps{list-style:none;padding:0;margin:12px 0;counter-reset:st;display:grid;gap:8px}
+ol.steps>li{counter-increment:st;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 14px 10px 46px;position:relative;margin:0}
+ol.steps>li::before{content:counter(st);position:absolute;left:12px;top:10px;width:24px;height:24px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font:700 13px/24px var(--f-mono);text-align:center}
+.rvbar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.btn{all:unset;cursor:pointer;min-height:44px;padding:0 16px;border-radius:12px;display:inline-flex;align-items:center;gap:8px;font:700 15px/1 var(--f-body);border:1px solid var(--line);background:var(--surface)}
+.btn.pri{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.btn[disabled]{opacity:.45;cursor:default}
+.btn.good{border-color:var(--good);color:var(--good)} .btn.bad{border-color:var(--bad);color:var(--bad)}
+.pq{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:12px 0}
+.pq .qh{display:flex;justify-content:space-between;gap:8px;font:600 11px/1.3 var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.pq .qh .mk{color:var(--accent)}
+.pq .qt{margin:.35em 0 .5em}
+.pq .ans{border-top:1px dashed var(--line);margin-top:8px;padding-top:8px}
+.pq .ans>b:first-child{font:600 11px/1 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--good);margin-right:6px}
+.swipehint{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:14.5px;margin-top:22px}
+.toc-mini{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:8px;margin:14px 0}
+.toc-mini button{all:unset;cursor:pointer;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.toc-mini button:hover{border-color:var(--accent)}
+.toc-mini b{display:block;font:800 20px/1 var(--f-disp);color:var(--accent);margin-bottom:4px}
+.toc-mini span{font-size:14.5px;color:var(--muted)}
+.cover-k{font:800 clamp(80px,26vw,150px)/.85 var(--f-disp);color:var(--accent);letter-spacing:-.04em;margin:8px 0 0}
+.stat{display:flex;gap:18px;flex-wrap:wrap;margin:16px 0;font:600 14px/1.3 var(--f-mono);color:var(--muted)}
+.stat b{display:block;font:800 26px/1 var(--f-disp);color:var(--fg)}
+a{color:var(--accent)}
+
+/* bottom bar */
+.bot{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;padding:8px 12px;border-top:1px solid var(--line);background:var(--bg)}
+.prog{display:grid;gap:5px;min-width:0}
+.bar{height:4px;background:var(--surface2);border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+.cnt{font:600 12.5px/1 var(--f-mono);color:var(--muted);text-align:center;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* sheets (contents, flashcards, quiz) */
+.sheet{position:fixed;inset:0;z-index:20;background:var(--bg);display:grid;grid-template-rows:auto 1fr;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.sheet .top{border-bottom:1px solid var(--line)}
+.sbody{overflow-y:auto;padding-inline:16px;-webkit-overflow-scrolling:touch}
+.sbody>.in{max-width:680px;margin:0 auto;padding-block:14px 40px}
+.tocgrp{font:600 11px/1.3 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--accent);margin:18px 0 6px}
+.tocitem{all:unset;cursor:pointer;display:grid;grid-template-columns:32px 1fr auto;gap:8px;align-items:baseline;width:100%;box-sizing:border-box;padding:10px 8px;border-radius:10px}
+.tocitem:hover,.tocitem.cur{background:var(--surface)}
+.tocitem .no{font:600 12px/1 var(--f-mono);color:var(--muted)}
+.tocitem .kd{font:600 10px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 12px}
+.chip{all:unset;cursor:pointer;min-height:34px;padding:0 12px;border-radius:999px;border:1px solid var(--line);font:600 13.5px/34px var(--f-body)}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.fc{perspective:1200px;height:min(56vh,380px);cursor:pointer;margin:6px 0 12px}
+.fc-in{position:relative;width:100%;height:100%;transition:transform .45s;transform-style:preserve-3d}
+.fc.flip .fc-in{transform:rotateY(180deg)}
+.fc-f{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:18px;border:1px solid var(--line);background:var(--surface);padding:42px 22px 30px;display:flex;flex-direction:column;justify-content:center;overflow:auto;font-size:19px;line-height:1.45}
+.fc-f.back{transform:rotateY(180deg);background:var(--accent-soft);font-size:17.5px}
+.fc-f .ft{position:absolute;top:14px;left:18px;right:18px;display:flex;justify-content:space-between;font:600 11px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.fc-f.front .q{font:700 21px/1.3 var(--f-disp)}
+.fcrow{display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between}
+.mcq{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}
+.mcq .qh{display:flex;justify-content:space-between;gap:8px;font:600 11px/1.3 var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.mcq .qt{margin:.4em 0 .7em;font-weight:700}
+.opts{display:grid;gap:6px}
+.opt{all:unset;cursor:pointer;display:grid;grid-template-columns:26px 1fr;gap:8px;align-items:baseline;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font-size:16px;line-height:1.4}
+.opt b{font:700 13px/1 var(--f-mono);color:var(--accent)}
+.opt.right{background:var(--good-soft);border-color:var(--good)} .opt.wrong{background:var(--bad-soft);border-color:var(--bad)}
+.mcq.done .opt{cursor:default}
+.mcq .ex{margin-top:10px;font-size:15.5px;border-top:1px dashed var(--line);padding-top:10px}
+.score{position:sticky;top:0;z-index:2;background:var(--bg);padding-block:10px;display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px solid var(--line);font:600 14px var(--f-body)}
+.score .num{font:700 16px var(--f-mono);color:var(--accent);font-variant-numeric:tabular-nums}
+mjx-container{max-width:100%;overflow-x:auto;overflow-y:hidden}
+
+/* ---------- handwriting notes ---------- */
+.wrow{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-start;margin:10px 0}
+.btn.write{border-color:var(--teal);color:var(--teal)}
+.btn.write svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.wthumb{display:block;max-width:150px;width:100%;border:1px solid var(--line);border-radius:10px;cursor:pointer;background:var(--surface)}
+.wmeta{font:600 11.5px/1.3 var(--f-mono);color:var(--muted)}
+#noteSheet{display:flex;flex-direction:column;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+#noteSheet>.npages{flex:1;min-height:0}
+.ntools{display:flex;gap:6px;align-items:center;padding:6px 10px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none;background:var(--bg)}
+.ntools::-webkit-scrollbar{display:none}
+.tl{all:unset;cursor:pointer;flex:none;display:inline-grid;place-items:center;min-width:38px;height:40px;border-radius:10px;border:1px solid transparent;font:700 13px/1 var(--f-body)}
+.tl svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.tl[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.tl[disabled]{opacity:.35;cursor:default}
+.tl .dot{width:20px;height:20px;border-radius:50%;border:2px solid var(--line)}
+.tl[aria-pressed="true"] .dot{border-color:var(--accent)}
+.sep{flex:none;width:1px;height:26px;background:var(--line);margin:0 2px}
+.nq{border-bottom:1px solid var(--line);background:var(--surface);padding:8px 16px;max-height:34vh;overflow-y:auto;font-size:15.5px}
+.nq .in{max-width:680px;margin:0 auto}
+.nq p{margin:.3em 0}
+.nq .tw{margin:6px 0}
+.npages{overflow:auto;padding:14px 12px 60px;background:var(--surface2);touch-action:none;overscroll-behavior:contain}
+.npage{position:relative;margin:0 auto 14px;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.25);overflow:hidden}
+.npage canvas{display:block;width:100%;height:auto;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.npage .pn{position:absolute;right:10px;bottom:8px;font:600 11px/1 var(--f-mono);color:var(--muted);pointer-events:none}
+.nhint{font-size:13px;color:var(--muted);text-align:center;margin:4px 0 0}
+
+@media (prefers-reduced-motion:reduce){.fc-in,.bar i{transition:none}.track{scroll-behavior:auto}}
+</style>
+<script>window.MathJax={tex:{inlineMath:[["\\(","\\)"]]},svg:{fontCache:"global"},options:{enableMenu:false}};</script><script src="mathjax/tex-svg.js"></script>
+<header class="top">
+  <a class="ib" href="index.html" aria-label="Revision Hub"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7M6 9.5V20h12V9.5"/></svg></a><button class="ib" id="tocBtn" type="button" aria-label="Contents"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/></svg></button>
+  <div class="ttl"><b>Mechanics · Paper 4</b><small>9709 · Paper 4 · all chapters</small></div>
+  <button class="mode" id="fcBtn" type="button">Cards<span class="lg"> · 34</span></button>
+  <button class="mode" id="qBtn" type="button">Quiz<span class="lg"> · 14</span></button>
+  <button class="ib" id="themeBtn" type="button" aria-label="Switch light or dark"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4L6 18M18 6l1.4-1.4"/></svg></button>
+</header>
+<main class="track" id="track"><section class="card" data-id="cover" data-group="Start" data-title="Paper 4 · Mechanics" data-kind="Cover"><div class="ci"><div class="ch"><span class="sec">Start</span><span class="kind">Cover</span></div>
+<p class="sec" style="margin:0">CAIE 9709 · AS Level · Paper 4</p>
+<p class="cover-k">P4</p>
+<h1>Mechanics: the whole paper</h1>
+<p class="lede">Built from Puan Syazwani's KYUEM notes, tutorials, quizzes and Assignment 1 across all five chapters. \(g = 10\ \text{m s}^{-2}\), answers to 3 s.f.</p>
+<div class="stat"><div><b>5</b>chapters</div><div><b>12</b>worked examples</div><div><b>12</b>practice Qs</div></div>
+<p><a href="index.html">Open Revision Hub</a></p>
+<div class="swipehint">Swipe or use the arrows · tap ☰ for contents</div></div></section><section class="card" data-id="big" data-group="Start" data-title="The big picture" data-kind="Overview"><div class="ci"><div class="ch"><span class="sec">Start</span><span class="kind">Overview</span></div>
+<h2>One method answers every question</h2>
+<p class="lede">50 marks, 1 hr 15 min: about 1.5 minutes per mark. Every question is one of five ideas.</p>
+<div class="tw"><table>
+<tr><th>Chapter</th><th>The one equation</th><th>Use when</th></tr>
+<tr><td class="k">Forces &amp; equilibrium</td><td>\(\sum F_x = 0,\ \sum F_y = 0\)</td><td>At rest, constant velocity, "about to slip"</td></tr>
+<tr><td class="k">Kinematics</td><td>SUVAT, or \(v = \frac{ds}{dt},\ a = \frac{dv}{dt}\)</td><td>Motion described, no forces</td></tr>
+<tr><td class="k">Newton's laws</td><td>\(F_{\text{res}} = ma\)</td><td>Forces <i>and</i> acceleration</td></tr>
+<tr><td class="k">Momentum</td><td>\(m_1u_1 + m_2u_2 = m_1v_1 + m_2v_2\)</td><td>Collisions, coalescing</td></tr>
+<tr><td class="k">Energy &amp; power</td><td>\(\text{WD} = \Delta KE + \Delta PE\), \(P = Fv\)</td><td>Distances/heights, no time; engines</td></tr>
+</table></div>
+<h3>The routine (marks are lost here, not in algebra)</h3>
+<div class="chain"><span>1 · Force diagram</span><i>→</i><span>2 · Positive direction</span><i>→</i><span>3 · Name the equation</span><i>→</i><span>4 · Substitute</span><i>→</i><span>5 · 3 s.f. + units</span></div>
+<div class="note tip"><b>Method marks</b>An M1 needs every relevant term present with the correct component (sin/cos). Write the unsimplified equation first: an examiner can award M1 even if your arithmetic later slips.</div></div></section><section class="card" data-id="words" data-group="Start" data-title="Modelling words" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">Start</span><span class="kind">Concept</span></div>
+<h2>What the modelling words mean in your equations</h2>
+<div class="tw"><table>
+<tr><th>Word</th><th>So in the equations…</th></tr>
+<tr><td class="k">Particle</td><td>All mass at a point: no rotation, no size, forces all act at one point.</td></tr>
+<tr><td class="k">Smooth</td><td>No friction: \(F = 0\). Only \(R\) acts at the contact.</td></tr>
+<tr><td class="k">Rough</td><td>Friction acts, \(F \le \mu R\).</td></tr>
+<tr><td class="k">Limiting equilibrium / about to slip</td><td>\(F = \mu R\) <b>exactly</b>, and acceleration is still 0.</td></tr>
+<tr><td class="k">Light (string, rod, pulley)</td><td>Mass ignored, so tension is the <b>same all the way along</b>.</td></tr>
+<tr><td class="k">Inextensible</td><td>Doesn't stretch: connected particles share the <b>same magnitude of acceleration and speed</b>.</td></tr>
+<tr><td class="k">Smooth pulley</td><td>Tension the same on both sides; only the direction changes.</td></tr>
+<tr><td class="k">Rigid rod / tow-bar</td><td>Can be in tension (pulling) <b>or thrust</b> (pushing). A string can only be in tension.</td></tr>
+<tr><td class="k">Coalesce</td><td>The two bodies stick together and move with one common velocity.</td></tr>
+<tr><td class="k">Line of greatest slope</td><td>Force/motion is straight up or down the slope, so resolve parallel and perpendicular to it.</td></tr>
+</table></div>
+<div class="note trap"><b>Trap</b>"Limiting" doesn't mean moving. It means on the point of moving, so \(a = 0\) and \(F = \mu R\).</div></div></section><section class="card" data-id="f-res" data-group="1 Forces &amp; equilibrium" data-title="Components and resultants" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">1 · Forces &amp; equilibrium</span><span class="kind">Concept</span></div>
+<h2>Resolve everything into two perpendicular directions</h2>
+<div class="def"><div class="lab">Components <i>θ from the x-axis</i></div>
+<p>\(F_x = F\cos\theta, \qquad F_y = F\sin\theta\)</p></div>
+<div class="def"><div class="lab">Resultant of several forces</div>
+<p>\(X = \sum F_x,\ \ Y = \sum F_y\), then \(R = \sqrt{X^2 + Y^2}\), \(\tan\alpha = \dfrac{Y}{X}\)</p></div>
+<ul>
+<li><b>cos goes with the angle you're touching</b>: the component <i>adjacent</i> to the marked angle uses cos.</li>
+<li>Give the direction of a resultant as an angle <i>from a stated line</i> ("8.66° below the horizontal").</li>
+<li>Two forces in equilibrium are equal and opposite. Three forces in equilibrium form a closed <b>triangle of forces</b> (sine/cosine rule works).</li>
+</ul>
+<div class="note tip"><b>Quick check</b>Draw a rough sketch of \(X\) and \(Y\) with their signs before you take \(\tan^{-1}\). The calculator only gives \(-90°\) to \(90°\).</div></div></section><section class="card" data-id="f-eq" data-group="1 Forces &amp; equilibrium" data-title="Equilibrium" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">1 · Forces &amp; equilibrium</span><span class="kind">Concept</span></div>
+<h2>Equilibrium: resultant force is zero</h2>
+<p class="lede">At rest <b>or</b> moving with constant velocity (Newton's first law).</p>
+<div class="formula">Σ(components in any direction) = 0</div>
+<h3>Choosing directions</h3>
+<div class="two">
+<div><h4>Flat ground</h4><p>Resolve horizontally and vertically.</p></div>
+<div><h4 class="t">Slope</h4><p>Resolve <b>parallel</b> and <b>perpendicular</b> to the slope. Only the weight (and any horizontal force) needs splitting.</p></div>
+<div><h4 class="g">Unknown you don't want</h4><p>Resolve <b>perpendicular to it</b> and it disappears from that equation (the note's tugboat example: resolve perpendicular to \(T\)).</p></div>
+</div>
+<div class="note link"><b>Newton's third law</b>If A pushes on B, B pushes back on A with an equal and opposite force. That's why the floor pushes up on you (\(R\)) and why tension acts towards the centre of the string on both connected bodies.</div>
+<div class="note trap"><b>Trap</b>\(R\) is <b>not</b> always \(mg\). Any force with a vertical component (a pull at an angle, a boy pushing down on a chair) changes \(R\), and therefore changes \(\mu R\).</div></div></section><section class="card" data-id="f-fric" data-group="1 Forces &amp; equilibrium" data-title="Friction" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">1 · Forces &amp; equilibrium</span><span class="kind">Concept</span></div>
+<h2>Friction: a force that grows until it can't</h2>
+<div class="def"><div class="lab">Friction law</div>
+<p>\(0 \le F \le \mu R\). At limiting equilibrium or when sliding, \(F = \mu R\).</p></div>
+<ul>
+<li>Friction only takes the value it needs to stop motion, up to the maximum \(\mu R\).</li>
+<li>Friction opposes the motion <b>or the motion that would happen</b> (the tendency). Decide which way it would slide before you draw \(F\).</li>
+<li>Smooth means \(\mu = 0\). Usually \(0 \le \mu \le 1\), but \(\mu\) can exceed 1 (tutorial Q7 uses \(\mu = 1.125\)).</li>
+<li>Angle of friction: \(\tan\lambda = \mu\). On a slope with no other force, the particle is on the point of slipping when \(\tan\theta = \mu\).</li>
+</ul>
+<div class="tw"><table>
+<tr><th>Applied push</th><th>Result</th></tr>
+<tr><td>Less than \(\mu R\)</td><td>Stays at rest, \(F\) = push</td></tr>
+<tr><td>Equal to \(\mu R\)</td><td>Limiting equilibrium, about to slip</td></tr>
+<tr><td>Greater than \(\mu R\)</td><td>Moves; \(F = \mu R\) and use \(F_{\text{res}} = ma\)</td></tr>
+</table></div></div></section><section class="card" data-id="f-slope" data-group="1 Forces &amp; equilibrium" data-title="Rough slopes and ranges" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">1 · Forces &amp; equilibrium</span><span class="kind">Concept</span></div>
+<h2>Rough slopes: two critical cases</h2>
+<figure class="dg"><svg viewBox="0 0 320 240" role="img" aria-label="Block on a rough slope with weight, normal reaction, applied force P up the slope and friction down the slope"><defs><marker id="fh" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0,0 L10,5 L0,10 z"/></marker></defs><path class="ax" d="M20,205 L276.1,205 L276.1,68.9 Z"/><polygon class="fb" points="134.8,144.0 170.1,125.2 151.3,89.9 116.0,108.7"/><line class="ar" x1="143.1" y1="116.9" x2="143.1" y2="186.9" marker-end="url(#fh)"/><text class="t-b" x="157.1" y="188.9" text-anchor="start">W = mg</text><line class="ar" x1="143.1" y1="116.9" x2="113.9" y2="62.2" marker-end="url(#fh)"/><text class="t-s" x="110.2" y="55.1" text-anchor="middle">R</text><line class="ar" x1="162.5" y1="106.6" x2="213.7" y2="79.4" marker-end="url(#fh)"/><text class="t-d" x="222.5" y="72.7" text-anchor="middle">P</text><line class="ar" x1="123.6" y1="127.2" x2="81.2" y2="149.8" marker-end="url(#fh)"/><text class="t-gr" x="66.4" y="158.5" text-anchor="end">F ≤ μR</text><path class="g" d="M66,205 A46,46 0 0 0 60.6,183.4"/><text class="t-sm" x="76.0" y="197.0" text-anchor="start">θ</text><text class="t-sm" x="159.1" y="214.9" text-anchor="middle">mg sinθ down the slope · mg cosθ into it</text></svg><figcaption>Perpendicular: R = mg cos θ (plus any perpendicular component of P). Parallel: mg sin θ down the slope.</figcaption></figure>
+<div class="two">
+<div><h4 class="r">About to slip DOWN</h4><p>Friction acts <b>up</b> the slope. Gives the <b>least</b> \(P\):<br>\(P + \mu R = mg\sin\theta\)</p></div>
+<div><h4 class="g">About to move UP</h4><p>Friction acts <b>down</b> the slope. Gives the <b>greatest</b> \(P\):<br>\(P = mg\sin\theta + \mu R\)</p></div>
+</div>
+<p>For any \(P\) between these two values, the particle stays at rest. Answer "range of values" as \(P_{\min} \le P \le P_{\max}\).</p>
+<div class="note trap"><b>Trap</b>If \(P\) acts at an angle to the slope, \(R\) is different in the two cases' equations only if you forget it. \(R = mg\cos\theta - P\sin\alpha\) depends on \(P\), so substitute it in <b>before</b> solving for \(P\).</div></div></section><section class="card" data-id="we-f1" data-group="1 Forces &amp; equilibrium" data-title="Resultant of two pushes" data-kind="Worked example"><div class="ci"><div class="ch"><span class="sec">Worked example · 1 · Forces &amp; equilibrium</span><span class="kind">Worked example</span></div>
+<h2>The tractor: resultant of two forces</h2>
+<p><b>Q (Forces note):</b> Two people push a tractor with forces 210 N at 15° above the horizontal and 190 N at 35° below the horizontal, in the same vertical plane. Find the resultant.</p>
+<ol class="steps">
+<li><b>Diagram, directions:</b> both forces point forward; take right (forward) and up as positive.</li>
+<li><span class="tag">M1</span> Resolve horizontally: \(X = 210\cos15° + 190\cos35° = 202.84 + 155.64 = 358.48\ \text{N}\)</li>
+<li><span class="tag">M1</span> Resolve vertically: \(Y = 210\sin15° - 190\sin35° = 54.35 - 108.98 = -54.63\ \text{N}\) (downward)</li>
+<li><span class="tag">M1</span> \(R = \sqrt{358.48^2 + 54.63^2} = 363\ \text{N}\) <span class="tag">A1</span></li>
+<li>\(\tan\alpha = \dfrac{54.63}{358.48}\Rightarrow \alpha = 8.66°\) <b>below the horizontal</b> <span class="tag">A1</span></li>
+</ol>
+<div class="note tip"><b>Why it works</b>Keep 5 s.f. in the working and round only at the end, or the angle drifts to 8.7°.</div></div></section><section class="card" data-id="we-f2" data-group="1 Forces &amp; equilibrium" data-title="Range of P on a rough slope" data-kind="Worked example"><div class="ci"><div class="ch"><span class="sec">Worked example · 1 · Forces &amp; equilibrium</span><span class="kind">Worked example</span></div>
+<h2>Least P to stop slipping, least P to move it up</h2>
+<p><b>Q (Forces note):</b> A block of weight 30 N is on a rough plane inclined at \(\theta\), \(\tan\theta = \frac34\). A force \(P\) N acts up the slope, parallel to it. \(\mu = \frac13\). Find the least \(P\) that (a) prevents slipping down, (b) makes it move up.</p>
+<ol class="steps">
+<li>\(\tan\theta = \frac34 \Rightarrow \sin\theta = 0.6,\ \cos\theta = 0.8\) (3-4-5 triangle).</li>
+<li><span class="tag">M1</span> Perpendicular to slope: \(R = 30\cos\theta = 24\ \text{N}\), so \(F_{\max} = \frac13(24) = 8\ \text{N}\). Weight component down slope: \(30\sin\theta = 18\ \text{N}\).</li>
+<li><span class="tag">M1</span> (a) About to slip <b>down</b>: friction acts <b>up</b>. Parallel: \(P + 8 = 18\), so \(P = 10\ \text{N}\) <span class="tag">A1</span></li>
+<li><span class="tag">M1</span> (b) About to move <b>up</b>: friction acts <b>down</b>. Parallel: \(P = 18 + 8 = 26\ \text{N}\) <span class="tag">A1</span></li>
+<li>So the block stays at rest for \(10 \le P \le 26\).</li>
+</ol>
+<div class="note trap"><b>Where marks go</b>Friction flips direction between parts. Same magnitude, opposite sign.</div></div></section><section class="card" data-id="k-suvat" data-group="2 Kinematics" data-title="SUVAT" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">2 · Kinematics</span><span class="kind">Concept</span></div>
+<h2>Constant acceleration: SUVAT</h2>
+<div class="tw"><table>
+<tr><th>Equation</th><th>Missing</th></tr>
+<tr><td>\(v = u + at\)</td><td>\(s\)</td></tr>
+<tr><td>\(s = \frac12(u+v)t\)</td><td>\(a\)</td></tr>
+<tr><td>\(s = ut + \frac12at^2\)</td><td>\(v\)</td></tr>
+<tr><td>\(s = vt - \frac12at^2\)</td><td>\(u\)</td></tr>
+<tr><td>\(v^2 = u^2 + 2as\)</td><td>\(t\)</td></tr>
+</table></div>
+<ul>
+<li>List \(s, u, v, a, t\); circle the 3 you know and the 1 you want; pick the equation <b>missing</b> the 5th.</li>
+<li>Displacement, velocity, acceleration are <b>vectors</b> (sign matters). Distance and speed are <b>scalars</b>.</li>
+<li>Average velocity = net displacement ÷ total time. Average speed = total distance ÷ total time.</li>
+</ul>
+<div class="note trap"><b>Only for constant a</b>If \(a\) depends on \(t\) (e.g. \(v = 0.6t^2 - 0.12t^3\)), SUVAT is <b>wrong</b>. Use calculus.</div>
+<div class="note tip"><b>Two unknowns?</b>Write two SUVAT equations for two stages from the <b>same start point</b> (e.g. A→B and A→C) and solve simultaneously. Quiz 1 Q1 and Assignment Q4 both do this.</div></div></section><section class="card" data-id="k-vert" data-group="2 Kinematics" data-title="Vertical motion" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">2 · Kinematics</span><span class="kind">Concept</span></div>
+<h2>Vertical motion under gravity</h2>
+<p>Ignoring air resistance, everything moves with \(a = g = 10\ \text{m s}^{-2}\) downward, whatever its mass.</p>
+<ul>
+<li>Choose <b>up positive</b> for a thrown-up object: \(u > 0\), \(a = -10\).</li>
+<li>At the greatest height, \(v = 0\). Back at the start, \(s = 0\).</li>
+<li>\(s = 25\) on the way up and on the way down gives <b>two</b> values of \(t\): the quadratic's two roots.</li>
+<li>Two balls colliding: write \(s\) for each with its own start time (ball thrown 1 s later uses \(t - 1\)), then set positions equal.</li>
+</ul>
+<div class="note link"><b>From the note</b>Ball up at 30 m s⁻¹: greatest height \(0 = 900 - 20s \Rightarrow s = 45\) m; returns after \(0 = 30t - 5t^2 \Rightarrow t = 6\) s; at 25 m when \(5t^2 - 30t + 25 = 0\), so \(t = 1\) or \(5\) s.</div>
+<div class="note trap"><b>Trap</b>Mixing signs: if up is positive, a ball dropped from 30 m ends at \(s = -30\), not \(+30\).</div></div></section><section class="card" data-id="k-graph" data-group="2 Kinematics" data-title="Motion graphs" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">2 · Kinematics</span><span class="kind">Concept</span></div>
+<h2>Reading s–t and v–t graphs</h2>
+<div class="two">
+<div><h4>Displacement–time</h4><ul><li>Gradient = <b>velocity</b></li><li>Horizontal line = at rest</li><li>Curve = changing velocity</li></ul></div>
+<div><h4 class="t">Velocity–time</h4><ul><li>Gradient = <b>acceleration</b></li><li>Area under = <b>displacement</b></li><li>Below the axis = moving backwards</li></ul></div>
+</div>
+<figure class="dg"><div class="pnl"><svg viewBox="0 0 320 250" role="img" aria-label="Velocity-time graph: accelerate, constant speed, decelerate"><defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0,0 L10,5 L0,10 z"/></marker></defs><polygon class="fb" points="46.0,214.0 110.0,100.0 238.0,100.0 289.2,214.0"/><path class="k d" d="M46.0,214.0 L110.0,100.0 L238.0,100.0 L289.2,214.0"/><path class="g" d="M110.0,100.0 L110.0,214 M110.0,100.0 L46,100.0"/><text class="t-ax" x="110.0" y="229" text-anchor="middle">12</text><text class="t-ax" x="40" y="104.0" text-anchor="end">6</text><path class="g" d="M238.0,100.0 L238.0,214 M238.0,100.0 L46,100.0"/><text class="t-ax" x="238.0" y="229" text-anchor="middle">37</text><text class="t-ax" x="289.2" y="229.0" text-anchor="middle">45</text><text class="t-sm" x="53.7" y="75.3" text-anchor="start">gradient = a</text><text class="t-pt" x="174.0" y="157.0" text-anchor="middle">area = distance</text><path class="ax" d="M46,12 L46,214 L314,214"/><text class="t-axl" x="40" y="8" text-anchor="start">v (m s⁻¹)</text><text class="t-axl" x="314" y="244" text-anchor="end">t (s)</text><text class="t-ax" x="40" y="229" text-anchor="end">O</text></svg></div><figcaption>Assignment 1 Q1, the cyclist: gradient gives acceleration, area gives displacement. 36 + 150 + 24 = 210 m.</figcaption></figure>
+<div class="note trap"><b>Distance vs displacement</b>If the v–t graph goes below the axis, <b>distance</b> = sum of the areas (all positive), <b>displacement</b> = area above − area below.</div>
+<div class="note tip"><b>Trapezium shortcut</b>For accelerate–cruise–decelerate, area = \(\frac12(\text{top} + \text{bottom}) \times v\). With total distance given, this is often one equation in one unknown.</div></div></section><section class="card" data-id="k-calc" data-group="2 Kinematics" data-title="Variable acceleration" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">2 · Kinematics</span><span class="kind">Concept</span></div>
+<h2>Variable acceleration: use calculus</h2>
+<div class="chain"><span>\(s\)</span><i>→ d/dt →</i><span>\(v\)</span><i>→ d/dt →</i><span>\(a\)</span></div>
+<div class="chain"><span>\(a\)</span><i>→ ∫ dt →</i><span>\(v\)</span><i>→ ∫ dt →</i><span>\(s\)</span></div>
+<ul>
+<li>Every indefinite integral needs \(+c\). Find it from the given condition ("starts from rest" ⇒ \(v = 0\) at \(t = 0\); "from O" ⇒ \(s = 0\) at \(t = 0\)).</li>
+<li><b>Instantaneous rest</b>: solve \(v = 0\).</li>
+<li><b>Maximum velocity</b>: solve \(a = \frac{dv}{dt} = 0\); justify with \(\frac{d^2v}{dt^2} < 0\).</li>
+<li><b>Distance</b> between times: \(\int_{t_1}^{t_2} v\,dt\) — but split the integral wherever \(v\) changes sign and add the magnitudes.</li>
+</ul>
+<div class="note link"><b>From the note</b>Go-kart \(v = \frac1{10}t(36 - t)\): \(\frac{dv}{dt} = \frac{36 - 2t}{10} = 0 \Rightarrow t = 18\) s, \(v_{\max} = 32.4\ \text{m s}^{-1}\); \(\frac{d^2v}{dt^2} = -\frac15 < 0\), so a maximum.</div></div></section><section class="card" data-id="we-k1" data-group="2 Kinematics" data-title="Two stages, same acceleration" data-kind="Worked example"><div class="ci"><div class="ch"><span class="sec">Worked example · 2 · Kinematics</span><span class="kind">Worked example</span></div>
+<h2>Find a and u from two equal-time stages</h2>
+<p><b>Q (Kinematics Quiz 1 Q1):</b> P moves along ABCD with constant acceleration. AB = 100 m, BC = 148 m; each takes 4 s. (a) Show \(a = 3\ \text{m s}^{-2}\) and find the speed at A. [6] (b) P reaches D at 61 m s⁻¹. Find CD. [3]</p>
+<ol class="steps">
+<li>Let \(u\) = speed at A. Use \(s = ut + \frac12at^2\) from A both times so \(u\) is the same unknown.</li>
+<li><span class="tag">M1</span><span class="tag">A1</span> A→B (\(t = 4\)): \(100 = 4u + 8a\)</li>
+<li><span class="tag">M1</span><span class="tag">A1</span> A→C (\(t = 8\), \(s = 248\)): \(248 = 8u + 32a\)</li>
+<li><span class="tag">M1</span> Double the first: \(200 = 8u + 16a\). Subtract: \(48 = 16a\), so \(a = 3\) <span class="tag">A1</span> (shown), then \(u = 19\ \text{m s}^{-1}\) <span class="tag">A1</span></li>
+<li><span class="tag">B1</span> (b) Speed at C: \(v = 19 + 3(8) = 43\ \text{m s}^{-1}\).</li>
+<li><span class="tag">M1</span> \(v^2 = u^2 + 2as\): \(61^2 = 43^2 + 6s \Rightarrow s = \dfrac{3721 - 1849}{6} = 312\ \text{m}\) <span class="tag">A1</span></li>
+</ol>
+<div class="note trap"><b>Common slip</b>Using B→C with \(u = 0\). The particle is still moving at B.</div></div></section><section class="card" data-id="we-k2" data-group="2 Kinematics" data-title="Variable velocity: distance to rest" data-kind="Worked example"><div class="ci"><div class="ch"><span class="sec">Worked example · 2 · Kinematics</span><span class="kind">Worked example</span></div>
+<h2>"Show that OP = 6.25 m"</h2>
+<p><b>Q (Kinematics Quiz 1 Q2a):</b> A particle starts from rest at O and comes to instantaneous rest at P. \(v = 0.6t^2 - 0.12t^3\). Show that OP = 6.25 m. [5]</p>
+<ol class="steps">
+<li>\(v\) is a function of \(t\) ⇒ acceleration not constant ⇒ <b>calculus, not SUVAT</b>.</li>
+<li><span class="tag">M1</span> Rest at P: \(0.6t^2 - 0.12t^3 = t^2(0.6 - 0.12t) = 0 \Rightarrow t = 5\) (t = 0 is O) <span class="tag">A1</span></li>
+<li><span class="tag">M1</span> Integrate: \(s = \int_0^5 (0.6t^2 - 0.12t^3)\,dt = \left[0.2t^3 - 0.03t^4\right]_0^5\) <span class="tag">A1</span></li>
+<li>\(= 0.2(125) - 0.03(625) = 25 - 18.75 = 6.25\ \text{m}\) <span class="tag">A1</span> (AG: answer given, so show every line)</li>
+</ol>
+<div class="note tip"><b>"Show that"</b>The answer is given, so the marks are for the working. Show the limits, the substituted values and the subtraction.</div></div></section><section class="card" data-id="we-k3" data-group="2 Kinematics" data-title="Overtaking problem" data-kind="Worked example"><div class="ci"><div class="ch"><span class="sec">Worked example · 2 · Kinematics</span><span class="kind">Worked example</span></div>
+<h2>Cyclist and car: total time, then overtaking</h2>
+<p><b>Q (Assignment 1 Q1):</b> A cyclist starts from rest at A, accelerates at 0.5 m s⁻² for 36 m, travels at constant speed for 25 s, then decelerates uniformly to rest at B. AB = 210 m. (a) Find the total time. [5] (b) 24 s after the cyclist leaves A, a car starts from rest at A with acceleration 4 m s⁻². It overtakes the cyclist during her constant-speed stage. Find the time from the cyclist's start until the car overtakes. [5]</p>
+<ol class="steps">
+<li><span class="tag">M1</span> Stage 1: \(v^2 = 0 + 2(0.5)(36) \Rightarrow v = 6\); \(t = 6 / 0.5 = 12\) s.</li>
+<li><span class="tag">B1</span> Stage 2: \(6 \times 25 = 150\) m. Stage 3 distance: \(210 - 36 - 150 = 24\) m.</li>
+<li><span class="tag">M1</span> Stage 3: \(24 = \frac12(6 + 0)t \Rightarrow t = 8\) s. Total \(= 12 + 25 + 8 = 45\) s <span class="tag">A1</span></li>
+<li><span class="tag">M1</span> (b) Let \(T\) = time since the cyclist started. Cyclist (cruising): \(s = 36 + 6(T - 12)\). Car: \(s = \frac12(4)(T - 24)^2 = 2(T - 24)^2\).</li>
+<li><span class="tag">M1</span> Equal: \(2(T - 24)^2 = 6T - 36 \Rightarrow T^2 - 51T + 594 = 0\) <span class="tag">A1</span></li>
+<li><span class="tag">A1</span> \(T = 18\) or \(33\). \(T = 18\) is before the car starts, so \(T = 33\) s (and 33 is inside the cruise window 12–37 s ✓).</li>
+</ol>
+<div class="note trap"><b>Trap</b>Using the car's own clock for both. Put both on <b>one</b> time variable and shift the later starter by its delay.</div></div></section><section class="card" data-id="n-laws" data-group="3 Newton&#x27;s laws" data-title="F = ma and the forces" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">3 · Newton's laws</span><span class="kind">Concept</span></div>
+<h2>Newton's second law: \(F_{\text{res}} = ma\)</h2>
+<ol>
+<li><b>First law:</b> no resultant force ⇒ rest or constant velocity.</li>
+<li><b>Second law:</b> resultant force = rate of change of momentum = \(ma\) (constant mass).</li>
+<li><b>Third law:</b> A on B is equal and opposite to B on A.</li>
+</ol>
+<div class="tw"><table>
+<tr><th>Force</th><th>Direction / size</th></tr>
+<tr><td class="k">Weight \(W = mg\)</td><td>Vertically down. Mass in kg, weight in N.</td></tr>
+<tr><td class="k">Normal reaction \(R\)</td><td>Perpendicular to the surface, away from it.</td></tr>
+<tr><td class="k">Friction \(F\)</td><td>Along the surface, against (attempted) motion; \(\le \mu R\).</td></tr>
+<tr><td class="k">Tension \(T\)</td><td>Along the string, away from the body.</td></tr>
+<tr><td class="k">Thrust</td><td>Along a rod, towards the body (pushing).</td></tr>
+<tr><td class="k">Driving force \(D\)</td><td>Forward; from an engine (\(D = P/v\)).</td></tr>
+<tr><td class="k">Resistance</td><td>Opposes motion. "0.5 N per kg" ⇒ \(0.5m\).</td></tr>
+</table></div>
+<div class="note tip"><b>Write it in this order</b>(forces in direction of \(a\)) − (forces against) \(= ma\). Then the sign of \(a\) is automatic.</div></div></section><section class="card" data-id="n-slope" data-group="3 Newton&#x27;s laws" data-title="Moving on a slope" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">3 · Newton's laws</span><span class="kind">Concept</span></div>
+<h2>Moving on a slope</h2>
+<ul>
+<li>Perpendicular: no acceleration, so \(R = mg\cos\theta\) (± components of any angled force).</li>
+<li>Parallel: \(F_{\text{res}} = ma\). Friction is now <b>exactly</b> \(\mu R\) because it's sliding.</li>
+</ul>
+<div class="formula">Sliding down: ma = mg sinθ − μ mg cosθ<br>Pushed up:   ma = P − mg sinθ − μ mg cosθ</div>
+<div class="note link"><b>Exact trig</b>\(\sin\theta = 0.6 \Rightarrow \cos\theta = 0.8\); \(\sin\theta = \frac{7}{25} \Rightarrow \cos\theta = \frac{24}{25}\); \(\sin\theta = 0.05 \Rightarrow\) usually only \(\sin\theta\) is needed (no friction). Use exact values, not rounded angles.</div>
+<div class="note trap"><b>Trap</b>When a particle slides up, stops, then slides back, friction <b>changes direction</b> and so does the acceleration. New stage, new equation.</div>
+<h3>Lifts</h3>
+<p>Person in a lift: \(R - mg = ma\) (up positive). Accelerating up or decelerating while moving down ⇒ \(R > mg\). Note: man of 70 kg, lift from rest to 10 m s⁻¹ in 2 s: \(a = 5\), \(R = 70(10 + 5) = 1050\) N.</p></div></section><section class="card" data-id="n-conn" data-group="3 Newton&#x27;s laws" data-title="Connected particles" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">3 · Newton's laws</span><span class="kind">Concept</span></div>
+<h2>Connected particles: two equations, or one plus one</h2>
+<div class="two">
+<div><h4>Whole system</h4><p>Treat car + trailer as one body. Internal tension cancels. Gives \(a\) quickly.<br>\(D - R_1 - R_2 = (m_1 + m_2)a\)</p></div>
+<div><h4 class="t">Separate body</h4><p>One particle on its own. Tension appears. Gives \(T\).<br>Trailer: \(T - R_2 = m_2a\)</p></div>
+</div>
+<p>Use the system equation to find \(a\), then the <b>simpler</b> single body (usually the one with fewer forces) to find \(T\).</p>
+<h3>Strings over pulleys</h3>
+<figure class="dg"><svg viewBox="0 0 320 230" role="img" aria-label="Two particles over a smooth pulley: same tension T on both sides, A accelerates up, B down"><defs><marker id="fh" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0,0 L10,5 L0,10 z"/></marker></defs><circle class="pto" cx="160" cy="40" r="18"/><line class="ax" x1="160" y1="8" x2="160" y2="40"/><line class="ax" x1="90" y1="8" x2="230" y2="8"/><line class="ax" x1="142" y1="40" x2="142" y2="150"/><rect class="fa" x="124" y="150" width="36" height="30" rx="4"/><text class="t-pt" x="142.0" y="170.0" text-anchor="middle">A</text><line class="ar" x1="142.0" y1="146.0" x2="142.0" y2="110.0" marker-end="url(#fh)"/><text class="t-s" x="130.0" y="128.0" text-anchor="end">T</text><line class="ar" x1="142.0" y1="180.0" x2="142.0" y2="220.0" marker-end="url(#fh)"/><text class="t-b" x="130.0" y="212.0" text-anchor="end">30 N</text><text class="t-sm" x="116.0" y="168.0" text-anchor="end">3 kg</text><line class="ax" x1="178" y1="40" x2="178" y2="110"/><rect class="fc" x="160" y="110" width="36" height="30" rx="4"/><text class="t-pt" x="178.0" y="130.0" text-anchor="middle">B</text><line class="ar" x1="178.0" y1="106.0" x2="178.0" y2="70.0" marker-end="url(#fh)"/><text class="t-s" x="190.0" y="88.0" text-anchor="start">T</text><line class="ar" x1="178.0" y1="140.0" x2="178.0" y2="180.0" marker-end="url(#fh)"/><text class="t-b" x="190.0" y="172.0" text-anchor="start">50 N</text><text class="t-sm" x="204.0" y="128.0" text-anchor="start">5 kg</text><line class="ar" x1="92.0" y1="160.0" x2="92.0" y2="130.0" marker-end="url(#fh)"/><text class="t-d" x="86.0" y="150.0" text-anchor="end">a</text><line class="ar" x1="228.0" y1="110.0" x2="228.0" y2="140.0" marker-end="url(#fh)"/><text class="t-d" x="234.0" y="130.0" text-anchor="start">a</text><line class="ax" x1="20" y1="222" x2="300" y2="222"/></svg><figcaption>Smooth light pulley, light inextensible string: same T on both sides, same size of acceleration. Each particle's positive direction is the way it moves.</figcaption></figure>
+<div class="note trap"><b>Trap</b>You can't use a "whole system" equation for a string that changes direction unless you take "along the string" as the direction for each particle. Safer: write \(F = ma\) for each particle separately and add.</div>
+<div class="note tip"><b>After the string goes slack</b>When the falling particle hits the floor, \(T = 0\). The other particle continues with its current speed and moves freely (\(a = -g\) if vertical, \(a = -g\sin\theta\) on a smooth slope).</div></div></section><section class="card" data-id="we-n1" data-group="3 Newton&#x27;s laws" data-title="Car and trailer" data-kind="Worked example"><div class="ci"><div class="ch"><span class="sec">Worked example · 3 · Newton's laws</span><span class="kind">Worked example</span></div>
+<h2>Car towing a trailer</h2>
+<p><b>Q (Newton note):</b> Car 700 kg tows a trailer 200 kg on a horizontal road. Driving force 1220 N. Resistances: car 200 N, trailer 300 N. Find the acceleration and the tension in the tow-bar.</p>
+<ol class="steps">
+<li><b>Diagram:</b> car: \(1220\) forward, \(200\) back, \(T\) back. Trailer: \(T\) forward, \(300\) back. Positive = direction of motion.</li>
+<li><span class="tag">M1</span> Whole system, \(F = ma\): \(1220 - 200 - 300 = 900a\)</li>
+<li>\(a = \dfrac{720}{900} = 0.8\ \text{m s}^{-2}\) <span class="tag">A1</span></li>
+<li><span class="tag">M1</span> Trailer alone: \(T - 300 = 200(0.8)\)</li>
+<li>\(T = 460\ \text{N}\) <span class="tag">A1</span>. Check with the car: \(1220 - 200 - 460 = 560 = 700(0.8)\) ✓</li>
+</ol>
+<div class="note link"><b>Tension or thrust?</b>If your \(T\) comes out negative, the tow-bar is in <b>thrust</b> (pushing). That's the point of the note's caravan-uphill example: say which it is.</div></div></section><section class="card" data-id="we-n2" data-group="3 Newton&#x27;s laws" data-title="Pulley: after B lands" data-kind="Worked example"><div class="ci"><div class="ch"><span class="sec">Worked example · 3 · Newton's laws</span><span class="kind">Worked example</span></div>
+<h2>Pulley system, then free motion</h2>
+<p><b>Q (Newton's 2nd law sheet Q6):</b> A (3 kg) and B (5 kg) hang over a smooth pulley, string taut. A is 1 m above a horizontal plane, B is 2 m above it. Released from rest; B stays on the plane once it lands; A doesn't reach the pulley. (a) Find \(T\) and the time for B to reach the plane. (b) Find the time for which A is at least 3.25 m above the plane.</p>
+<ol class="steps">
+<li><span class="tag">M1</span> B (down +): \(50 - T = 5a\). A (up +): \(T - 30 = 3a\).</li>
+<li><span class="tag">M1</span> Add: \(20 = 8a \Rightarrow a = 2.5\ \text{m s}^{-2}\); \(T = 30 + 7.5 = 37.5\ \text{N}\) <span class="tag">A1</span></li>
+<li><span class="tag">M1</span> B falls 2 m: \(2 = \frac12(2.5)t^2 \Rightarrow t = \sqrt{1.6} = 1.26\ \text{s}\) <span class="tag">A1</span></li>
+<li><span class="tag">B1</span> (b) When B lands, A has risen 2 m to 3 m, with \(v^2 = 2(2.5)(2) = 10\), \(v = \sqrt{10}\).</li>
+<li><span class="tag">M1</span> String slack ⇒ A moves freely, \(a = -10\). Height above plane: \(3 + \sqrt{10}\,t - 5t^2 \ge 3.25\)</li>
+<li><span class="tag">M1</span> \(5t^2 - \sqrt{10}\,t + 0.25 = 0\): roots differ by \(\dfrac{\sqrt{10 - 5}}{5} = 0.447\ \text{s}\) <span class="tag">A1</span></li>
+</ol>
+<div class="note tip"><b>Shortcut</b>The time between the two roots of \(at^2 + bt + c = 0\) is \(\dfrac{\sqrt{b^2 - 4ac}}{a}\).</div></div></section><section class="card" data-id="we-n3" data-group="3 Newton&#x27;s laws" data-title="Rough slope and hanging particle" data-kind="Worked example"><div class="ci"><div class="ch"><span class="sec">Worked example · 3 · Newton's laws</span><span class="kind">Worked example</span></div>
+<h2>Pulley at the bottom of a rough slope</h2>
+<p><b>Q (Newton's 2nd law sheet Q7):</b> A (0.2 kg) on a rough plane, \(\sin\theta = 0.6\), \(\mu = 1.125\), is joined over a smooth pulley at the bottom of the plane to B (0.3 kg) hanging 0.25 m above the ground. Released from rest. (a) Find \(T\) and \(a\). (b) B lands and stops. Find the total distance A travels down the plane.</p>
+<ol class="steps">
+<li><span class="tag">B1</span> A: \(R = 0.2(10)(0.8) = 1.6\ \text{N}\), so \(F = 1.125(1.6) = 1.8\ \text{N}\), acting <b>up</b> the slope (A moves down).</li>
+<li><span class="tag">M1</span> A (down slope +): \(T + 0.2(10)(0.6) - 1.8 = 0.2a \Rightarrow T + 1.2 - 1.8 = 0.2a\)</li>
+<li><span class="tag">M1</span> B (down +): \(3 - T = 0.3a\). Add: \(2.4 = 0.5a \Rightarrow a = 4.8\ \text{m s}^{-2}\), \(T = 3 - 1.44 = 1.56\ \text{N}\) <span class="tag">A1</span><span class="tag">A1</span></li>
+<li><span class="tag">M1</span> After 0.25 m: \(v^2 = 2(4.8)(0.25) = 2.4\).</li>
+<li><span class="tag">M1</span> String slack: A has \(1.2\) N down slope, \(1.8\) N friction up slope ⇒ deceleration \(= \dfrac{0.6}{0.2} = 3\ \text{m s}^{-2}\).</li>
+<li><span class="tag">A1</span> \(0 = 2.4 - 2(3)s \Rightarrow s = 0.4\) m. Total \(= 0.25 + 0.4 = 0.65\ \text{m}\).</li>
+</ol>
+<div class="note trap"><b>Trap</b>Keeping \(T\) in the second stage. Once B lands, the string is slack: \(T = 0\).</div></div></section><section class="card" data-id="m-con" data-group="4 Momentum" data-title="Conservation of momentum" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">4 · Momentum</span><span class="kind">Concept</span></div>
+<h2>Momentum is conserved in a collision</h2>
+<div class="def"><div class="lab">Momentum <i>vector, N s or kg m s⁻¹</i></div><p>\(p = mv\)</p></div>
+<div class="def"><div class="lab">Conservation of linear momentum</div>
+<p>\(m_Au_A + m_Bu_B = m_Av_A + m_Bv_B\)</p>
+<p>Coalesce: \(m_Au_A + m_Bu_B = (m_A + m_B)v\)</p></div>
+<ul>
+<li><b>Pick one positive direction</b> and keep it for every velocity, before and after. Anything moving the other way is negative.</li>
+<li>Unknown velocity? Leave it as \(+v\); a negative answer just means it moves the other way.</li>
+<li>Change in momentum of one body = \(m(v - u)\), with signs. Rebounding ball: \(u = -3,\ v = +6\) gives \(\Delta p = 9m\), not \(3m\).</li>
+<li>Kinetic energy is <b>not</b> usually conserved: loss of KE = KE before − KE after (common follow-up).</li>
+<li>Chain collisions (A hits B, B hits C): apply conservation to <b>each</b> collision separately.</li>
+</ul>
+<div class="note tip"><b>Combine with kinematics</b>Momentum questions often need SUVAT first (speed just before impact) and after (where the coalesced object lands). The note's balls X and Y do both.</div></div></section><section class="card" data-id="we-m1" data-group="4 Momentum" data-title="Head-on collision" data-kind="Worked example"><div class="ci"><div class="ch"><span class="sec">Worked example · 4 · Momentum</span><span class="kind">Worked example</span></div>
+<h2>Opposite directions before impact</h2>
+<p><b>Q (Momentum note):</b> P (0.5 kg) and Q (0.2 kg) move towards each other at 8 m s⁻¹ and 2 m s⁻¹. After the collision P's direction is unchanged and Q's speed is double P's. Find (a) P's speed after, (b) the change in Q's momentum.</p>
+<ol class="steps">
+<li><b>Direction:</b> P's original direction positive. Before: \(u_P = 8,\ u_Q = -2\). After: \(v_P = v,\ v_Q = 2v\) (Q must now move in P's direction, ahead of it).</li>
+<li><span class="tag">M1</span> CoM: \(0.5(8) + 0.2(-2) = 0.5v + 0.2(2v)\) <span class="tag">A1</span></li>
+<li>\(3.6 = 0.9v \Rightarrow v = 4\ \text{m s}^{-1}\) <span class="tag">A1</span></li>
+<li><span class="tag">M1</span> (b) \(\Delta p_Q = 0.2(8 - (-2)) = 2\ \text{N s}\) in P's original direction <span class="tag">A1</span></li>
+</ol>
+<div class="note trap"><b>Biggest momentum error</b>Writing \(0.2(2)\) instead of \(0.2(-2)\) for Q before impact. Signs come from your chosen direction, not from the word "speed".</div></div></section><section class="card" data-id="we-m2" data-group="4 Momentum" data-title="Coalescing particles" data-kind="Worked example"><div class="ci"><div class="ch"><span class="sec">Worked example · 4 · Momentum</span><span class="kind">Worked example</span></div>
+<h2>Find u when the particles coalesce</h2>
+<p><b>Q (Momentum note):</b> A (2 kg) and B (3 kg) move towards each other with speeds \(u\) and \(2u\) m s⁻¹. They coalesce and move in B's original direction at 4 m s⁻¹. Find \(u\).</p>
+<ol class="steps">
+<li><b>Direction:</b> B's original direction positive, so A's velocity is \(-u\).</li>
+<li><span class="tag">M1</span> \(3(2u) + 2(-u) = (2 + 3)(4)\) <span class="tag">A1</span></li>
+<li>\(4u = 20 \Rightarrow u = 5\) <span class="tag">A1</span></li>
+<li>Follow-up you might get: KE lost \(= \frac12(2)(5^2) + \frac12(3)(10^2) - \frac12(5)(4^2) = 25 + 150 - 40 = 135\ \text{J}\).</li>
+</ol></div></section><section class="card" data-id="e-work" data-group="5 Work, energy &amp; power" data-title="Work, KE, PE" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">5 · Work, energy &amp; power</span><span class="kind">Concept</span></div>
+<h2>Work and energy</h2>
+<div class="tw"><table>
+<tr><th>Quantity</th><th>Formula</th><th>Note</th></tr>
+<tr><td class="k">Work done by a force</td><td>\(W = Fs\cos\theta\)</td><td>\(\theta\) between force and displacement. J.</td></tr>
+<tr><td class="k">Kinetic energy</td><td>\(\frac12mv^2\)</td><td>Scalar: direction doesn't matter.</td></tr>
+<tr><td class="k">Gravitational PE</td><td>\(mgh\)</td><td>\(h\) is <b>vertical</b> height; state the zero level.</td></tr>
+<tr><td class="k">WD against gravity on a slope</td><td>\(mg \times (d\sin\theta)\)</td><td>Only the vertical rise counts.</td></tr>
+<tr><td class="k">WD against friction</td><td>\(\mu R \times d\)</td><td>Distance along the surface.</td></tr>
+</table></div>
+<div class="def"><div class="lab">Work–energy principle</div>
+<p>WD by driving force − WD against resistance<br>\(= \Delta KE + \Delta PE\)</p>
+<p>No resistances and no driving force ⇒ \(KE + PE\) is conserved.</p></div>
+<div class="note tip"><b>When to use energy</b>When the question gives distances or heights but no time, or the resistance isn't constant (only its work is given). Energy can't give you time directly.</div>
+<div class="note trap"><b>Trap</b>Using the slope length \(d\) for \(h\) in \(mgh\). Height gained = \(d\sin\theta\).</div></div></section><section class="card" data-id="e-power" data-group="5 Work, energy &amp; power" data-title="Power" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">5 · Work, energy &amp; power</span><span class="kind">Concept</span></div>
+<h2>Power: the rate of doing work</h2>
+<div class="def"><div class="lab">Power <i>W = J s⁻¹</i></div>
+<p>\(P = \dfrac{\text{work done}}{\text{time}}\), and for a driving force at speed \(v\): \(P = Dv\)</p></div>
+<div class="chain"><span>Given \(P\) and \(v\)</span><i>→</i><span>\(D = \dfrac{P}{v}\)</span><i>→</i><span>\(D - R - mg\sin\theta = ma\)</span></div>
+<ul>
+<li><b>Maximum / steady speed</b>: \(a = 0\), so \(D = R\) (+ \(mg\sin\theta\) uphill, − downhill). Then \(v_{\max} = P / D\).</li>
+<li>kW ⇒ ×1000. "Working at 4 kW" means \(P = 4000\).</li>
+<li>Power constant over a time \(t\) ⇒ work done by the engine \(= Pt\) (use it in the work–energy equation).</li>
+</ul>
+<div class="note trap"><b>Trap</b>\(P = Fv\) uses the <b>driving force</b>, not the resultant force. Find \(D\) first, then put it into \(F = ma\).</div></div></section><section class="card" data-id="we-e1" data-group="5 Work, energy &amp; power" data-title="μ from energy" data-kind="Worked example"><div class="ci"><div class="ch"><span class="sec">Worked example · 5 · Work, energy &amp; power</span><span class="kind">Worked example</span></div>
+<h2>Coefficient of friction by energy</h2>
+<p><b>Q (Energy note):</b> A 10 kg box slides 3 m down a rough slope at 30°. Its speed rises from 3.25 m s⁻¹ to 5 m s⁻¹. Find \(\mu\).</p>
+<ol class="steps">
+<li><span class="tag">B1</span> PE lost \(= 10(10)(3\sin30°) = 150\ \text{J}\).</li>
+<li><span class="tag">B1</span> KE gained \(= \frac12(10)(5^2 - 3.25^2) = 72.19\ \text{J}\).</li>
+<li><span class="tag">M1</span> Work–energy: WD against friction = PE lost − KE gained \(= 77.81\ \text{J}\).</li>
+<li><span class="tag">M1</span> \(R = 10(10)\cos30° = 86.60\ \text{N}\), so WD \(= \mu(86.60)(3)\).</li>
+<li>\(\mu = \dfrac{77.81}{259.8} = 0.300\) <span class="tag">A1</span></li>
+</ol>
+<div class="note link"><b>Same answer by Newton</b>\(a = \frac{25 - 10.5625}{6} = 2.406\); \(10a = 50 - \mu(86.6)\) ⇒ \(\mu = 0.300\). Pick whichever is fewer lines.</div></div></section><section class="card" data-id="we-e2" data-group="5 Work, energy &amp; power" data-title="Car with constant power" data-kind="Worked example"><div class="ci"><div class="ch"><span class="sec">Worked example · 5 · Work, energy &amp; power</span><span class="kind">Worked example</span></div>
+<h2>Acceleration and top speed at constant power</h2>
+<p><b>Q (MJ2023/41/Q7 a–b):</b> A car of mass 1200 kg on a horizontal road. Engine power constant at 16 kW. Resistance 500 N. (a) Find the acceleration when the speed is 20 m s⁻¹. [3] (b) Find the steady speed. [2]</p>
+<ol class="steps">
+<li><span class="tag">M1</span> \(D = \dfrac{P}{v} = \dfrac{16\,000}{20} = 800\ \text{N}\)</li>
+<li><span class="tag">M1</span> \(F = ma\): \(800 - 500 = 1200a\)</li>
+<li>\(a = 0.25\ \text{m s}^{-2}\) <span class="tag">A1</span></li>
+<li><span class="tag">M1</span> (b) Steady ⇒ \(a = 0\) ⇒ \(D = 500\): \(\dfrac{16\,000}{v} = 500\)</li>
+<li>\(v = 32\ \text{m s}^{-1}\) <span class="tag">A1</span></li>
+</ol>
+<div class="note tip"><b>Part (c) style</b>On the hill the resistance varies, so only its work is given. Use work–energy: \(Pt - \text{WD}_{\text{res}} = \Delta KE + mg(d\sin\theta)\).</div></div></section><section class="card" data-id="traps" data-group="Exam" data-title="Common mistakes" data-kind="Traps"><div class="ci"><div class="ch"><span class="sec">Exam technique</span><span class="kind">Traps</span></div>
+<h2>Where Paper 4 marks disappear</h2>
+<div class="tw"><table>
+<tr><th>Mistake</th><th>Fix</th></tr>
+<tr><td>\(R = mg\) when a force pulls at an angle</td><td>Resolve vertically every time; \(R = mg - P\sin\alpha\).</td></tr>
+<tr><td>Friction in the wrong direction</td><td>Ask "which way would it slide?" Friction points the other way.</td></tr>
+<tr><td>\(\sin\) / \(\cos\) swapped on a slope</td><td>Down the slope: \(mg\sin\theta\). Into the slope: \(mg\cos\theta\).</td></tr>
+<tr><td>Mass for weight (\(m\) instead of \(mg\))</td><td>Forces in N; \(W = 10m\). Check units of each term.</td></tr>
+<tr><td>Different tensions either side of a smooth pulley</td><td>Light string, smooth pulley ⇒ one \(T\).</td></tr>
+<tr><td>Sign error in momentum</td><td>One positive direction, every velocity signed.</td></tr>
+<tr><td>SUVAT with variable acceleration</td><td>If \(a\) or \(v\) is given as a function of \(t\), use calculus.</td></tr>
+<tr><td>Forgetting \(+c\)</td><td>Use the initial condition to find it.</td></tr>
+<tr><td>\(P = Fv\) with the resultant force</td><td>\(F\) here is the <b>driving</b> force.</td></tr>
+<tr><td>Slope length used as height</td><td>\(h = d\sin\theta\).</td></tr>
+<tr><td>Tension kept after string goes slack</td><td>Particle lands ⇒ \(T = 0\); new stage.</td></tr>
+<tr><td>Rounding early</td><td>Carry 4–5 s.f.; give 3 s.f. (angles to 1 d.p.).</td></tr>
+</table></div></div></section><section class="card" data-id="tech" data-group="Exam" data-title="Exam technique" data-kind="Strategy"><div class="ci"><div class="ch"><span class="sec">Exam technique</span><span class="kind">Strategy</span></div>
+<h2>How to sit Paper 4</h2>
+<ul>
+<li><b>Timing:</b> 50 marks in 75 min ⇒ 1.5 min per mark. Leave 8 minutes to check signs and units.</li>
+<li><b>Diagram first</b>, even when one is printed: add every force, the direction of \(a\), and your positive direction.</li>
+<li><b>Name the principle</b> on the line: "N2L for A:", "Resolving ⊥ to the plane:", "CoM:", "Work–energy:". Examiners look for it before awarding M1.</li>
+<li><b>One equation per particle</b> in connected systems. Add them to eliminate \(T\).</li>
+<li><b>"Show that"</b>: answer given, so every step must appear; don't work backwards from it.</li>
+<li><b>g = 10</b> and 3 s.f. unless told otherwise. Exact answers (fractions, surds) are fine if exact.</li>
+<li><b>Multi-stage questions</b> (slack strings, braking, bounce): the end speed of one stage is the start speed of the next. Write it down clearly so follow-through marks apply.</li>
+</ul>
+<div class="note tip"><b>Which tool?</b>Time involved ⇒ SUVAT / \(F = ma\). Heights and distances only ⇒ energy. Impact ⇒ momentum. At rest ⇒ resolve.</div></div></section><section class="card" data-id="pr1" data-group="Practice" data-title="Practice: forces and kinematics" data-kind="Practice"><div class="ci"><div class="ch"><span class="sec">Practice · 1–2</span><span class="kind">Practice</span></div>
+<h2>Practice · Forces and kinematics</h2>
+<p class="lede">Do these on paper or in "Write your working", then reveal.</p>
+<div class="pq"><div class="qh"><span>Q1 · Forces note</span><span class="mk">[5]</span></div>
+<p class="qt">A book of mass 8 kg is at rest on a rough slope at 20° to the horizontal, held in limiting equilibrium by a force of 10 N up the line of greatest slope. (a) Find \(\mu\). (b) Find the largest force up the slope for which the book stays at rest.</p>
+<div class="ans"><b>Answer</b>(a) Friction acts up the slope: \(10 + \mu(80\cos20°) = 80\sin20°\), so \(\mu = 0.231\). (b) Friction now acts down the slope: \(P = 80\sin20° + 0.231(80\cos20°) = 44.7\ \text{N}\).</div></div>
+<div class="pq"><div class="qh"><span>Q2 · Newton sheet Q2</span><span class="mk">[6]</span></div>
+<p class="qt">A particle of mass 0.8 kg on a rough plane inclined at 28° is held in equilibrium by a force \(T\) N acting at 35° above a line of greatest slope. \(\mu = 0.2\). Find the least and greatest possible values of \(T\).</p>
+<div class="ans"><b>Answer</b>\(R = 8\cos28° - T\sin35°\). Least (friction up): \(T\cos35° + 0.2R = 8\sin28°\) ⇒ \(T = 3.33\) N. Greatest (friction down): \(T\cos35° = 8\sin28° + 0.2R\) ⇒ \(T = 5.53\) N.</div></div>
+<div class="pq"><div class="qh"><span>Q3 · Assignment 1 Q4</span><span class="mk">[6]</span></div>
+<p class="qt">A car with initial speed \(u\) and constant acceleration \(a\) takes 5 s for the first 80 m and 8 s for the first 160 m. Find \(a\) and \(u\).</p>
+<div class="ans"><b>Answer</b>\(80 = 5u + 12.5a\), \(160 = 8u + 32a\). Solving: \(a = \frac83 = 2.67\ \text{m s}^{-2}\), \(u = \frac{28}{3} = 9.33\ \text{m s}^{-1}\).</div></div>
+<div class="pq"><div class="qh"><span>Q4 · Kinematics Quiz 1 Q2(b)(c)</span><span class="mk">[7]</span></div>
+<p class="qt">Now \(s = kt^3 + ct^5\). The particle passes P (\(s = 6.25\)) with velocity 1.25 m s⁻¹ at \(t = 5\). Find \(k\) and \(c\), then the acceleration at \(t = 5\).</p>
+<div class="ans"><b>Answer</b>\(125k + 3125c = 6.25\); \(v = 3kt^2 + 5ct^4\) ⇒ \(75k + 3125c = 1.25\). Subtract: \(k = 0.1\), \(c = -0.002\). \(a = 6kt + 20ct^3 = 3 - 5 = -2\ \text{m s}^{-2}\).</div></div></div></section><section class="card" data-id="pr2" data-group="Practice" data-title="Practice: Newton&#x27;s laws" data-kind="Practice"><div class="ci"><div class="ch"><span class="sec">Practice · 3</span><span class="kind">Practice</span></div>
+<h2>Practice · Newton's laws</h2>
+<div class="pq"><div class="qh"><span>Q5 · Newton sheet Q1</span><span class="mk">[6]</span></div>
+<p class="qt">A bobsled starts at the top of a 60 m slope inclined at 12°, speed 5 m s⁻¹, and slides straight down. (a) With no resistance, find its speed at the bottom. (b) If instead \(\mu = 0.03\), find the time to reach the bottom.</p>
+<div class="ans"><b>Answer</b>(a) \(a = 10\sin12° = 2.079\); \(v^2 = 25 + 2(2.079)(60)\) ⇒ \(v = 16.6\ \text{m s}^{-1}\). (b) \(a = 10(\sin12° - 0.03\cos12°) = 1.786\); \(60 = 5t + 0.893t^2\) ⇒ \(t = 5.86\) s.</div></div>
+<div class="pq"><div class="qh"><span>Q6 · Newton sheet Q3</span><span class="mk">[9]</span></div>
+<p class="qt">A van (4500 kg) tows a trailer (750 kg) down a hill, \(\sin\theta = 0.05\), by a light rigid tow-bar. Resistances: van 2500 N, trailer 300 N. (a) Tension is 450 N: find the trailer's acceleration and the van's driving force. (b) Uphill, \(\sin\alpha = 0.09\), driving force 9100 N, speed 20 m s⁻¹ at the bottom: find \(a\), the tension, and the speed after 375 m.</p>
+<div class="ans"><b>Answer</b>(a) Trailer: \(450 + 375 - 300 = 750a\) ⇒ \(a = 0.7\); van: \(D + 2250 - 2500 - 450 = 4500(0.7)\) ⇒ \(D = 3850\) N. (b) System: \(9100 - 4725 - 2800 = 5250a\) ⇒ \(a = 0.3\); trailer: \(T - 675 - 300 = 225\) ⇒ \(T = 1200\) N; \(v^2 = 400 + 2(0.3)(375)\) ⇒ \(v = 25\ \text{m s}^{-1}\).</div></div></div></section><section class="card" data-id="pr3" data-group="Practice" data-title="Practice: momentum and energy" data-kind="Practice"><div class="ci"><div class="ch"><span class="sec">Practice · 4–5</span><span class="kind">Practice</span></div>
+<h2>Practice · Momentum, energy, power</h2>
+<div class="pq"><div class="qh"><span>Q7 · Momentum note</span><span class="mk">[3]</span></div>
+<p class="qt">A 2 kg particle at 5 m s⁻¹ hits a stationary 8 kg particle. Afterwards the 2 kg particle moves at 3 m s⁻¹ in the reverse direction. Find the speed of the 8 kg particle.</p>
+<div class="ans"><b>Answer</b>\(2(5) + 0 = 2(-3) + 8v\) ⇒ \(v = 2\ \text{m s}^{-1}\).</div></div>
+<div class="pq"><div class="qh"><span>Q8 · Momentum note</span><span class="mk">[4]</span></div>
+<p class="qt">A (0.01 kg), B (0.06 kg), C (0.12 kg) are at rest in a line on a smooth surface, B between. A is given 4 m s⁻¹ towards B, rebounds at 2 m s⁻¹; B then hits C and comes to rest. Find C's speed.</p>
+<div class="ans"><b>Answer</b>First: \(0.04 = -0.02 + 0.06v_B\) ⇒ \(v_B = 1\). Second: \(0.06(1) = 0.12v_C\) ⇒ \(v_C = 0.5\ \text{m s}^{-1}\).</div></div>
+<div class="pq"><div class="qh"><span>Q9 · MJ2023/41/Q2</span><span class="mk">[6]</span></div>
+<p class="qt">P (0.4 kg) is projected vertically upwards from the ground at 10 m s⁻¹. (a) Find the greatest height. (b) On first hitting the ground it loses 7.2 J and bounces vertically. Find the time between the first and second impacts.</p>
+<div class="ans"><b>Answer</b>(a) \(0 = 100 - 20h\) ⇒ \(h = 5\) m. (b) KE at impact \(= 20\) J, after \(= 12.8\) J ⇒ \(v = 8\); time up and down \(= 2(8)/10 = 1.6\) s.</div></div>
+<div class="pq"><div class="qh"><span>Q10 · Energy note</span><span class="mk">[3]</span></div>
+<p class="qt">A crate of mass 50 kg slides across a rough horizontal floor from 3 m s⁻¹ to rest in 4 m. Find \(\mu\).</p>
+<div class="ans"><b>Answer</b>KE lost \(= 225\) J \(= \mu(500)(4)\) ⇒ \(\mu = 0.1125 = 0.113\).</div></div>
+<div class="pq"><div class="qh"><span>Q11 · Energy note</span><span class="mk">[4]</span></div>
+<p class="qt">A car of mass 800 kg on a level road, resistance 0.5 N per kg, engine at 4 kW. Find (a) the acceleration at 8 m s⁻¹, (b) the maximum speed.</p>
+<div class="ans"><b>Answer</b>Resistance \(= 400\) N. (a) \(D = 500\); \(500 - 400 = 800a\) ⇒ \(a = 0.125\ \text{m s}^{-2}\). (b) \(4000/v = 400\) ⇒ \(v = 10\ \text{m s}^{-1}\).</div></div>
+<div class="pq"><div class="qh"><span>Q12 · Momentum note</span><span class="mk">[4]</span></div>
+<p class="qt">Carts A (1.2 kg) and B (2.4 kg) move the same way at 9 and 3 m s⁻¹. A collides with B and slows to 1 m s⁻¹. Find B's new velocity and the KE lost.</p>
+<div class="ans"><b>Answer</b>\(10.8 + 7.2 = 1.2 + 2.4v\) ⇒ \(v = 7\ \text{m s}^{-1}\). KE before \(= 48.6 + 10.8 = 59.4\) J; after \(= 0.6 + 58.8 = 59.4\) J ⇒ no KE lost (a perfectly elastic collision).</div></div></div></section><section class="card" data-id="sheet" data-group="Summary" data-title="Formula sheet" data-kind="Summary"><div class="ci"><div class="ch"><span class="sec">Summary</span><span class="kind">Summary</span></div>
+<h2>Everything to remember</h2>
+<div class="tw"><table>
+<tr><th>Topic</th><th>Formulae</th></tr>
+<tr><td class="k">Resolving</td><td>\(F\cos\theta,\ F\sin\theta\); \(R = \sqrt{X^2 + Y^2}\), \(\tan\alpha = Y/X\)</td></tr>
+<tr><td class="k">Equilibrium</td><td>\(\sum F_x = 0,\ \sum F_y = 0\)</td></tr>
+<tr><td class="k">Friction</td><td>\(F \le \mu R\); limiting/sliding \(F = \mu R\)</td></tr>
+<tr><td class="k">Slope</td><td>\(R = mg\cos\theta\); down-slope \(mg\sin\theta\)</td></tr>
+<tr><td class="k">SUVAT</td><td>\(v = u + at\); \(s = \frac12(u+v)t\); \(s = ut + \frac12at^2\); \(s = vt - \frac12at^2\); \(v^2 = u^2 + 2as\)</td></tr>
+<tr><td class="k">Calculus</td><td>\(v = \frac{ds}{dt}\), \(a = \frac{dv}{dt}\); \(s = \int v\,dt\), \(v = \int a\,dt\)</td></tr>
+<tr><td class="k">Newton II</td><td>\(F_{\text{res}} = ma\); \(W = mg\)</td></tr>
+<tr><td class="k">Momentum</td><td>\(p = mv\); \(m_1u_1 + m_2u_2 = m_1v_1 + m_2v_2\)</td></tr>
+<tr><td class="k">Work</td><td>\(W = Fs\cos\theta\)</td></tr>
+<tr><td class="k">Energy</td><td>\(KE = \frac12mv^2\), \(PE = mgh\); WD = \(\Delta KE + \Delta PE\)</td></tr>
+<tr><td class="k">Power</td><td>\(P = \frac{W}{t} = Dv\); max speed when \(a = 0\)</td></tr>
+</table></div>
+<div class="note tip"><b>Last check before you write the answer</b>Units? 3 s.f.? Direction stated for vectors? Tension or thrust stated?</div></div></section></main>
+<footer class="bot">
+  <button class="ib" id="prevBtn" type="button" aria-label="Previous card"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+  <div class="prog"><div class="bar"><i id="barFill"></i></div><div class="cnt" id="cnt">1 / 35</div></div>
+  <button class="ib" id="nextBtn" type="button" aria-label="Next card"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+</footer>
+
+<div class="sheet" id="tocSheet" hidden>
+  <header class="top"><div class="ttl"><b>Contents</b><small>35 cards · tap to jump</small></div>
+  <button class="ib" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></header>
+  <div class="sbody"><div class="in" id="tocList"></div></div>
+</div>
+<div class="sheet" id="fcSheet" hidden>
+  <header class="top"><div class="ttl"><b>Flashcards</b><small>Tap the card to flip · Space flips on a keyboard</small></div>
+  <button class="ib" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></header>
+  <div class="sbody"><div class="in">
+    <div class="chips" id="fcChips"></div>
+    <div class="fc" id="fc"><div class="fc-in">
+      <div class="fc-f front"><div class="ft"><span id="fcT"></span><span>Question</span></div><div class="q" id="fcQ"></div></div>
+      <div class="fc-f back"><div class="ft"><span id="fcT2"></span><span>Answer</span></div><div id="fcA"></div></div>
+    </div></div>
+    <div class="fcrow"><button class="btn bad" id="fcAgain" type="button">Again</button><span class="cnt" id="fcN" style="align-self:center"></span><button class="btn good" id="fcGot" type="button">Got it</button></div>
+    <div class="fcrow" style="margin-top:8px"><button class="btn" id="fcPrev" type="button">← Prev</button><button class="btn" id="fcShuf" type="button">Shuffle</button><button class="btn" id="fcNext" type="button">Next →</button></div>
+    <p class="lede" style="font-size:14.5px;margin-top:14px">"Again" puts the card in the Again pile so you can drill only the ones you missed.</p>
+  </div></div>
+</div>
+<div class="sheet" id="qSheet" hidden>
+  <header class="top"><div class="ttl"><b>Paper 4 quiz</b><small>Pick an answer to see the explanation</small></div>
+  <button class="ib" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></header>
+  <div class="sbody"><div class="in">
+    <div class="score"><span>Score <span class="num" id="qScore"></span></span><button class="btn" id="qReset" type="button">Reset</button></div>
+    <div id="qList"></div>
+  </div></div>
+</div>
+
+<div class="sheet" id="noteSheet" hidden>
+  <header class="top">
+    <div class="ttl"><b id="nTitle">Your working</b><small id="nSub">Saved on this device</small></div>
+    <button class="tl" id="nQ" type="button" aria-pressed="true" aria-label="Show question"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9.5 9.5a2.5 2.5 0 114 2c-1 .7-1.5 1.2-1.5 2.5M12 17h.01"/></svg></button>
+    <button class="tl" id="nUndo" type="button" aria-label="Undo"><svg viewBox="0 0 24 24"><path d="M9 7L4 12l5 5"/><path d="M4 12h11a5 5 0 010 10h-2"/></svg></button>
+    <button class="tl" id="nRedo" type="button" aria-label="Redo"><svg viewBox="0 0 24 24"><path d="M15 7l5 5-5 5"/><path d="M20 12H9a5 5 0 000 10h2"/></svg></button>
+    <button class="btn pri" id="nDone" type="button">Done</button>
+  </header>
+  <div class="ntools" role="toolbar" aria-label="Writing tools">
+    <button class="tl" data-tool="pen" type="button" aria-label="Pen" aria-pressed="true"><svg viewBox="0 0 24 24"><path d="M4 20l4-1 11-11-3-3L5 16l-1 4z"/><path d="M14 6l3 3"/></svg></button>
+    <button class="tl" data-tool="hl" type="button" aria-label="Highlighter" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M9 15l-3 5h6l1-2"/><path d="M9 15l7-11 4 3-7 11z"/></svg></button>
+    <button class="tl" data-tool="er" type="button" aria-label="Eraser" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M8 20h12"/><path d="M4.5 14.5l9-9 6 6-7.5 7.5H9z"/></svg></button>
+    <span class="sep"></span>
+    <button class="tl" data-col="ink" type="button" aria-label="Black ink" aria-pressed="true"><span class="dot" style="background:var(--fg)"></span></button>
+    <button class="tl" data-col="blue" type="button" aria-label="Blue ink" aria-pressed="false"><span class="dot" style="background:#3E7BFA"></span></button>
+    <button class="tl" data-col="red" type="button" aria-label="Red ink" aria-pressed="false"><span class="dot" style="background:#E5484D"></span></button>
+    <button class="tl" data-col="green" type="button" aria-label="Green ink" aria-pressed="false"><span class="dot" style="background:#2FA36B"></span></button>
+    <span class="sep"></span>
+    <button class="tl" data-size="1" type="button" aria-label="Fine" aria-pressed="false">S</button>
+    <button class="tl" data-size="2" type="button" aria-label="Medium" aria-pressed="true">M</button>
+    <button class="tl" data-size="3" type="button" aria-label="Thick" aria-pressed="false">L</button>
+    <span class="sep"></span>
+    <button class="tl" data-bg="lined" type="button" aria-label="Lined paper" aria-pressed="true">≡</button>
+    <button class="tl" data-bg="grid" type="button" aria-label="Grid paper" aria-pressed="false">#</button>
+    <button class="tl" data-bg="blank" type="button" aria-label="Blank paper" aria-pressed="false">□</button>
+    <span class="sep"></span>
+    <button class="tl" id="nFinger" type="button" aria-label="Draw with finger" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M9 11V5a1.5 1.5 0 013 0v6"/><path d="M12 10.5V9a1.5 1.5 0 013 0v2"/><path d="M15 11a1.5 1.5 0 013 0v3a6 6 0 01-6 6h-1a6 6 0 01-5-3l-2-3.5a1.5 1.5 0 012.5-1.6L9 13"/></svg></button>
+    <button class="tl" id="nZoom" type="button" aria-label="Zoom level, tap to reset" style="min-width:52px">100%</button>
+    <button class="tl" id="nAdd" type="button" aria-label="Add page"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M12 9v6M9 12h6"/></svg></button>
+    <button class="tl" id="nClear" type="button" aria-label="Clear this note"><svg viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button>
+  </div>
+  <div class="nq" id="nQBox"><div class="in" id="nQText"></div></div>
+  <div class="npages" id="nPages"></div>
+</div>
+
+<script>var DECK={"key": "deck-9709-p4", "flash": [["Modelling", "What does 'light' imply for a string?", "Its mass is ignored, so the tension is the same throughout the string."], ["Modelling", "What does 'inextensible' imply for connected particles?", "They have the same magnitude of acceleration (and speed)."], ["Modelling", "What does 'smooth' mean?", "No friction acts at that contact (μ = 0)."], ["Modelling", "What does 'limiting equilibrium' mean?", "On the point of moving: a = 0 and friction is at its maximum, F = μR."], ["Modelling", "What does 'modelled as a particle' let you ignore?", "Size and rotation: all forces act at a single point."], ["Modelling", "Rod vs string: what can a rod do that a string can't?", "Be in thrust (push). A string can only be in tension."], ["Forces", "Components of force F at angle θ to the x-axis?", "F cos θ along x, F sin θ along y."], ["Forces", "Condition for equilibrium?", "Resultant force zero: sum of components in each of two perpendicular directions is zero."], ["Forces", "On a slope at θ, the weight's components?", "mg sin θ down the slope, mg cos θ into the slope."], ["Forces", "Friction law?", "0 ≤ F ≤ μR, with F = μR when limiting or sliding."], ["Forces", "On a rough slope, which case gives the least P (up the slope)?", "About to slip down: friction acts up the slope, P + μR = mg sin θ."], ["Forces", "A particle on a slope with only W, R, F is about to slip. Link θ and μ?", "μ = tan θ."], ["Forces", "Why isn't R always mg?", "Any other force with a perpendicular component (pull at an angle, push down) changes R."], ["Kinematics", "Gradient of a displacement–time graph?", "Velocity."], ["Kinematics", "Gradient and area of a velocity–time graph?", "Gradient = acceleration; area = displacement."], ["Kinematics", "When is SUVAT not allowed?", "When acceleration isn't constant, e.g. v or a given as a function of t."], ["Kinematics", "How to find maximum velocity from v(t)?", "Solve dv/dt = 0; confirm with d²v/dt² < 0."], ["Kinematics", "Ball thrown up at 30 m/s: greatest height?", "0 = 900 − 20s ⇒ 45 m."], ["Kinematics", "Distance vs displacement on a v–t graph crossing the axis?", "Distance adds all areas as positive; displacement subtracts areas below the axis."], ["Newton", "Newton's second law?", "Resultant force = rate of change of momentum = ma (constant mass)."], ["Newton", "Connected particles: fastest way to a, then T?", "Whole-system equation for a, then one particle on its own for T."], ["Newton", "Person in a lift accelerating upwards: R vs mg?", "R − mg = ma, so R > mg."], ["Newton", "Particle lands and string goes slack: what changes?", "T = 0; the other particle moves freely with its current speed."], ["Newton", "Tow-bar force comes out negative. Meaning?", "It's a thrust, not a tension."], ["Momentum", "Principle of conservation of momentum?", "Total momentum before = total after, for a collision with no external impulse."], ["Momentum", "Formula when particles coalesce?", "m₁u₁ + m₂u₂ = (m₁ + m₂)v."], ["Momentum", "Ball of 0.2 kg hits a wall at 3 m/s, rebounds at 2 m/s. Change in momentum?", "0.2(2 − (−3)) = 1 N s, away from the wall."], ["Momentum", "Is KE conserved in collisions?", "Not usually. KE lost = KE before − KE after."], ["Energy", "Work done by force F through s at angle θ?", "Fs cos θ."], ["Energy", "Work–energy principle?", "WD by driving − WD against resistance = ΔKE + ΔPE."], ["Energy", "Particle moves d up a slope at θ: gain in PE?", "mg d sin θ."], ["Power", "Power of an engine at speed v with driving force D?", "P = Dv."], ["Power", "Condition for maximum (steady) speed?", "a = 0, so driving force = resistance (+ mg sin θ uphill)."], ["Exam", "Default g and accuracy in 9709 Paper 4?", "g = 10 m s⁻², answers to 3 s.f. (angles 1 d.p.)."]], "quiz": [{"s": "Forces", "q": "A 5 kg block rests on a horizontal floor. A force of 20 N pulls it at 30° above the horizontal. What is R?", "o": ["50 N", "40 N", "60 N", "32.7 N"], "c": 1, "e": "Vertically: R + 20 sin30° = 50, so R = 40 N. A forgets the pull's vertical component; C adds it the wrong way."}, {"s": "Forces", "q": "A particle is in limiting equilibrium on a rough slope at 30° with no other applied force. What is μ?", "o": ["0.5", "0.577", "0.866", "1.73"], "c": 1, "e": "mg sinθ = μ mg cosθ ⇒ μ = tan 30° = 0.577."}, {"s": "Forces", "q": "A 30 N block on a slope with sinθ = 0.6, μ = ⅓. A force P acts up the slope. The block is about to move UP. P = ?", "o": ["10 N", "18 N", "26 N", "8 N"], "c": 2, "e": "R = 24, μR = 8. About to move up ⇒ friction down: P = 18 + 8 = 26 N. A is the 'about to slip down' case."}, {"s": "Kinematics", "q": "A car accelerates uniformly from 4 to 12 m s⁻¹ in 4 s. Distance covered?", "o": ["32 m", "48 m", "16 m", "64 m"], "c": 0, "e": "s = ½(u + v)t = ½(16)(4) = 32 m."}, {"s": "Kinematics", "q": "v = 0.6t² − 0.12t³ for t ≥ 0. When is the particle next at instantaneous rest?", "o": ["t = 2.5 s", "t = 5 s", "t = 0.2 s", "t = 3.33 s"], "c": 1, "e": "t²(0.6 − 0.12t) = 0 ⇒ t = 5. D (t = 3.33) is where acceleration is zero (maximum v)."}, {"s": "Kinematics", "q": "Which is TRUE for a velocity–time graph?", "o": ["Area = acceleration", "Gradient = displacement", "Area = displacement", "Gradient = velocity"], "c": 2, "e": "v–t: gradient is acceleration, area is displacement. Gradient = velocity is the s–t graph."}, {"s": "Newton", "q": "Car 700 kg tows trailer 200 kg. D = 1220 N, resistances 200 N (car) and 300 N (trailer). Tension?", "o": ["300 N", "460 N", "560 N", "720 N"], "c": 1, "e": "System: a = 720/900 = 0.8. Trailer: T − 300 = 160 ⇒ T = 460 N."}, {"s": "Newton", "q": "A 3 kg and a 5 kg particle hang over a smooth pulley. Acceleration?", "o": ["2 m s⁻²", "2.5 m s⁻²", "4 m s⁻²", "6.25 m s⁻²"], "c": 1, "e": "(50 − 30) = 8a ⇒ a = 2.5 m s⁻²."}, {"s": "Newton", "q": "A 60 kg person is in a lift moving DOWN and slowing at 2 m s⁻². Normal reaction?", "o": ["480 N", "600 N", "720 N", "120 N"], "c": 2, "e": "Slowing while moving down ⇒ acceleration is upward. R − 600 = 60(2) ⇒ R = 720 N."}, {"s": "Momentum", "q": "A 6 kg hammer at 24 m s⁻¹ strikes a 2 kg post and doesn't rebound. Common speed?", "o": ["18 m s⁻¹", "24 m s⁻¹", "16 m s⁻¹", "12 m s⁻¹"], "c": 0, "e": "Coalesce: 6(24) = 8v ⇒ v = 18 m s⁻¹."}, {"s": "Momentum", "q": "A (2 kg) at u and B (3 kg) at 2u move towards each other, coalesce and move in B's direction at 4 m s⁻¹. u = ?", "o": ["2.5", "4", "5", "10"], "c": 2, "e": "B's direction positive: 6u − 2u = 5(4) ⇒ u = 5. Forgetting A's minus sign gives 8u = 20, u = 2.5 (A)."}, {"s": "Energy", "q": "A 3.5 kg case is lifted vertically 1.8 m. Work done against gravity?", "o": ["6.3 J", "63 J", "35 J", "31.5 J"], "c": 1, "e": "mgh = 3.5 × 10 × 1.8 = 63 J."}, {"s": "Power", "q": "A car engine works at 16 kW against 500 N resistance on level ground. Maximum speed?", "o": ["20 m s⁻¹", "32 m s⁻¹", "8 m s⁻¹", "40 m s⁻¹"], "c": 1, "e": "At max speed a = 0 ⇒ D = 500 ⇒ v = 16 000/500 = 32 m s⁻¹."}, {"s": "Energy", "q": "A particle moves 5 m up a smooth slope inclined at 30°. Its mass is 2 kg. Gain in PE?", "o": ["100 J", "50 J", "86.6 J", "10 J"], "c": 1, "e": "Height = 5 sin 30° = 2.5 m; PE = 2 × 10 × 2.5 = 50 J. A uses the slope length as height."}]};</script>
+<script>
+(function(){
+var KEY=DECK.key, root=document.documentElement;
+function sget(k){try{return localStorage.getItem(KEY+':'+k)}catch(e){return null}}
+function sset(k,v){try{localStorage.setItem(KEY+':'+k,v)}catch(e){}}
+/* theme: dark by default, light on request */
+root.setAttribute('data-theme',sget('theme')||'dark');
+document.getElementById('themeBtn').addEventListener('click',function(){
+  var t=root.getAttribute('data-theme')==='dark'?'light':'dark';root.setAttribute('data-theme',t);sset('theme',t);});
+
+var track=document.getElementById('track'), cards=[].slice.call(track.querySelectorAll('.card'));
+var N=cards.length, cur=0, bar=document.getElementById('barFill'), cnt=document.getElementById('cnt');
+function width(){return track.clientWidth}
+function update(i){cur=i;bar.style.width=((i+1)/N*100)+'%';
+  cnt.textContent=(i+1)+' / '+N+' · '+cards[i].dataset.title;sset('pos',i);
+  document.getElementById('prevBtn').disabled=i===0;document.getElementById('nextBtn').disabled=i===N-1;}
+function go(i,smooth){i=Math.max(0,Math.min(N-1,i));
+  track.scrollTo({left:i*width(),behavior:smooth===false?'auto':'smooth'});update(i);}
+var t0;track.addEventListener('scroll',function(){clearTimeout(t0);t0=setTimeout(function(){
+  var i=Math.round(track.scrollLeft/width());if(i!==cur)update(i);},80);},{passive:true});
+window.addEventListener('resize',function(){track.scrollTo({left:cur*width(),behavior:'auto'});});
+document.getElementById('prevBtn').addEventListener('click',function(){go(cur-1)});
+document.getElementById('nextBtn').addEventListener('click',function(){go(cur+1)});
+document.addEventListener('keydown',function(e){
+  if(document.querySelector('.sheet:not([hidden])'))return;
+  if(e.key==='ArrowRight'||e.key==='PageDown'){go(cur+1);e.preventDefault();}
+  if(e.key==='ArrowLeft'||e.key==='PageUp'){go(cur-1);e.preventDefault();}});
+document.querySelectorAll('[data-goto]').forEach(function(b){b.addEventListener('click',function(){
+  var t=b.getAttribute('data-goto');for(var i=0;i<N;i++){if(cards[i].dataset.id===t){go(i);return;}}});});
+
+/* tap-to-reveal: worked-example steps */
+document.querySelectorAll('ol.steps').forEach(function(ol){
+  var li=[].slice.call(ol.children),shown=0;li.forEach(function(x){x.hidden=true});
+  var bar=document.createElement('div');bar.className='rvbar';
+  var nb=document.createElement('button');nb.className='btn pri';nb.type='button';
+  var ab=document.createElement('button');ab.className='btn';ab.type='button';ab.textContent='Show all';
+  function paint(){nb.textContent=shown<li.length?('Show step '+(shown+1)+' of '+li.length):'All steps shown';
+    nb.disabled=shown>=li.length;ab.hidden=shown>=li.length;}
+  nb.addEventListener('click',function(){if(shown<li.length){li[shown].hidden=false;shown++;paint();}});
+  ab.addEventListener('click',function(){li.forEach(function(x){x.hidden=false});shown=li.length;paint();});
+  bar.appendChild(nb);bar.appendChild(ab);ol.parentNode.insertBefore(bar,ol.nextSibling);paint();});
+/* tap-to-reveal: practice answers */
+document.querySelectorAll('.pq').forEach(function(q){
+  var a=q.querySelector('.ans');if(!a)return;a.hidden=true;
+  var b=document.createElement('button');b.className='btn';b.type='button';b.textContent='Show answer';
+  b.addEventListener('click',function(){a.hidden=!a.hidden;b.textContent=a.hidden?'Show answer':'Hide answer';});
+  q.insertBefore(b,a);});
+document.querySelectorAll('[data-revealall]').forEach(function(b){b.addEventListener('click',function(){
+  var c=b.closest('.card');c.querySelectorAll('.pq .ans').forEach(function(a){a.hidden=false});
+  c.querySelectorAll('.pq .btn').forEach(function(x){x.textContent='Hide answer'});});});
+
+/* sheets */
+function openSheet(id){document.getElementById(id).hidden=false;}
+function closeSheets(){document.querySelectorAll('.sheet').forEach(function(s){s.hidden=true});}
+document.querySelectorAll('[data-close]').forEach(function(b){b.addEventListener('click',closeSheets)});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeSheets();});
+
+/* contents */
+var toc=document.getElementById('tocList'),lastSec=null;
+cards.forEach(function(c,i){
+  var s=c.dataset.group;if(s!==lastSec){var g=document.createElement('div');g.className='tocgrp';g.textContent=s;toc.appendChild(g);lastSec=s;}
+  var b=document.createElement('button');b.className='tocitem';b.type='button';
+  b.innerHTML='<span class="no">'+(i+1)+'</span><span></span><span class="kd"></span>';
+  b.children[1].textContent=c.dataset.title;b.children[2].textContent=c.dataset.kind;
+  b.addEventListener('click',function(){closeSheets();go(i,false);});toc.appendChild(b);});
+document.getElementById('tocBtn').addEventListener('click',function(){
+  [].forEach.call(toc.querySelectorAll('.tocitem'),function(b,i){b.classList.toggle('cur',i===cur)});
+  openSheet('tocSheet');var c=toc.querySelector('.cur');if(c)c.scrollIntoView({block:'center'});});
+
+/* flashcards */
+var F=DECK.flash,topics=['All'];F.forEach(function(c){if(topics.indexOf(c[0])<0)topics.push(c[0])});topics.push('Again pile');
+var filt='All',order=[],fi=0,again={};
+var chipBox=document.getElementById('fcChips'),fc=document.getElementById('fc');
+topics.forEach(function(t){var b=document.createElement('button');b.className='chip';b.type='button';b.textContent=t;
+  b.setAttribute('aria-pressed',t===filt?'true':'false');
+  b.addEventListener('click',function(){filt=t;[].forEach.call(chipBox.children,function(x){x.setAttribute('aria-pressed',x===b?'true':'false')});build();});
+  chipBox.appendChild(b);});
+function build(){order=[];F.forEach(function(c,i){if(filt==='All'||c[0]===filt||(filt==='Again pile'&&again[i]))order.push(i)});fi=0;show();}
+function show(){fc.classList.remove('flip');var q=document.getElementById('fcQ'),a=document.getElementById('fcA');
+  if(!order.length){q.textContent=filt==='Again pile'?'Nothing in the Again pile yet.':'No cards.';a.textContent='';document.getElementById('fcN').textContent='0 cards';return;}
+  var c=F[order[fi]];q.innerHTML=c[1];a.innerHTML=c[2];
+  document.getElementById('fcT').textContent=c[0];document.getElementById('fcT2').textContent=c[0];
+  document.getElementById('fcN').textContent=(fi+1)+' / '+order.length;}
+fc.addEventListener('click',function(){fc.classList.toggle('flip')});
+document.getElementById('fcPrev').addEventListener('click',function(){if(order.length){fi=(fi-1+order.length)%order.length;show();}});
+document.getElementById('fcNext').addEventListener('click',function(){if(order.length){fi=(fi+1)%order.length;show();}});
+document.getElementById('fcShuf').addEventListener('click',function(){for(var i=order.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=order[i];order[i]=order[j];order[j]=t;}fi=0;show();});
+document.getElementById('fcAgain').addEventListener('click',function(){if(order.length){again[order[fi]]=1;fi=(fi+1)%order.length;show();}});
+document.getElementById('fcGot').addEventListener('click',function(){if(!order.length)return;delete again[order[fi]];
+  if(filt==='Again pile'){order.splice(fi,1);if(fi>=order.length)fi=0;}else fi=(fi+1)%order.length;show();});
+document.addEventListener('keydown',function(e){if(document.getElementById('fcSheet').hidden)return;
+  if(e.key===' '){fc.classList.toggle('flip');e.preventDefault();}
+  if(e.key==='ArrowRight')document.getElementById('fcNext').click();
+  if(e.key==='ArrowLeft')document.getElementById('fcPrev').click();});
+document.getElementById('fcBtn').addEventListener('click',function(){openSheet('fcSheet');});
+build();
+
+/* quiz */
+var Q=DECK.quiz,list=document.getElementById('qList'),right=0,done=0;
+function renderQ(){list.innerHTML='';right=0;done=0;paintS();
+  Q.forEach(function(it,qi){var box=document.createElement('div');box.className='mcq';
+    box.innerHTML='<div class="qh"><span>Q'+(qi+1)+'</span><span></span></div><p class="qt"></p><div class="opts"></div>';
+    box.querySelector('.qh span:last-child').textContent=it.s;box.querySelector('.qt').innerHTML=it.q;
+    var opts=box.querySelector('.opts');
+    it.o.forEach(function(t,oi){var b=document.createElement('button');b.type='button';b.className='opt';
+      b.innerHTML='<b>'+'ABCD'[oi]+'</b><span></span>';b.querySelector('span').innerHTML=t;
+      b.addEventListener('click',function(){if(box.classList.contains('done'))return;box.classList.add('done');done++;
+        var ok=oi===it.c;if(ok)right++;b.classList.add(ok?'right':'wrong');opts.children[it.c].classList.add('right');
+        var ex=document.createElement('div');ex.className='ex';
+        ex.innerHTML='<b style="color:var('+(ok?'--good':'--bad')+')">'+(ok?'Correct. ':'Answer: '+'ABCD'[it.c]+'. ')+'</b>'+it.e;box.appendChild(ex);paintS();});
+      opts.appendChild(b);});
+    list.appendChild(box);});}
+function paintS(){document.getElementById('qScore').textContent=right+' / '+done+' answered of '+Q.length;}
+document.getElementById('qReset').addEventListener('click',function(){renderQ();list.parentNode.parentNode.scrollTop=0;});
+document.getElementById('qBtn').addEventListener('click',function(){openSheet('qSheet');});
+renderQ();
+
+
+/* ---------- handwriting notes ---------- */
+(function(){
+var NK=KEY+':note:', L=1000, PH=1414;              // logical page: 1000 × 1414 (A4)
+var COLS={blue:'#3E7BFA',red:'#E5484D',green:'#2FA36B'};
+var SIZES={1:2.2,2:3.6,3:6};
+var sheet=document.getElementById('noteSheet'), pagesBox=document.getElementById('nPages');
+var st={tool:'pen',col:'ink',size:2,finger:false}, note=null, nid=null, undo=[], redo=[], onSave=null;
+try{var s=JSON.parse(localStorage.getItem(KEY+':notetools')||'null');if(s)for(var k in s)st[k]=s[k];}catch(e){}
+function css(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
+function colOf(c){return c==='ink'?css('--fg'):(COLS[c]||c);}
+function load(id){try{var n=JSON.parse(localStorage.getItem(NK+id)||'null');if(n&&n.pages)return n;}catch(e){}return {bg:'lined',pages:[[]]};}
+function hasInk(n){return n.pages.some(function(p){return p.length;});}
+var saveT;
+function save(){clearTimeout(saveT);saveT=setTimeout(function(){
+  var sub=document.getElementById('nSub');
+  try{ if(hasInk(note)) localStorage.setItem(NK+nid,JSON.stringify(note)); else localStorage.removeItem(NK+nid);
+    sub.textContent='Saved on this device';
+  }catch(e){ sub.textContent='Storage full: clear an old note to keep saving'; }
+  if(onSave)onSave();},350);}
+function saveTools(){try{localStorage.setItem(KEY+':notetools',JSON.stringify(st));}catch(e){}}
+
+/* drawing */
+function paintBg(ctx,bg){
+  ctx.fillStyle=css('--surface');ctx.fillRect(0,0,L,PH);
+  ctx.strokeStyle=css('--line');ctx.lineWidth=1.2;ctx.beginPath();
+  if(bg==='lined'){for(var y=110;y<PH-40;y+=44){ctx.moveTo(40,y);ctx.lineTo(L-40,y);}}
+  if(bg==='grid'){for(var x=0;x<=L;x+=40){ctx.moveTo(x,0);ctx.lineTo(x,PH);}for(var y2=0;y2<=PH;y2+=40){ctx.moveTo(0,y2);ctx.lineTo(L,y2);}}
+  ctx.stroke();
+}
+function drawStroke(ctx,s){
+  var p=s.p;if(!p.length)return;
+  ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle=colOf(s.c);
+  if(s.t==='h'){ctx.globalAlpha=.32;ctx.lineWidth=s.w;ctx.beginPath();ctx.moveTo(p[0],p[1]);
+    for(var i=3;i<p.length;i+=3)ctx.lineTo(p[i],p[i+1]);if(p.length===3)ctx.lineTo(p[0]+.1,p[1]);ctx.stroke();ctx.globalAlpha=1;return;}
+  if(p.length===3){ctx.fillStyle=ctx.strokeStyle;ctx.beginPath();ctx.arc(p[0],p[1],s.w*(.35+p[2]/10)/2,0,7);ctx.fill();return;}
+  for(var j=3;j<p.length;j+=3){ctx.lineWidth=s.w*(.35+(p[j+2]+p[j-1])/20);ctx.beginPath();
+    var mx=(p[j-3]+p[j])/2,my=(p[j-2]+p[j+1])/2;
+    if(j>3){ctx.moveTo((p[j-6]+p[j-3])/2,(p[j-5]+p[j-2])/2);ctx.quadraticCurveTo(p[j-3],p[j-2],mx,my);}else{ctx.moveTo(p[0],p[1]);ctx.lineTo(mx,my);}
+    if(j===p.length-3)ctx.lineTo(p[j],p[j+1]);ctx.stroke();}
+}
+function render(ctx,page,bg){paintBg(ctx,bg);page.forEach(function(s){drawStroke(ctx,s);});}
+function fit(cv){var w=cv.clientWidth||cv.parentNode.clientWidth,d=window.devicePixelRatio||1;
+  cv.width=Math.round(w*d);cv.height=Math.round(w*PH/L*d);var ctx=cv.getContext('2d');ctx.setTransform(cv.width/L,0,0,cv.width/L,0,0);return ctx;}
+
+/* pages: one gesture handler on the whole paper area (pen draws; one finger pans; two fingers pinch-zoom) */
+var views=[], zoom=1, ZMIN=.5, ZMAX=4;
+try{zoom=+localStorage.getItem(KEY+':notezoom')||1;}catch(e){}
+function baseW(){return Math.max(240,Math.min(pagesBox.clientWidth-24,900));}
+function pageW(){return Math.round(baseW()*zoom);}
+function build(){pagesBox.innerHTML='';views=[];
+  note.pages.forEach(function(pg,i){
+    var wrap=document.createElement('div');wrap.className='npage';
+    var cv=document.createElement('canvas');cv.setAttribute('aria-label','Writing page '+(i+1));
+    var pn=document.createElement('span');pn.className='pn';pn.textContent=(i+1)+' / '+note.pages.length;
+    wrap.appendChild(cv);wrap.appendChild(pn);pagesBox.appendChild(wrap);
+    views.push({cv:cv,wrap:wrap,i:i});});
+  var h=document.createElement('p');h.className='nhint';
+  h.textContent=st.finger?'Finger draws. Pinch with two fingers to zoom.':'Write with Apple Pencil. One finger scrolls, two fingers pinch to zoom.';
+  pagesBox.appendChild(h);
+  layout();requestAnimationFrame(redrawAll);}
+function layout(){var w=pageW();views.forEach(function(v){v.wrap.style.width=w+'px';});paintZoom();}
+function fit(cv){var w=cv.clientWidth||pageW(),h=w*PH/L,d=window.devicePixelRatio||1;
+  d=Math.min(d,Math.sqrt(16e6/(w*h)));                      // iPad canvas memory limit
+  cv.width=Math.round(w*d);cv.height=Math.round(h*d);var ctx=cv.getContext('2d');ctx.setTransform(cv.width/L,0,0,cv.width/L,0,0);return ctx;}
+function redraw(v){v.ctx=fit(v.cv);render(v.ctx,note.pages[v.i],note.bg);}
+function redrawAll(){views.forEach(redraw);}
+window.addEventListener('resize',function(){if(!sheet.hidden){layout();redrawAll();}});
+function paintZoom(){var z=document.getElementById('nZoom');if(z)z.textContent=Math.round(zoom*100)+'%';}
+function setZoom(z,cx,cy){ // keep the point (cx,cy) in the paper area fixed on screen
+  z=Math.max(ZMIN,Math.min(ZMAX,z));var r=pagesBox.getBoundingClientRect(),ox=cx-r.left,oy=cy-r.top;
+  var ax=(pagesBox.scrollLeft+ox)/zoom,ay=(pagesBox.scrollTop+oy)/zoom;zoom=z;layout();
+  pagesBox.scrollLeft=ax*zoom-ox;pagesBox.scrollTop=ay*zoom-oy;}
+var zt;function zoomDone(){clearTimeout(zt);zt=setTimeout(function(){redrawAll();try{localStorage.setItem(KEY+':notezoom',zoom);}catch(e){}},120);}
+
+function viewAt(x,y){for(var i=0;i<views.length;i++){var r=views[i].cv.getBoundingClientRect();
+  if(x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom)return views[i];}return null;}
+function pos(v,e){var r=v.cv.getBoundingClientRect(),k=L/r.width;
+  var pr=e.pointerType==='pen'?(e.pressure||.5):.5;return [Math.round((e.clientX-r.left)*k*10)/10,Math.round((e.clientY-r.top)*k*10)/10,Math.round(pr*9)];}
+
+/* iOS: stop Safari treating pen or finger movement as scrolling, text selection or the callout menu.
+   Without this a quick vertical stroke after a horizontal one gets cancelled (the "+" problem). */
+['touchstart','touchmove'].forEach(function(t){pagesBox.addEventListener(t,function(e){if(e.cancelable)e.preventDefault();},{passive:false});});
+sheet.addEventListener('selectstart',function(e){e.preventDefault();});
+pagesBox.addEventListener('contextmenu',function(e){e.preventDefault();});
+
+var touches={},mode=null,cur=null,curV=null,drawPid=null,live=null,pan=null,pinch=null;
+function nTouch(){return Object.keys(touches).length;}
+function pinchInfo(){var k=Object.keys(touches),a=touches[k[0]],b=touches[k[1]];
+  return {d:Math.hypot(a.x-b.x,a.y-b.y)||1,x:(a.x+b.x)/2,y:(a.y+b.y)/2};}
+function startStroke(v,e){var p=pos(v,e);curV=v;
+  if(st.tool==='er'){cur={er:true,removed:[]};erase(v,p);return;}
+  cur={t:st.tool==='hl'?'h':'p',c:st.tool==='hl'?'#F5C400':st.col,w:st.tool==='hl'?SIZES[st.size]*5:SIZES[st.size],p:p.slice()};
+  if(cur.t==='h')live=note.pages[v.i].slice();
+  drawStroke(v.ctx,cur);}
+function moveStroke(e){var v=curV,evs=e.getCoalescedEvents?e.getCoalescedEvents():[e];if(!evs.length)evs=[e];
+  evs.forEach(function(ev){var p=pos(v,ev);
+    if(cur.er){erase(v,p);return;}
+    var q=cur.p,n=q.length;if(Math.abs(q[n-3]-p[0])+Math.abs(q[n-2]-p[1])<1.2)return;
+    q.push(p[0],p[1],p[2]);
+    if(cur.t==='p')drawStroke(v.ctx,{t:'p',c:cur.c,w:cur.w,p:q.slice(Math.max(0,q.length-9))});});
+  if(cur.t==='h'){render(v.ctx,live,note.bg);drawStroke(v.ctx,cur);}}
+function endStroke(keep){var v=curV;
+  if(cur&&keep!==false){
+    if(cur.er){if(cur.removed.length){undo.push({k:'er',i:v.i,items:cur.removed});redo=[];}}
+    else{note.pages[v.i].push(cur);undo.push({k:'add',i:v.i,s:cur});redo=[];}}
+  if(cur&&keep===false&&cur.er)cur.removed.slice().reverse().forEach(function(it){note.pages[v.i].splice(it.at,0,it.s);});
+  cur=null;live=null;curV=null;drawPid=null;mode=null;if(v)redraw(v);paintUR();save();}
+function erase(v,p){var pg=note.pages[v.i],r=14/Math.min(zoom,2)*1.2,hit=false;
+  for(var i=pg.length-1;i>=0;i--){var q=pg[i].p;
+    for(var j=0;j<q.length;j+=3){if(Math.abs(q[j]-p[0])<r&&Math.abs(q[j+1]-p[1])<r){cur.removed.push({s:pg[i],at:i});pg.splice(i,1);hit=true;break;}}}
+  if(hit)render(v.ctx,pg,note.bg);}
+
+pagesBox.addEventListener('pointerdown',function(e){
+  try{var sel=window.getSelection&&window.getSelection();if(sel&&sel.removeAllRanges)sel.removeAllRanges();}catch(x){}
+  if(e.pointerType==='pen'&&!st.penSeen){st.penSeen=true;saveTools();}
+  var isTouch=e.pointerType==='touch';
+  if(isTouch){
+    if(mode==='draw'&&!drawIsTouch)return;                       // palm resting while the pen writes
+    touches[e.pointerId]={x:e.clientX,y:e.clientY};try{pagesBox.setPointerCapture(e.pointerId);}catch(x){}
+    if(nTouch()===2){if(mode==='draw')endStroke(false);var pi=pinchInfo();pinch={d:pi.d,z:zoom};pan=null;mode='pinch';return;}
+    if(nTouch()>2)return;
+    if(st.penSeen&&!st.finger){mode='pan';pan={x:e.clientX,y:e.clientY,l:pagesBox.scrollLeft,t:pagesBox.scrollTop};return;}
+  }
+  if(mode==='draw')return;
+  var v=viewAt(e.clientX,e.clientY);if(!v)return;
+  if(mode==='pan')pan=null;
+  e.preventDefault();mode='draw';drawPid=e.pointerId;drawIsTouch=isTouch;
+  if(!isTouch){try{pagesBox.setPointerCapture(e.pointerId);}catch(x){}}
+  startStroke(v,e);});
+var drawIsTouch=false;
+pagesBox.addEventListener('pointermove',function(e){
+  if(touches[e.pointerId]){touches[e.pointerId]={x:e.clientX,y:e.clientY};
+    if(mode==='pinch'&&nTouch()>=2){var pi=pinchInfo();setZoom(pinch.z*pi.d/pinch.d,pi.x,pi.y);
+      if(pinch.mx!=null){pagesBox.scrollLeft-=pi.x-pinch.mx;pagesBox.scrollTop-=pi.y-pinch.my;}
+      pinch.mx=pi.x;pinch.my=pi.y;e.preventDefault();return;}
+    if(mode==='pan'&&pan){pagesBox.scrollLeft=pan.l-(e.clientX-pan.x);pagesBox.scrollTop=pan.t-(e.clientY-pan.y);return;}}
+  if(mode==='draw'&&e.pointerId===drawPid&&cur){e.preventDefault();moveStroke(e);}});
+function up(e){
+  if(touches[e.pointerId]){delete touches[e.pointerId];
+    if(mode==='pinch'){if(nTouch()<2){mode=nTouch()?'wait':null;pan=null;zoomDone();}return;}
+    if(mode==='wait'&&!nTouch())mode=null;
+    if(mode==='pan'){mode=null;pan=null;return;}}
+  if(mode==='draw'&&e.pointerId===drawPid)endStroke(true);}
+pagesBox.addEventListener('pointerup',up);pagesBox.addEventListener('pointercancel',up);
+pagesBox.addEventListener('wheel',function(e){if(!e.ctrlKey)return;e.preventDefault();setZoom(zoom*Math.exp(-e.deltaY/200),e.clientX,e.clientY);zoomDone();},{passive:false});
+function paintUR(){document.getElementById('nUndo').disabled=!undo.length;document.getElementById('nRedo').disabled=!redo.length;}
+document.getElementById('nUndo').addEventListener('click',function(){var a=undo.pop();if(!a)return;
+  if(a.k==='add'){var pg=note.pages[a.i],k=pg.lastIndexOf(a.s);if(k>=0)pg.splice(k,1);}
+  if(a.k==='er'){a.items.slice().reverse().forEach(function(it){note.pages[a.i].splice(it.at,0,it.s);});}
+  if(a.k==='clear'){note.pages=a.pages;build();}
+  if(a.k==='page'){note.pages.pop();build();}
+  redo.push(a);if(views[a.i])redraw(views[a.i]);paintUR();save();});
+document.getElementById('nRedo').addEventListener('click',function(){var a=redo.pop();if(!a)return;
+  if(a.k==='add')note.pages[a.i].push(a.s);
+  if(a.k==='er')a.items.forEach(function(it){var pg=note.pages[a.i],k=pg.indexOf(it.s);if(k>=0)pg.splice(k,1);});
+  if(a.k==='clear'){note.pages=[[]];build();}
+  if(a.k==='page'){note.pages.push([]);build();}
+  undo.push(a);if(views[a.i])redraw(views[a.i]);paintUR();save();});
+
+/* toolbar */
+function paintTools(){
+  sheet.querySelectorAll('[data-tool]').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.tool===st.tool);});
+  sheet.querySelectorAll('[data-col]').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.col===st.col);});
+  sheet.querySelectorAll('[data-size]').forEach(function(b){b.setAttribute('aria-pressed',+b.dataset.size===+st.size);});
+  sheet.querySelectorAll('[data-bg]').forEach(function(b){b.setAttribute('aria-pressed',note&&b.dataset.bg===note.bg);});
+  document.getElementById('nFinger').setAttribute('aria-pressed',!!st.finger);}
+sheet.querySelectorAll('[data-tool]').forEach(function(b){b.addEventListener('click',function(){st.tool=b.dataset.tool;paintTools();saveTools();});});
+sheet.querySelectorAll('[data-col]').forEach(function(b){b.addEventListener('click',function(){st.col=b.dataset.col;if(st.tool!=='pen')st.tool='pen';paintTools();saveTools();});});
+sheet.querySelectorAll('[data-size]').forEach(function(b){b.addEventListener('click',function(){st.size=+b.dataset.size;paintTools();saveTools();});});
+sheet.querySelectorAll('[data-bg]').forEach(function(b){b.addEventListener('click',function(){note.bg=b.dataset.bg;paintTools();redrawAll();save();});});
+document.getElementById('nZoom').addEventListener('click',function(){var r=pagesBox.getBoundingClientRect();setZoom(1,r.left+r.width/2,r.top);zoomDone();});
+document.getElementById('nFinger').addEventListener('click',function(){st.finger=!st.finger;paintTools();saveTools();build();});
+document.getElementById('nAdd').addEventListener('click',function(){note.pages.push([]);undo.push({k:'page',i:note.pages.length-1});redo=[];build();paintUR();save();
+  setTimeout(function(){pagesBox.scrollTop=pagesBox.scrollHeight;},60);});
+var clearArm=false,clearBtn=document.getElementById('nClear');
+clearBtn.addEventListener('click',function(){
+  if(!clearArm){clearArm=true;document.getElementById('nSub').textContent='Tap the bin again to clear every page';setTimeout(function(){clearArm=false;document.getElementById('nSub').textContent='Saved on this device';},3000);return;}
+  clearArm=false;undo.push({k:'clear',i:0,pages:note.pages});redo=[];note.pages=[[]];build();paintUR();save();});
+var qBtn=document.getElementById('nQ');
+qBtn.addEventListener('click',function(){var box=document.getElementById('nQBox');box.hidden=!box.hidden;qBtn.setAttribute('aria-pressed',!box.hidden);});
+
+/* open / close */
+function open(id,title,qNode,after){
+  nid=id;note=load(id);undo=[];redo=[];onSave=after;
+  document.getElementById('nTitle').textContent=title;document.getElementById('nSub').textContent='Saved on this device';
+  var qt=document.getElementById('nQText');qt.innerHTML='';
+  if(qNode){qNode.forEach(function(n){var c=n.cloneNode(true);c.querySelectorAll('button,.wrow,.ans,.rvbar').forEach(function(x){x.remove();});qt.appendChild(c);});}
+  document.getElementById('nQBox').hidden=!qNode;qBtn.setAttribute('aria-pressed',!!qNode);
+  sheet.hidden=false;paintTools();paintUR();build();pagesBox.scrollTop=0;
+  if(window.MathJax&&MathJax.typesetPromise)MathJax.typesetPromise([qt]).catch(function(){});}
+document.getElementById('nDone').addEventListener('click',function(){clearTimeout(saveT);
+  try{if(hasInk(note))localStorage.setItem(NK+nid,JSON.stringify(note));else localStorage.removeItem(NK+nid);}catch(e){}
+  sheet.hidden=true;if(onSave)onSave();});
+
+/* thumbnails + buttons on cards */
+function thumb(id){var n=load(id);if(!hasInk(n))return null;
+  var c=document.createElement('canvas');c.width=360;c.height=Math.round(360*PH/L);var ctx=c.getContext('2d');
+  ctx.setTransform(360/L,0,0,360/L,0,0);render(ctx,n.pages[0],n.bg);return {src:c.toDataURL('image/png'),pages:n.pages.length};}
+var PEN='<svg viewBox="0 0 24 24"><path d="M4 20l4-1 11-11-3-3L5 16l-1 4z"/><path d="M14 6l3 3"/></svg>';
+function attach(anchor,where,id,title,qNodes){
+  var row=document.createElement('div');row.className='wrow';
+  var b=document.createElement('button');b.type='button';b.className='btn write';
+  var img=document.createElement('img');img.className='wthumb';img.alt='Your handwritten working';
+  var meta=document.createElement('span');meta.className='wmeta';
+  row.appendChild(b);row.appendChild(meta);
+  function paint(){var t=thumb(id);
+    b.innerHTML=PEN+(t?'Edit your working':'Write your working');
+    if(t){img.src=t.src;meta.textContent=t.pages>1?t.pages+' pages':'';if(!img.parentNode)row.appendChild(img);}
+    else{if(img.parentNode)img.remove();meta.textContent='';}}
+  function go(){open(id,title,qNodes,paint);}
+  b.addEventListener('click',go);img.addEventListener('click',go);
+  if(where==='before')anchor.parentNode.insertBefore(row,anchor);else anchor.parentNode.insertBefore(row,anchor.nextSibling);
+  paint();}
+cards.forEach(function(c){
+  var title=c.dataset.title, cid=c.dataset.id;
+  if(c.dataset.kind==='Worked example'){
+    var ci=c.querySelector('.ci'),first=ci.querySelector('ol.steps');
+    if(first){var q=[].slice.call(ci.children).filter(function(n){return n.matches('p:not(.sec),.tw,figure,.formula');});
+      attach(first,'before',cid,title,q);}}
+  c.querySelectorAll('.pq').forEach(function(pq,i){var qt=pq.querySelector('.qt');if(!qt)return;
+    var lab=pq.querySelector('.qh span');attach(qt,'after',cid+'-q'+(i+1),(lab?lab.textContent:'Question '+(i+1)),[qt]);});
+});
+})();
+
+/* start where you left off */
+var start=parseInt(sget('pos')||'0',10);if(!(start>=0&&start<N))start=0;
+var h=(location.hash||'').slice(1);if(h){cards.forEach(function(c,i){if(c.dataset.id===h)start=i});}
+requestAnimationFrame(function(){go(start,false);});
+})();
+</script>
+
+<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(function(r){document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')r.update().catch(function(){});});}).catch(function(){});var had=!!navigator.serviceWorker.controller,done=false;navigator.serviceWorker.addEventListener('controllerchange',function(){if(had&&!done){done=true;location.reload();}});}</script>
+</body></html>

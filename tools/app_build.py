@@ -15,6 +15,7 @@ DECKS = {  # published artifact URL -> local file in the app
 # decks that live only in the app (no separate artifact): built file -> local file; the hub links to the local file directly
 APP_DECKS = {
     "deck-econ-essaybank.html": "econ-essay-bank.html",
+    "deck-maths-p4.html": "maths-p4.html",
 }
 
 TIMER = SRC / "data/timer-source.html"
