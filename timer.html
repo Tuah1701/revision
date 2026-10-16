@@ -2,7 +2,7 @@
 <title>Exam Timer</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=Martian+Mono:wght@300;500;700&display=swap">
 <style>
-/* Layout: one-screen invigilator board — paper picker, giant clock, progress rail, controls, finish card */
+/* Layout: one-screen invigilator board — paper picker, saved sessions, giant clock, progress rail, controls, finish card */
 :root{
   --bg:#E9EEF1; --paper:#F7F9FA; --ink:#13202A; --muted:#5B6B77; --line:#C9D3DA;
   --accent:#0F6B5C; --warn:#B36B00; --crit:#B3261E;
@@ -17,7 +17,7 @@
   --bg:#0D1317; --paper:#141C21; --ink:#E4EBEF; --muted:#8C9BA5; --line:#26333B;
   --accent:#3FBFA6; --warn:#E5A23A; --crit:#F2655B; color-scheme:dark;}
 html,body{height:100%}
-body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.45}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.45}
 .wrap{min-height:100%;box-sizing:border-box;padding-inline:clamp(16px,4vw,48px);padding-block:clamp(16px,3vw,28px);
   display:flex;flex-direction:column;gap:clamp(14px,2.5vh,24px);max-width:1100px;margin:0 auto}
 body.warn{--state:var(--warn)} body.crit, body.over{--state:var(--crit)}
@@ -31,11 +31,15 @@ header{display:flex;flex-direction:column;gap:10px;border-bottom:2px solid var(-
 .pick .lbl{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600;min-width:4.5em}
 .seg{font-size:.88rem;padding:.38em .85em;border:1.5px solid var(--line);border-radius:4px;background:transparent;color:var(--muted);font-weight:600;cursor:pointer;font-family:var(--body)}
 .seg[aria-pressed="true"]{border-color:var(--ink);background:var(--ink);color:var(--bg)}
-body.running .pick{opacity:.45;pointer-events:none}
+/* a dot marks any subject/paper holding paused progress */
+.seg.has::after{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--warn);margin-left:7px;vertical-align:middle}
+#savedPick .seg{border-style:dashed;color:var(--ink)}
+#savedPick .seg b{font-family:var(--display);font-weight:500;font-size:.8rem}
+#savedPick .seg[aria-pressed="true"]{border-style:solid;color:var(--bg)}
 
 main{display:flex;flex-direction:column;align-items:center;gap:clamp(10px,2.2vh,20px);flex:1;justify-content:center}
-.status{font-size:.8rem;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:var(--state);display:flex;align-items:center;gap:8px}
-.status::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--state)}
+.status{font-size:.8rem;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:var(--state);display:flex;align-items:center;gap:8px;text-align:center}
+.status::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--state);flex:none}
 body.running .status::before{animation:pulse 1.6s ease-in-out infinite}
 @keyframes pulse{50%{opacity:.25}}
 #clock{font-family:var(--display);font-weight:500;font-variant-numeric:tabular-nums;letter-spacing:-.04em;
@@ -71,6 +75,15 @@ a.log{font-weight:700;text-decoration:none;background:var(--accent);color:var(--
 #setup ol{margin:8px 0 12px;padding-left:1.3em;display:flex;flex-direction:column;gap:6px}
 #setup .acts{display:flex;gap:10px;flex-wrap:wrap}
 #setup .note{color:var(--muted);font-size:.88rem;margin:0 0 10px}
+#sync{width:100%;box-sizing:border-box;background:var(--paper);border:1.5px solid var(--accent);border-radius:4px;padding:16px 18px;font-size:.95rem}
+#sync h2{font-size:1.05rem;margin:0 0 6px}
+#sync ol{margin:8px 0 12px;padding-left:1.3em;display:flex;flex-direction:column;gap:6px}
+#sync .note{color:var(--muted);font-size:.88rem;margin:0 0 10px}
+#sync .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+#syncToken{flex:1;min-width:14em;font-family:var(--display);font-size:.85rem;padding:.6em .7em;border:1.5px solid var(--line);border-radius:4px;background:var(--bg);color:var(--ink)}
+#syncMsg{font-size:.9rem;margin-top:8px;color:var(--muted)}
+#syncBtn{font-size:.82rem;padding:.25em .7em;border-width:1px}
+#syncState.ok{color:var(--accent)} #syncState.bad{color:var(--crit)}
 footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 20px;font-size:.82rem;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}
 footer label{display:flex;align-items:center;gap:6px;cursor:pointer}
 code{font-family:var(--display);font-size:.78rem;background:var(--paper);border:1px solid var(--line);padding:1px 5px;border-radius:3px;color:var(--ink)}
@@ -85,6 +98,7 @@ code{font-family:var(--display);font-size:.78rem;background:var(--paper);border:
     </div>
     <div class="pick" id="subjectPick" aria-label="Subject"><span class="lbl">Subject</span></div>
     <div class="pick" id="paperPick" aria-label="Paper"><span class="lbl">Paper</span></div>
+    <div class="pick" id="savedPick" aria-label="Saved papers" hidden><span class="lbl">Saved</span></div>
   </header>
 
   <main>
@@ -116,7 +130,7 @@ code{font-family:var(--display);font-size:.78rem;background:var(--paper);border:
     </section>
     <section id="setup" hidden>
       <h2>iPad alerts · one-time setup</h2>
-      <p class="note">When you press Start, the timer hands your warnings to a Shortcut, which puts them in Reminders. They pop up even while you're in another app. Pause, Finish and Reset clear them.</p>
+      <p class="note">When you press Start, the timer hands your warnings to a Shortcut, which puts them in Reminders. They pop up even while you're in another app. Pause, Finish, Reset and switching paper clear them.</p>
       <ol>
         <li>In <b>Reminders</b>, make a new list called <b>Exam Timer</b>.</li>
         <li>In <b>Shortcuts</b>, tap <b>+</b> and name the shortcut <b>Exam Alerts</b> (exactly).</li>
@@ -132,12 +146,25 @@ code{font-family:var(--display);font-size:.78rem;background:var(--paper);border:
       <p class="note">After each Start or Pause you'll briefly see Shortcuts; swipe back to the timer. Alerts land within about a minute of the exact time, and a Focus mode can silence them.</p>
       <div class="acts"><button id="testAlert">Send test alert (20 s)</button><button id="hideSetup">Done</button></div>
     </section>
+    <section id="sync" hidden>
+      <h2>Sync between Mac and iPad · one-time setup</h2>
+      <p class="note">Your saved papers go into a private (secret) gist on your GitHub account, so a paper you pause on the Mac is waiting on the iPad, and the other way round. Do step 1 once, then step 2 on each device.</p>
+      <ol>
+        <li>On github.com: your photo → <b>Settings</b> → <b>Developer settings</b> → <b>Personal access tokens</b> → <b>Tokens (classic)</b> → <b>Generate new token (classic)</b>. Note: <i>Exam Timer</i>. Expiration: <i>No expiration</i> (or a year). Tick <b>only</b> <code>gist</code>. Generate, then copy the token (starts <code>ghp_</code>). Keep it in Notes or iCloud Keychain so you can paste it on the other device.</li>
+        <li>Paste it below and tap <b>Connect</b>. Do the same in the app on your other device.</li>
+      </ol>
+      <div class="row"><input id="syncToken" type="password" autocomplete="off" spellcheck="false" placeholder="ghp_…"><button class="primary" id="syncConnect">Connect</button><button id="syncHide">Close</button></div>
+      <div id="syncMsg"></div>
+      <p class="note" style="margin-top:10px">The token can only read and write your gists, and it stays on this device. To stop syncing here, tap <b>Disconnect</b>.</p>
+      <div class="row"><button id="syncNow">Sync now</button><button id="syncOff">Disconnect</button></div>
+    </section>
   </main>
 
   <footer>
-    <span>Your session is saved on this device: it keeps time while you use other apps, and a paused test waits (even overnight) until you press Start again. Only Reset, New test or picking a different paper clears it. Turn on iPad alerts to get warnings while you're in other apps.</span>
+    <span>Every paper keeps its own clock, and with Sync on it follows you between Mac and iPad. Pick another paper at any time: the one you were on pauses and is saved (dot <span style="color:var(--warn)">●</span>), ready to continue later from <b>Saved</b>. Only Reset or New test clears a paper.</span>
     <label><input type="checkbox" id="sound" checked onchange="save()"> Sound</label>
     <label><input type="checkbox" id="alerts" onchange="alertsChanged()"> iPad alerts</label>
+    <span>Sync: <b id="syncState">off</b> <button id="syncBtn">Set up</button></span>
     <span><code>Space</code> start/pause · <code>Enter</code> finish · <code>F</code> full screen</span>
   </footer>
 </div>
@@ -156,6 +183,10 @@ let subject = "pure1", paper = "P1";
 let totalMs = 110*60000, remainingMs = totalMs;  // remainingMs goes negative in overtime
 let endTime = null, startedAt = null, tick = null, wakeLock = null, audio = null, finished = false;
 const fired = new Set();
+// every paper's own clock, keyed "subject-PAPER" (e.g. "phys-P1"); the paper on screen is also mirrored here on save
+let sessions = {};
+let lastHash = "";
+let dirty = false;                                            // local change not yet sent to the sync gist
 
 // ---------- helpers ----------
 const pad = n => String(n).padStart(2,"0");
@@ -166,6 +197,11 @@ function clockTime(d){ return d.toLocaleTimeString([], {hour:"numeric", minute:"
 function words(min){ const h=Math.floor(min/60), m=min%60, p=[]; if(h) p.push(`${h} hour${h>1?"s":""}`); if(m) p.push(`${m} minute${m>1?"s":""}`); return p.join(" ")||"0 minutes"; }
 const left = () => endTime ? endTime - Date.now() : remainingMs;
 const running = () => !!tick;
+const keyOf = (s,p) => `${s}-${p}`;
+const curKey = () => keyOf(subject, paper);
+const defMs = (s=subject,p=paper) => SUBJECTS[s].papers[p][1]*60000;
+const paperLabel = p => p==="T" ? "Topical" : p;
+const isOpen = s => s && !s.cleared && s.startedAt && !s.finished;          // paused / in-progress session worth keeping
 
 function beep(times=1, freq=880){
   if(!$("sound").checked) return;
@@ -176,24 +212,76 @@ function beep(times=1, freq=880){
       o.start(t); o.stop(t+0.3); } }catch(e){}
 }
 
+// ---------- current paper <-> saved sessions ----------
+function snap(){
+  return { totalMs, remainingMs: running() ? left() : remainingMs, runEnd: running() ? endTime : null,
+    startedAt: startedAt ? +startedAt : null, finished, fired:[...fired] };
+}
+// what counts as a real change (a running clock's remainingMs moves every tick, its runEnd doesn't)
+const sig = s => s.cleared ? "x" : JSON.stringify([s.totalMs, s.runEnd ? 0 : Math.round(s.remainingMs/1000), s.runEnd||0, s.startedAt||0, !!s.finished]);
+const remOf = s => s.runEnd ? s.runEnd - Date.now() : s.remainingMs;
+function stash(){                                             // write the on-screen paper into the sessions map
+  const s = snap(), k = curKey(), prev = sessions[k];
+  if(!s.startedAt && s.totalMs === defMs()){                  // back to a blank paper: leave a "cleared" marker so other devices clear it too
+    if(prev && !prev.cleared){ sessions[k] = {cleared:true, at:Date.now()}; dirty = true; }
+    return;
+  }
+  if(!prev || sig(prev) !== sig(s)){ s.at = Date.now(); dirty = true; } else s.at = prev.at;
+  sessions[k] = s;
+}
+function applySession(s){                                     // put a saved session on screen
+  if(!s || s.cleared){ setMinutes(defMs()/60000, true); return; }
+  setMinutes(s.totalMs/60000, true);
+  remainingMs = s.remainingMs; fired.clear(); (s.fired||[]).forEach(w => fired.add(w));
+  if(!s.startedAt){ render(); return; }
+  startedAt = new Date(s.startedAt); $("startAt").textContent = clockTime(startedAt);
+  if(s.finished){ finished = true; showDone(); }
+  else if(s.runEnd){ remainingMs = s.runEnd - Date.now(); resume(s.runEnd); }
+  else showPaused();
+}
+
 // ---------- pickers ----------
-function seg(label, on, click){ const b=document.createElement("button"); b.className="seg"; b.textContent=label; b.setAttribute("aria-pressed", on); b.onclick=click; return b; }
+function seg(label, on, click, has){ const b=document.createElement("button"); b.className="seg"+(has?" has":""); b.innerHTML=label; b.setAttribute("aria-pressed", on); b.onclick=click; return b; }
+function openFor(sub, pap){                                   // is there paused progress on this subject / paper?
+  if(sub===subject && (!pap || pap===paper)) return !!(startedAt && !finished);
+  if(pap) return isOpen(sessions[keyOf(sub,pap)]);
+  return Object.keys(SUBJECTS[sub].papers).some(p => openFor(sub,p));
+}
 function renderPickers(){
-  const sp=$("subjectPick"), pp=$("paperPick");
-  sp.replaceChildren(sp.firstElementChild, ...Object.entries(SUBJECTS).map(([k,s]) => seg(s.name, k===subject, () => choose(k))));
-  pp.replaceChildren(pp.firstElementChild, ...Object.entries(SUBJECTS[subject].papers).map(([k,p]) => seg(k==="T"?"Topical":k, k===paper, () => choose(subject,k))));
+  const sp=$("subjectPick"), pp=$("paperPick"), sv=$("savedPick");
+  sp.replaceChildren(sp.firstElementChild, ...Object.entries(SUBJECTS).map(([k,s]) =>
+    seg(s.name, k===subject, () => choose(k), k!==subject && openFor(k))));
+  pp.replaceChildren(pp.firstElementChild, ...Object.keys(SUBJECTS[subject].papers).map(k =>
+    seg(paperLabel(k), k===paper, () => choose(subject,k), k!==paper && openFor(subject,k))));
+  // Saved row: every paper with paused progress, so you can jump straight back to it
+  const items = [];
+  for(const [s,S] of Object.entries(SUBJECTS)) for(const p of Object.keys(S.papers)){
+    const cur = s===subject && p===paper;
+    if(!openFor(s,p)) continue;
+    const rem = cur ? left() : remOf(sessions[keyOf(s,p)]);
+    const t = rem >= 0 ? `${fmtShort(rem)} left` : `${fmtShort(-rem)} over`;
+    items.push(seg(`${S.name} ${paperLabel(p)} · <b>${t}</b>`, cur, () => choose(s,p)));
+  }
+  sv.replaceChildren(sv.firstElementChild, ...items); sv.hidden = !items.length;
   const S=SUBJECTS[subject], P=S.papers[paper];
   $("subjectCode").textContent = S.code;
   $("paperTitle").textContent = `${S.name} · ${paper==="T" ? P[0] : paper+" "+P[0]}`;
 }
-function choose(sub, pap, mins, fromLink){
-  if(running()) return;                                       // can't swap papers while the clock runs
-  if(startedAt && !finished){                                 // paused test in progress
-    if(fromLink) return;                                      // a link never wipes a saved session
-    if(!confirm("Switch paper? Your paused progress on this one will be cleared.")) return;
-  }
-  subject = sub; paper = pap && SUBJECTS[sub].papers[pap] ? pap : Object.keys(SUBJECTS[sub].papers)[0];
-  renderPickers(); setMinutes(mins || SUBJECTS[subject].papers[paper][1]);
+function choose(sub, pap, mins){
+  // picking just a subject opens its saved paper if it has one, else its first paper
+  const papers = Object.keys(SUBJECTS[sub].papers);
+  const P = pap && SUBJECTS[sub].papers[pap] ? pap
+          : sub===subject ? paper
+          : (papers.find(p => isOpen(sessions[keyOf(sub,p)])) || papers[0]);
+  if(sub===subject && P===paper){ if(mins && !startedAt) setMinutes(mins); return; }
+  let note = "";
+  if(running()){ pause(); note = `${SUBJECTS[subject].name} ${paperLabel(paper)} paused and saved`; }
+  stash();
+  subject = sub; paper = P; renderPickers();
+  const s = sessions[curKey()];
+  if(s && !s.cleared && (s.startedAt || !mins)) applySession(s); else setMinutes(mins || SUBJECTS[subject].papers[paper][1], true);
+  if(note && !startedAt) $("status").textContent = note;
+  save();
 }
 
 // ---------- render ----------
@@ -260,7 +348,7 @@ function showDone(){
   $("dTaken").textContent = fmtShort(usedMs); $("dAllowed").textContent = `${allowedMin} min`;
   $("dOver").textContent = remainingMs < 0 ? `${fmtShort(-remainingMs)} over time` : `${fmtShort(remainingMs)} to spare`;
   $("dOver").style.color = remainingMs < 0 ? "var(--crit)" : "var(--accent)";
-  const S=SUBJECTS[subject]; $("dPaper").textContent = `${S.name} ${S.code} · ${paper==="T"?"Topical":paper}`;
+  const S=SUBJECTS[subject]; $("dPaper").textContent = `${S.name} ${S.code} · ${paperLabel(paper)}`;
   // the tracker opens its log form pre-filled from this link — nothing is saved until you press Save there
   $("logLink").href = `${TRACKER}#log-${subject}-${paper.toLowerCase()}-a${allowedMin}-t${takenMin}`;
   $("done").hidden = false; render();
@@ -273,26 +361,39 @@ function reset(){
   resetArmed = false; $("resetBtn").textContent = "Reset"; setMinutes($("mins").value);
 }
 
-// ---------- saved session: survives app switching, iPadOS closing the app, reloads, next day ----------
-const KEY = "examTimer.v1";
+// ---------- saved state: every paper's clock survives app switching, reloads, next day ----------
+const KEY = "examTimer.v2", OLD_KEY = "examTimer.v1";
 function save(){
-  try{ localStorage.setItem(KEY, JSON.stringify({ subject, paper, totalMs,
-    remainingMs: running() ? left() : remainingMs,
-    endTime: running() ? endTime : null,                     // running: absolute finish time, so time away still counts
-    startedAt: startedAt ? +startedAt : null, finished, fired:[...fired], sound:$("sound").checked, alerts:$("alerts").checked })); }catch(e){}
+  try{
+    stash();
+    localStorage.setItem(KEY, JSON.stringify({ subject, paper,
+      sessions, lastHash, sound:$("sound").checked, alerts:$("alerts").checked }));
+  }catch(e){}
+  renderPickers();
+  if(dirty) queuePush();
 }
 function restore(){
-  let st; try{ st = JSON.parse(localStorage.getItem(KEY)); }catch(e){ return false; }
-  if(!st || !SUBJECTS[st.subject] || !SUBJECTS[st.subject].papers[st.paper] || !(st.totalMs > 0)) return false;
-  subject = st.subject; paper = st.paper; renderPickers();
+  let st = null;
+  try{ st = JSON.parse(localStorage.getItem(KEY)); }catch(e){}
+  if(!st){                                                   // one-time move from the single-session version
+    try{ const o = JSON.parse(localStorage.getItem(OLD_KEY));
+      if(o && SUBJECTS[o.subject] && SUBJECTS[o.subject].papers[o.paper]) st = { subject:o.subject, paper:o.paper,
+        runEnd: o.finished ? null : o.endTime, sound:o.sound, alerts:o.alerts,
+        sessions:{ [keyOf(o.subject,o.paper)]: { totalMs:o.totalMs, remainingMs:o.remainingMs, startedAt:o.startedAt, finished:o.finished, fired:o.fired } } };
+    }catch(e){}
+  }
+  if(!st || !SUBJECTS[st.subject] || !SUBJECTS[st.subject].papers[st.paper]) return false;
+  sessions = {};
+  for(const [k,s] of Object.entries(st.sessions||{})){       // drop anything malformed
+    const [sub,pap] = k.split("-"); if(SUBJECTS[sub] && SUBJECTS[sub].papers[pap] && s && (s.cleared || s.totalMs > 0)) sessions[k] = {...s, at: s.at || 1};   // pre-sync saves still get uploaded
+  }
+  if(st.runEnd && sessions[keyOf(st.subject,st.paper)]) sessions[keyOf(st.subject,st.paper)].runEnd = st.runEnd;   // older save format
+  lastHash = st.lastHash || "";
+  subject = st.subject; paper = st.paper;
   $("sound").checked = st.sound !== false; $("alerts").checked = !!st.alerts;
-  setMinutes(st.totalMs/60000, true);
-  remainingMs = st.remainingMs; (st.fired||[]).forEach(w => fired.add(w));
-  if(!st.startedAt){ render(); return true; }                // set up but never started
-  startedAt = new Date(st.startedAt); $("startAt").textContent = clockTime(startedAt);
-  if(st.finished){ finished = true; showDone(); }
-  else if(st.endTime){ remainingMs = st.endTime - Date.now(); resume(st.endTime); }
-  else showPaused();
+  const s = sessions[curKey()];
+  if(s && !s.cleared) applySession(s); else setMinutes(SUBJECTS[subject].papers[paper][1], true);
+  renderPickers();
   return true;
 }
 function resume(end){                                        // pick a running clock back up without restarting it
@@ -303,8 +404,8 @@ function resume(end){                                        // pick a running c
 }
 // iPad: timers freeze while you're in another app; the clock is wall-time based, so just redraw on return
 document.addEventListener("visibilitychange", () => {
-  if(document.visibilityState === "visible"){ render(); if(running()) requestWake(); }
-  else save();
+  if(document.visibilityState === "visible"){ render(); if(running()) requestWake(); pull(); }
+  else { save(); pushNow(true); }
 });
 window.addEventListener("pagehide", save);
 window.addEventListener("pageshow", () => render());
@@ -318,7 +419,7 @@ function runShortcut(text){
 function sendAlerts(text){ if($("alerts").checked) runShortcut(text); }
 function scheduleAlerts(){
   if(!$("alerts").checked) return;
-  const l = left(), S = SUBJECTS[subject], name = `${S.name} ${paper==="T" ? "Topical" : paper}`, lines = [];
+  const l = left(), S = SUBJECTS[subject], name = `${S.name} ${paperLabel(paper)}`, lines = [];
   for(const w of [30,10,5]) if(totalMs > w*60000 && l > w*60000 + 30000) lines.push(`${Math.round((l - w*60000)/1000)}|${w} minutes left · ${name}`);
   if(l > 0) lines.push(`${Math.round(l/1000)}|Time up · ${name}. Pens down`);
   runShortcut(lines.join("\n"));
@@ -326,6 +427,90 @@ function scheduleAlerts(){
 function alertsChanged(){ $("setup").hidden = !$("alerts").checked; save(); }
 $("testAlert").onclick = () => runShortcut("20|Test alert from Exam Timer. It works!");
 $("hideSetup").onclick = () => { $("setup").hidden = true; };
+
+// ---------- Sync: all papers live in one private gist ("exam-timer.json") on Tuah's GitHub ----------
+// Each paper carries "at" (when it last changed); merging keeps the newer copy of every paper.
+const SYNC = "examTimer.sync", GIST_DESC = "Exam Timer sync", GIST_FILE = "exam-timer.json";
+let sync = null, pushTimer = null, busy = null, lastSync = null;
+try{ sync = JSON.parse(localStorage.getItem(SYNC)); }catch(e){}
+function gh(path, opts={}){
+  return fetch("https://api.github.com" + path, { ...opts, cache:"no-store", keepalive: !!opts.keepalive,
+    headers:{ Authorization:"Bearer " + sync.token, Accept:"application/vnd.github+json", ...(opts.body ? {"Content-Type":"application/json"} : {}) } })
+    .then(r => { if(r.status === 401) throw new Error("token"); if(!r.ok) throw new Error("http " + r.status); return r.json(); });
+}
+function syncState(text, cls){ const e=$("syncState"); e.textContent = text; e.className = cls||""; $("syncBtn").textContent = sync ? "Settings" : "Set up"; }
+function syncFailed(err){
+  syncState(err && err.message === "token" ? "token rejected" : navigator.onLine === false ? "offline · will catch up" : "can't reach GitHub", "bad");
+}
+function merge(remote){                                        // take every paper that's newer on the other device
+  let mine = false, screen = false;
+  for(const [k,r] of Object.entries(remote||{})){
+    const [sub,pap] = k.split("-"); if(!SUBJECTS[sub] || !SUBJECTS[sub].papers[pap] || !r || !r.at) continue;
+    const l = sessions[k];
+    if(!l || r.at > (l.at||0)){ if(!l || sig(l) !== sig(r)){ sessions[k] = r; if(k === curKey()) screen = true; } else sessions[k].at = r.at; }
+  }
+  for(const [k,l] of Object.entries(sessions)) if((l.at||1) > ((remote[k] && remote[k].at)||0)) mine = true;
+  if(screen){                                                  // the paper on screen changed elsewhere: show that version
+    const wasRunning = running(); stopTick(); applySession(sessions[curKey()]);
+    if(wasRunning && !running()) sendAlerts("");               // paused or finished on the other device: drop this one's alerts
+  }
+  return mine;
+}
+function writeLocal(){ try{ const st = JSON.parse(localStorage.getItem(KEY)) || {}; st.sessions = sessions; localStorage.setItem(KEY, JSON.stringify(st)); }catch(e){} renderPickers(); }
+async function pull(){
+  if(!sync || !sync.gist) return false;
+  if(busy) return busy;
+  busy = (async () => {
+    try{
+      stash();
+      const g = await gh("/gists/" + sync.gist), f = g.files && g.files[GIST_FILE];
+      let remote = {}; try{ remote = JSON.parse(f && f.content || "{}").sessions || {}; }catch(e){}
+      const mine = merge(remote); writeLocal();
+      if(mine || dirty){ dirty = false;
+        await gh("/gists/" + sync.gist, { method:"PATCH", body: JSON.stringify({ files:{ [GIST_FILE]:{ content: JSON.stringify({ v:1, sessions }) } } }) }); }
+      lastSync = new Date(); syncState("on · " + clockTime(lastSync), "ok"); return true;
+    }catch(e){ syncFailed(e); return false; }
+    finally{ busy = null; }
+  })();
+  return busy;
+}
+function queuePush(){ if(!sync) return; clearTimeout(pushTimer); pushTimer = setTimeout(pull, 1200); }
+function pushNow(leaving){                                     // app going to the background: send straight away
+  if(!sync || !sync.gist || !dirty) return; clearTimeout(pushTimer); dirty = false; stash();
+  gh("/gists/" + sync.gist, { method:"PATCH", keepalive: leaving,
+    body: JSON.stringify({ files:{ [GIST_FILE]:{ content: JSON.stringify({ v:1, sessions }) } } }) }).catch(() => { dirty = true; });
+}
+async function connect(){
+  const token = $("syncToken").value.trim(), msg = $("syncMsg");
+  if(!token){ msg.textContent = "Paste your token first."; return; }
+  sync = { token }; msg.textContent = "Connecting…";
+  try{
+    let gist = null;                                           // the other device may already have made the gist
+    for(let page = 1; page <= 5 && !gist; page++){
+      const list = await gh(`/gists?per_page=100&page=${page}`);
+      gist = (list.find(g => g.description === GIST_DESC && g.files && g.files[GIST_FILE]) || {}).id;
+      if(list.length < 100) break;
+    }
+    if(!gist){ stash();
+      gist = (await gh("/gists", { method:"POST", body: JSON.stringify({ description: GIST_DESC, public:false,
+        files:{ [GIST_FILE]:{ content: JSON.stringify({ v:1, sessions }) } } }) })).id; }
+    sync.gist = gist; localStorage.setItem(SYNC, JSON.stringify(sync));
+    $("syncToken").value = "";
+    const ok = await pull();
+    msg.textContent = ok ? "Connected. Your saved papers now follow you to your other device." : "Connected, but the first sync didn't go through. It'll retry.";
+  }catch(e){
+    sync = null; syncState("off");
+    msg.textContent = e.message === "token" ? "GitHub didn't accept that token. Check you copied all of it and ticked gist."
+      : "Couldn't reach GitHub. Check your connection and try again.";
+  }
+}
+$("syncBtn").onclick = () => { $("sync").hidden = !$("sync").hidden; $("syncMsg").textContent = ""; };
+$("syncHide").onclick = () => { $("sync").hidden = true; };
+$("syncConnect").onclick = connect;
+$("syncNow").onclick = async () => { $("syncMsg").textContent = sync ? ((await pull()) ? "Synced." : "Sync didn't go through.") : "Connect first."; };
+$("syncOff").onclick = () => { try{ localStorage.removeItem(SYNC); }catch(e){} sync = null; syncState("off"); $("syncMsg").textContent = "Sync is off on this device. Your saved papers stay here."; };
+setInterval(() => { if(document.visibilityState === "visible") pull(); }, 20000);
+window.addEventListener("online", () => pull());
 
 async function requestWake(){ try{ wakeLock = await navigator.wakeLock?.request("screen"); }catch(e){} }
 function releaseWake(){ try{ wakeLock?.release(); }catch(e){} wakeLock=null; }
@@ -345,18 +530,21 @@ document.addEventListener("keydown", e => {
 });
 
 // ---------- /timer links: #90, #phys-p2, #phys-p2-90, #econ ----------
-function fromHash(){
+// Switching never loses anything now (the old paper is saved), but on page load a link
+// won't interrupt a running test, and the same link reloaded won't drag you off where you were.
+function fromHash(initial){
   const h = location.hash.slice(1).toLowerCase(); if(!h) return;
+  if(initial && (h === lastHash || running())){ lastHash = h; save(); return; }
+  lastHash = h;
   const parts = h.split("-"), mins = parts.find(p => /^\d+$/.test(p));
   const sub = parts.find(p => SUBJECTS[p]), pap = parts.find(p => /^(p\d|t)$/.test(p));
-  if(startedAt && !finished) return;                        // keep the saved test
-  const P = sub ? (pap && SUBJECTS[sub].papers[pap.toUpperCase()] ? pap.toUpperCase() : Object.keys(SUBJECTS[sub].papers)[0]) : paper;
-  if((sub || subject) === subject && P === paper && (!mins || +mins*60000 === totalMs)) return;   // same setup: leave it as it is
-  if(sub) choose(sub, pap ? pap.toUpperCase() : null, mins, true);
-  else if(mins) setMinutes(mins);
+  if(sub) choose(sub, pap ? pap.toUpperCase() : null, mins);
+  else if(mins && !startedAt) setMinutes(mins);
+  save();
 }
-window.addEventListener("hashchange", fromHash);
-renderPickers(); if(!restore()) setMinutes(110); fromHash();
+window.addEventListener("hashchange", () => fromHash(false));
+renderPickers(); if(!restore()) setMinutes(110); fromHash(true);
+if(sync){ syncState("connecting…"); pull(); } else syncState("off");
 </script>
 
 <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(function(r){document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')r.update().catch(function(){});});}).catch(function(){});var had=!!navigator.serviceWorker.controller,done=false;navigator.serviceWorker.addEventListener('controllerchange',function(){if(had&&!done){done=true;location.reload();}});}</script></body></html>
