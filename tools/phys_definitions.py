@@ -20,7 +20,7 @@ CHAPTERS = [
         ("Systematic error", "Readings are consistently being either above or below true value"),
         ("Random error", "Readings are scattered around true value"),
         ("Accuracy", "The degree to which the values obtained approach true value and is influenced by size of systematic error"),
-        ("Precision", "The size of the smallest division and is determined by the size of random error"),
+        ("Precision", "How close repeated readings are to each other; determined by the size of random error", "corrected"),
         ("Uncertainty", "The total range of values within which the measurement is likely to lie"),
     ]),
     (3, "Kinematics", [
@@ -41,7 +41,7 @@ CHAPTERS = [
         ("Elastic collision", "Total kinetic energy before = after collision"),
     ]),
     (5, "Forces, density and pressure", [
-        ("Torque", "The product of one of the forces and the perpendicular distance between forces"),
+        ("Torque", "The product of one of the forces and the perpendicular distance between the lines of action of the forces", "corrected"),
         ("Centre of gravity", "The point at which the whole weight of a body seems to act."),
         ("Couple", "A pair of equal parallel forces that are opposite in direction in which the line do not coincide."),
         ("Moment", "The product of the force and the perpendicular distance between the line of the action of the force from the pivot"),
@@ -60,7 +60,7 @@ CHAPTERS = [
         ("Efficiency", "Useful energy output per total energy input"),
     ]),
     (9, "Deformation of solids", [
-        ("Hooke's Law", "Applied force is directly proportional to the extension produced provided that elastic limit is not exceeded."),
+        ("Hooke's Law", "Applied force is directly proportional to the extension produced provided that the limit of proportionality is not exceeded.", "corrected"),
         ("Plastic Deformation", "The ability of object to change its shape and hence does not return to its original shape after applied force is removed"),
         ("Elastic Deformation", "The ability of object to change its shape and hence return to its original shape after applied force is removed"),
         ("Stress", "Force per unit original cross sectional area"),
@@ -153,8 +153,9 @@ def defs(items, ch):
     out = []
     for it in items:
         term, d = it[0], it[1]
-        added = len(it) > 2 and it[2]
-        tag = "<i>blank on sheet · added</i>" if added else f"<i>Ch {ch}</i>"
+        flag = it[2] if len(it) > 2 else None
+        tag = ("<i>corrected to mark scheme</i>" if flag == "corrected"
+               else "<i>blank on sheet · added</i>" if flag else f"<i>Ch {ch}</i>")
         out.append(f'<div class="def"><div class="lab"><span>{e(term)}</span>{tag}</div><p>{e(d)}</p></div>')
     return "".join(out)
 
@@ -183,7 +184,7 @@ def build():
 <p class="sec" style="margin:0">CAIE 9702 · AS Level · Definitions</p>
 <p class="cover-k">Def</p>
 <h1>Definitions &amp; comparisons by chapter</h1>
-<p class="lede">From Muhammad Afiq bin Abdul Wahid's definitions sheet. Blanks on the sheet are filled in and marked "added".</p>
+<p class="lede">From Muhammad Afiq bin Abdul Wahid's definitions sheet. Blanks on the sheet are filled in and marked "added"; three definitions are corrected to mark-scheme wording.</p>
 <div class="stat"><div><b>{total}</b>definitions</div><div><b>{len(ESTIMATES)}</b>estimates</div><div><b>{len(CHAPTERS)}</b>chapters</div></div>
 <p><a href="index.html">Open Revision Hub</a></p>
 <div class="swipehint">Swipe or use the arrows · tap ☰ for contents</div>""", sec="Start"))

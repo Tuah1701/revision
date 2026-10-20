@@ -1,6 +1,6 @@
 // Pages (HTML): network first, so new decks show as soon as you're online; cached copy when offline.
 // Everything else (maths renderer, icons, fonts): cache first.
-const CACHE = 'revision-b8cb4854aa';
+const CACHE = 'revision-2188bd120d';
 const FILES = ["./", "econ-ch1.html", "econ-ch2.html", "econ-essay-bank.html", "econ-essays.html", "icon-180.png", "icon-192.png", "icon-512.png", "index.html", "manifest.webmanifest", "mathjax/tex-svg.js", "maths-p4.html", "phys-defs.html", "timer.html"];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES.map(f => new Request(f, {cache: 'reload'})))).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())); });
