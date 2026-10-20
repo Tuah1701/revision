@@ -16,7 +16,8 @@ DEFS = ('<defs><marker id="gh" viewBox="0 0 10 10" refX="8" refY="5" markerWidth
 class Plot:
     """Small graph panel. Axes cross at (0, 0); y range may go negative (axis then sits mid-panel)."""
 
-    def __init__(self, xr=(0, 10), yr=(0, 10), xl="t", yl="v", aria="graph", w=300, h=200, L=34, R=16, T=24, B=24):
+    def __init__(self, xr=(0, 10), yr=(0, 10), xl="t", yl="v", aria="graph", w=300, h=200, L=34, R=16, T=24, B=24, dn=None):
+        self.dn = dn
         self.x0, self.x1 = xr
         self.y0, self.y1 = yr
         self.xl, self.yl, self.aria = xl, yl, aria
@@ -82,6 +83,8 @@ class Plot:
               f'<text class="t-axl" x="{ax0 + 5:.1f}" y="{self.T - 10}" text-anchor="start">{self.yl}</text>'
               f'<text class="t-axl" x="{self.w - 4:.1f}" y="{ay0 + (16 if self.y0 >= 0 else -6):.1f}" text-anchor="end">{self.xl}</text>'
               f'<text class="t-ax" x="{ax0 - 5:.1f}" y="{ay0 + 14:.1f}" text-anchor="end">0</text>')
+        if self.dn:
+            ax += f'<text class="t-dn" x="{self.w - 6}" y="15" text-anchor="end" style="font-size:10.5px;font-weight:700;fill:var(--teal)">{self.dn}</text>'
         return (f'<svg viewBox="0 0 {self.w} {self.h}" role="img" aria-label="{self.aria}">{DEFS}'
                 + "".join(self.parts) + ax + "</svg>")
 
@@ -96,16 +99,16 @@ def rule(grad, area):
 
 # ---------------------------------------------------------------- diagrams
 def st_shapes():
-    a = Plot(yl="s", xl="t", aria="s-t at rest: horizontal line").path([(0, 5), (10, 5)]).t(5, 5, "at rest", "t-d", 0, -8, "middle")
-    b = Plot(yl="s", xl="t", aria="s-t constant velocity: straight line").path([(0, 0), (10, 9)]).t(6, 4, "constant v", "t-d")
-    c = Plot(yl="s", xl="t", aria="s-t accelerating: curve getting steeper").curve(lambda t: 0.09 * t * t, 0, 10).t(3.5, 6, "speeding up", "t-d")
-    d = Plot(yl="s", xl="t", aria="s-t decelerating to rest: curve flattening").curve(lambda t: 9 - 0.09 * (10 - t) ** 2, 0, 10).t(5.5, 4, "slowing down", "t-d")
+    a = Plot(dn="+ve → forward", yl="s", xl="t", aria="s-t at rest: horizontal line").path([(0, 5), (10, 5)]).t(5, 5, "at rest", "t-d", 0, -8, "middle")
+    b = Plot(dn="+ve → forward", yl="s", xl="t", aria="s-t constant velocity: straight line").path([(0, 0), (10, 9)]).t(6, 4, "constant v", "t-d")
+    c = Plot(dn="+ve → forward", yl="s", xl="t", aria="s-t accelerating: curve getting steeper").curve(lambda t: 0.09 * t * t, 0, 10).t(3.5, 6, "speeding up", "t-d")
+    d = Plot(dn="+ve → forward", yl="s", xl="t", aria="s-t decelerating to rest: curve flattening").curve(lambda t: 9 - 0.09 * (10 - t) ** 2, 0, 10).t(5.5, 4, "slowing down", "t-d")
     return fig(("At rest", a), ("Constant velocity", b), ("Accelerating", c), ("Decelerating", d),
                caption="Steepness = speed. Straight = constant velocity; curving up = accelerating; flattening = decelerating.")
 
 
 def st_tangent():
-    p = Plot(yl="s / m", xl="t / s", aria="tangent drawn on a curved s-t graph")
+    p = Plot(dn="+ve → forward", yl="s / m", xl="t / s", aria="tangent drawn on a curved s-t graph")
     f = lambda t: 0.08 * t * t
     p.curve(f, 0, 10)
     t0 = 6
@@ -119,16 +122,16 @@ def st_tangent():
 
 
 def vt_shapes():
-    a = Plot(aria="v-t constant velocity: horizontal line").path([(0, 6), (10, 6)]).t(5, 6, "a = 0", "t-d", 0, -8, "middle")
-    b = Plot(aria="v-t uniform acceleration: straight line up").path([(0, 1), (10, 9)]).t(4, 6, "a constant", "t-d", 0, 0, "end")
-    c = Plot(aria="v-t uniform deceleration: straight line down").path([(0, 9), (9, 0)]).t(5, 6.5, "a negative", "t-d")
-    d = Plot(aria="v-t increasing acceleration: curve getting steeper").curve(lambda t: 0.09 * t * t, 0, 10).t(3, 6, "a increasing", "t-d")
+    a = Plot(dn="+ve → forward", aria="v-t constant velocity: horizontal line").path([(0, 6), (10, 6)]).t(5, 6, "a = 0", "t-d", 0, -8, "middle")
+    b = Plot(dn="+ve → forward", aria="v-t uniform acceleration: straight line up").path([(0, 1), (10, 9)]).t(4, 6, "a constant", "t-d", 0, 0, "end")
+    c = Plot(dn="+ve → forward", aria="v-t uniform deceleration: straight line down").path([(0, 9), (9, 0)]).t(5, 6.5, "a negative", "t-d")
+    d = Plot(dn="+ve → forward", aria="v-t increasing acceleration: curve getting steeper").curve(lambda t: 0.09 * t * t, 0, 10).t(3, 6, "a increasing", "t-d")
     return fig(("Constant velocity", a), ("Uniform acceleration", b), ("Uniform deceleration", c), ("Increasing acceleration", d),
                caption="On v–t the slope is acceleration. Don't confuse a flat v–t (moving steadily) with a flat s–t (at rest).")
 
 
 def vt_area():
-    p = Plot(yr=(-5, 7), yl="v", xl="t", aria="v-t graph crossing the time axis, areas above and below")
+    p = Plot(dn="+ve → initial direction", yr=(-5, 7), yl="v", xl="t", aria="v-t graph crossing the time axis, areas above and below")
     pts = [(0, 6), (5, 0), (8, -3.6), (10, -3.6)]
     p.fill([(0, 0), (0, 6), (5, 0)], "fb").fill([(5, 0), (8, -3.6), (10, -3.6), (10, 0)], "fc")
     p.path(pts)
@@ -138,7 +141,7 @@ def vt_area():
 
 
 def at_graph():
-    p = Plot(yr=(-5, 5), yl="a", xl="t", aria="a-t graph: area equals change in velocity")
+    p = Plot(dn="+ve → forward", yr=(-5, 5), yl="a", xl="t", aria="a-t graph: area equals change in velocity")
     p.fill([(0, 0), (0, 3), (4, 3), (4, 0)], "fb").fill([(7, 0), (7, -2.5), (10, -2.5), (10, 0)], "fc")
     p.path([(0, 3), (4, 3)]).path([(4, 0), (7, 0)]).path([(7, -2.5), (10, -2.5)])
     p.guide([(4, 3), (4, 0)]).guide([(7, 0), (7, -2.5)])
@@ -147,47 +150,99 @@ def at_graph():
     return fig(p, caption="Area under a–t = change in velocity, not velocity itself. Add the initial velocity u.")
 
 
+def changing_accel():
+    F = "+ve → forward"
+    a = Plot(dn=F, aria="v-t concave down rising curve: decreasing acceleration").curve(lambda t: 9 * (1 - (1 - t / 10) ** 2), 0, 10).t(5.5, 4, "slope falls", "t-d")
+    b = Plot(dn=F, aria="v-t concave up rising curve: increasing acceleration").curve(lambda t: 0.09 * t * t, 0, 10).t(3, 6, "slope grows", "t-d")
+    c = Plot(dn=F, aria="v-t falling curve getting steeper: increasing deceleration").curve(lambda t: 9 - 0.09 * t * t, 0, 10).t(1.5, 4, "slope more −ve", "t-d")
+    d = Plot(dn=F, aria="v-t falling curve flattening: decreasing deceleration").curve(lambda t: 9 * (1 - t / 10) ** 2, 0, 10).t(4.5, 5, "slope less −ve", "t-d")
+    return fig(("decreasing acceleration", a), ("increasing acceleration", b), ("increasing deceleration", c), ("decreasing deceleration", d),
+               caption="Speeding up: v rises. Slowing down: v falls. Whether it's getting MORE or LESS so is read from how the gradient changes (steeper or flatter).")
+
+
+def changing_accel_at():
+    F = "+ve → forward"
+    a = Plot(dn=F, yr=(-5, 5), yl="a", aria="a-t positive line falling to zero").path([(0, 4), (10, 0)]).t(1, 1.2, "a > 0, falling", "t-d")
+    b = Plot(dn=F, yr=(-5, 5), yl="a", aria="a-t positive line rising").path([(0, 0), (10, 4)]).t(5, 3.2, "a > 0, rising", "t-d", 0, 0, "end")
+    c = Plot(dn=F, yr=(-5, 5), yl="a", aria="a-t negative line becoming more negative").path([(0, 0), (10, -4)]).t(5, -3.2, "a < 0, more −ve", "t-d", 0, 0, "end")
+    d = Plot(dn=F, yr=(-5, 5), yl="a", aria="a-t negative line rising towards zero").path([(0, -4), (10, 0)]).t(1, -1.2, "a < 0, → 0", "t-d")
+    return fig(("decreasing acceleration", a), ("increasing acceleration", b), ("increasing deceleration", c), ("decreasing deceleration", d),
+               caption="The matching a–t graphs (straight lines shown for simplicity). Deceleration = negative acceleration when forward is positive.")
+
+
+def bounce_up():
+    t1, t2 = 0.606, 0.404
+    t3 = 2.6 / G
+    v = Plot(dn="+ve ↑ up", xr=(0, 2.1), yr=(-7, 5), yl="v", xl="t", aria="bouncing ball velocity-time with up positive: lines slope downwards, jumps upward at each bounce")
+    v.path([(0, 0), (t1, -5.94)]).guide([(t1, -5.94), (t1, 3.96)]).path([(t1, 3.96), (t1 + 2 * t2, -3.96)])
+    v.guide([(t1 + 2 * t2, -3.96), (t1 + 2 * t2, 2.6)]).path([(t1 + 2 * t2, 2.6), (min(2.07, t1 + 2 * t2 + 2 * t3), -2.6 * (min(2.07, t1 + 2 * t2 + 2 * t3) - t1 - 2 * t2) / t3 + 2.6)])
+    v.t(t1, 3.96, "bounce", "t-sm", 4, -4).t(0.06, -4.2, "falling: v < 0", "t-sm", 10)
+    a = Plot(dn="+ve ↑ up", xr=(0, 2.1), yr=(-4, 9), yl="a", xl="t", aria="bouncing ball acceleration-time with up positive: constant minus g with large upward spikes at each bounce")
+    a.path([(0, -2.6), (t1 - 0.02, -2.6), (t1, 8.4), (t1 + 0.02, -2.6), (t1 + 2 * t2 - 0.02, -2.6), (t1 + 2 * t2, 6.5), (t1 + 2 * t2 + 0.02, -2.6), (2.07, -2.6)])
+    a.t(0, -2.6, "−g", "t-ax", -5, 4, "end").t(t1, 8.4, "huge upward a during contact", "t-sm", 6, 10)
+    return fig(("velocity–time (up +)", v), ("acceleration–time (up +)", a),
+               caption="Same motion, up positive: every free-flight line now slopes DOWN (gradient −g); each bounce is an upward jump from −v to a smaller +v.")
+
+
+def air_liquid():
+    D = "+ve ↓ down"
+    a = Plot(dn=D, yr=(0, 10), yl="v", xl="t", aria="dropped through air then into liquid faster than terminal velocity: rises at g then decreases to v_T")
+    a.path([(0, 0), (3, 7.5)]).curve(lambda t: 3 + 4.5 * math.exp(-(t - 3) / 0.9), 3, 10)
+    a.guide([(3, 7.5), (3, 0)]).guide([(0, 3), (10, 3)]).hg(0, 3, "v_T").t(3, 0, "enters", "t-ax", 0, 14, "middle").t(0.2, 8.6, "air: slope g", "t-sm")
+    b = Plot(dn=D, yr=(0, 10), yl="v", xl="t", aria="dropped from a small height: enters liquid slower than terminal velocity, then rises slowly to v_T")
+    b.path([(0, 0), (1.2, 3)]).curve(lambda t: 5 - 2 * math.exp(-(t - 1.2) / 1.6), 1.2, 10)
+    b.guide([(1.2, 3), (1.2, 0)]).guide([(0, 5), (10, 5)]).hg(0, 5, "v_T").t(1.2, 0, "enters", "t-ax", 0, 14, "middle").t(4, 3, "slope < g, falls to 0", "t-sm")
+    c = Plot(dn=D, yr=(-8, 6), yl="a", xl="t", aria="acceleration: g in air, sudden negative on entry, decaying to zero")
+    c.path([(0, 4), (3, 4)]).guide([(3, 4), (3, -6)]).curve(lambda t: -6 * math.exp(-(t - 3) / 0.9), 3, 10)
+    c.hg(0, 4, "g").t(3.3, -6, "D + U > W: a upward", "t-sm", 4, 4)
+    e = Plot(dn=D, yr=(-8, 6), yl="a", xl="t", aria="low drop acceleration: g in air, sudden fall to smaller positive value, decaying to zero")
+    e.path([(0, 4), (1.2, 4)]).guide([(1.2, 4), (1.2, 2.2)]).curve(lambda t: 2.2 * math.exp(-(t - 1.2) / 1.6), 1.2, 10).hg(0, 4, "g")
+    e.t(2.4, 2.2, "W > U + D: a down, < g", "t-sm")
+    return fig(("enters faster than v_T (high drop)", a), ("enters slower than v_T (low drop)", b), ("a–t for the high drop", c), ("a–t for the low drop", e),
+               caption="Air resistance in air neglected. In the liquid, upthrust and viscous drag act up; terminal when W = U + D. If it enters at exactly v_T the line just stays flat.")
+
+
 def journey_trio():
-    s = Plot(yl="s", xl="t", aria="journey s-t", h=170)
+    s = Plot(dn="+ve → forward", yl="s", xl="t", aria="journey s-t", h=170)
     def sf(t):
         if t <= 3: return 0.25 * t * t
         if t <= 7: return 2.25 + 1.5 * (t - 3)
         return 8.25 + 1.5 * (t - 7) - 0.25 * (t - 7) ** 2
     s.curve(sf, 0, 10).vg(3, sf(3)).vg(7, sf(7))
-    v = Plot(yl="v", xl="t", aria="journey v-t", h=170).path([(0, 0), (3, 1.5 * 5), (7, 7.5), (10, 0)])
+    v = Plot(dn="+ve → forward", yl="v", xl="t", aria="journey v-t", h=170).path([(0, 0), (3, 1.5 * 5), (7, 7.5), (10, 0)])
     v.vg(3, 7.5).vg(7, 7.5)
-    a = Plot(yr=(-6, 6), yl="a", xl="t", aria="journey a-t", h=170)
+    a = Plot(dn="+ve → forward", yr=(-6, 6), yl="a", xl="t", aria="journey a-t", h=170)
     a.path([(0, 3), (3, 3)]).path([(3, 0), (7, 0)]).path([(7, -4), (10, -4)]).guide([(3, 3), (3, 0)]).guide([(7, 0), (7, -4)])
     return fig(("s–t", s), ("v–t", v), ("a–t", a),
                caption="One journey, three graphs: speed up, cruise, brake. Each graph is the gradient of the one above.")
 
 
 def freefall():
-    v = Plot(yl="v", xl="t", aria="free fall v-t straight line gradient g").path([(0, 0), (9, 9)]).t(6, 3.5, "gradient = g", "t-d")
-    s = Plot(yl="s", xl="t", aria="free fall s-t parabola").curve(lambda t: 0.1 * t * t, 0, 9.5).t(2, 6, "s = ½gt²", "t-d")
-    a = Plot(yl="a", xl="t", aria="free fall a-t horizontal line at g").path([(0, 7), (10, 7)]).hg(0, 7, "g").t(5, 7, "constant", "t-d", 0, -8, "middle")
+    v = Plot(dn="+ve ↓ down", yl="v", xl="t", aria="free fall v-t straight line gradient g").path([(0, 0), (9, 9)]).t(6, 3.5, "gradient = g", "t-d")
+    s = Plot(dn="+ve ↓ down", yl="s", xl="t", aria="free fall s-t parabola").curve(lambda t: 0.1 * t * t, 0, 9.5).t(2, 6, "s = ½gt²", "t-d")
+    a = Plot(dn="+ve ↓ down", yl="a", xl="t", aria="free fall a-t horizontal line at g").path([(0, 7), (10, 7)]).hg(0, 7, "g").t(5, 7, "constant", "t-d", 0, -8, "middle")
     return fig(("v–t", v), ("s–t (distance fallen)", s), ("a–t", a),
                caption="Dropped from rest, no air resistance, down taken as positive.")
 
 
 def thrown_up():
-    v = Plot(yr=(-6, 6), yl="v", xl="t", aria="ball thrown up: v-t straight line from +u to -u").path([(0, 5), (10, -5)])
+    v = Plot(dn="+ve ↑ up", yr=(-6, 6), yl="v", xl="t", aria="ball thrown up: v-t straight line from +u to -u").path([(0, 5), (10, -5)])
     v.hg(0, 5, "+u").t(0, -5, "−u", "t-ax", -5, 4, "end").guide([(10, -5), (0, -5)]).t(5, 0, "top", "t-sm", 3, -7)
-    s = Plot(yl="s", xl="t", aria="ball thrown up: displacement-time inverted parabola").curve(lambda t: 0.36 * t * (10 - t), 0, 10)
+    s = Plot(dn="+ve ↑ up", yl="s", xl="t", aria="ball thrown up: displacement-time inverted parabola").curve(lambda t: 0.36 * t * (10 - t), 0, 10)
     s.vg(5, 9, "top").t(5, 9, "gradient 0 at top", "t-sm", 0, -7, "middle")
-    sp = Plot(yl="speed", xl="t", aria="ball thrown up: speed-time V shape").path([(0, 9), (5, 0), (10, 9)]).t(5, 0, "speed 0", "t-sm", 0, 14, "middle")
-    a = Plot(yr=(-6, 6), yl="a", xl="t", aria="ball thrown up: acceleration constant at -g").path([(0, -4), (10, -4)]).t(0, -4, "−g", "t-ax", -5, 4, "end")
+    sp = Plot(dn="speed: scalar (no direction)", yl="speed", xl="t", aria="ball thrown up: speed-time V shape").path([(0, 9), (5, 0), (10, 9)]).t(5, 0, "speed 0", "t-sm", 0, 14, "middle")
+    a = Plot(dn="+ve ↑ up", yr=(-6, 6), yl="a", xl="t", aria="ball thrown up: acceleration constant at -g").path([(0, -4), (10, -4)]).t(0, -4, "−g", "t-ax", -5, 4, "end")
     return fig(("velocity–time (up +)", v), ("displacement–time", s), ("speed–time", sp), ("acceleration–time", a),
                caption="Thrown up, caught at the same level. One straight v–t line through zero: the acceleration is −g the WHOLE time, including at the top.")
 
 
 def bounce():
     t1, t2 = 0.606, 0.404
-    v = Plot(xr=(0, 2.1), yr=(-5, 7), yl="v", xl="t", aria="bouncing ball velocity-time sawtooth, down positive")
+    v = Plot(dn="+ve ↓ down", xr=(0, 2.1), yr=(-5, 7), yl="v", xl="t", aria="bouncing ball velocity-time sawtooth, down positive")
     v.path([(0, 0), (t1, 5.94)]).guide([(t1, 5.94), (t1, -3.96)]).path([(t1, -3.96), (t1 + 2 * t2, 3.96)])
     v.guide([(t1 + 2 * t2, 3.96), (t1 + 2 * t2, -2.6)]).path([(t1 + 2 * t2, -2.6), (2.07, 2.6)])
-    v.t(0.05, 5.6, "down = +", "t-sm").t(t1, -3.96, "bounce", "t-sm", 4, 12)
-    h = Plot(xr=(0, 2.1), yr=(0, 2), yl="h", xl="t", aria="bouncing ball height-time series of parabolas")
+    v.t(t1, -3.96, "bounce", "t-sm", 4, 12)
+    h = Plot(dn="h measured up", xr=(0, 2.1), yr=(0, 2), yl="h", xl="t", aria="bouncing ball height-time series of parabolas")
     h.curve(lambda t: 1.8 - 0.5 * G * t * t, 0, t1)
     h.curve(lambda t: 3.96 * (t - t1) - 0.5 * G * (t - t1) ** 2, t1, t1 + 2 * t2)
     t3 = 2.6 / G
@@ -197,9 +252,9 @@ def bounce():
 
 
 def projectile():
-    vx = Plot(yr=(0, 10), yl="vₓ", xl="t", aria="projectile horizontal velocity constant").path([(0, 6), (10, 6)]).t(5, 6, "constant (no drag)", "t-d", 0, -8, "middle")
-    vy = Plot(yr=(-6, 6), yl="v_y", xl="t", aria="projectile vertical velocity line gradient minus g").path([(0, 5), (10, -5)]).t(5, 0, "top: v_y = 0", "t-sm", 4, -8)
-    tr = Plot(yr=(0, 10), yl="y", xl="x", aria="projectile trajectory parabola with and without air resistance")
+    vx = Plot(dn="+ve → forward", yr=(0, 10), yl="vₓ", xl="t", aria="projectile horizontal velocity constant").path([(0, 6), (10, 6)]).t(5, 6, "constant (no drag)", "t-d", 0, -8, "middle")
+    vy = Plot(dn="+ve ↑ up", yr=(-6, 6), yl="v_y", xl="t", aria="projectile vertical velocity line gradient minus g").path([(0, 5), (10, -5)]).t(5, 0, "top: v_y = 0", "t-sm", 4, -8)
+    tr = Plot(dn="x →, y ↑ up", yr=(0, 10), yl="y", xl="x", aria="projectile trajectory parabola with and without air resistance")
     tr.curve(lambda x: 0.36 * x * (10 - x), 0, 10, "d")
     tr.curve(lambda x: 13 * (x / 7) * (1 - (x / 7) ** 3), 0, 7, "o")
     tr.t(5, 9, "no drag: symmetric", "t-d", 0, -6, "middle").t(4.4, 6.3, "with drag", "t-o", 0, -4, "middle")
@@ -208,25 +263,25 @@ def projectile():
 
 
 def drag_curves():
-    d = Plot(yl="drag", xl="v", aria="drag force increases with speed").curve(lambda v: 0.09 * v * v, 0, 10).t(3, 6, "D ∝ v² (air, fast)", "t-d")
+    d = Plot(dn="drag: size", yl="drag", xl="v", aria="drag force increases with speed").curve(lambda v: 0.09 * v * v, 0, 10).t(3, 6, "D ∝ v² (air, fast)", "t-d")
     d.curve(lambda v: 0.6 * v, 0, 10, "o").t(8.5, 4.2, "D ∝ v (slow, viscous)", "t-o", 0, 0, "end")
-    v = Plot(yl="v", xl="t", aria="falling with air resistance v-t curves to terminal velocity")
+    v = Plot(dn="+ve ↓ down", yl="v", xl="t", aria="falling with air resistance v-t curves to terminal velocity")
     v.path([(0, 0), (4.5, 9.5)], "o").curve(lambda t: 7 * (1 - math.exp(-t / 2)), 0, 10).guide([(0, 7), (10, 7)])
     v.hg(0, 7, "v_T").t(4.6, 9.4, "no drag", "t-o")
-    a = Plot(yl="a", xl="t", aria="acceleration falls from g to zero").curve(lambda t: 7 * math.exp(-t / 2), 0, 10).hg(0, 7, "g").t(5, 1.5, "→ 0 at v_T", "t-d")
+    a = Plot(dn="+ve ↓ down", yl="a", xl="t", aria="acceleration falls from g to zero").curve(lambda t: 7 * math.exp(-t / 2), 0, 10).hg(0, 7, "g").t(5, 1.5, "→ 0 at v_T", "t-d")
     return fig(("drag–speed", d), ("v–t", v), ("a–t", a),
                caption="Initial gradient of v–t = g (drag is zero at v = 0). Gradient falls to zero at terminal velocity.")
 
 
 def forces_t():
-    p = Plot(yl="F", xl="t", aria="weight constant, drag rising to weight, resultant falling to zero")
+    p = Plot(dn="W ↓  D ↑ (sizes)", yl="F", xl="t", aria="weight constant, drag rising to weight, resultant falling to zero")
     p.path([(0, 7), (10, 7)], "b").curve(lambda t: 7 * (1 - math.exp(-t / 1.6)), 0, 10, "s").curve(lambda t: 7 * math.exp(-t / 1.6), 0, 10, "d")
     p.t(10, 7, "weight W", "t-b", 0, -7, "end").t(5, 5.4, "drag D", "t-s").t(2.2, 2.0, "resultant W − D", "t-d")
     return fig(p, caption="Drag grows with speed until D = W: resultant force zero, acceleration zero, constant (terminal) velocity.")
 
 
 def skydiver():
-    p = Plot(yl="v", xl="t", aria="skydiver v-t: rises to terminal, sudden drop after parachute opens, lower terminal velocity")
+    p = Plot(dn="+ve ↓ down", yl="v", xl="t", aria="skydiver v-t: rises to terminal, sudden drop after parachute opens, lower terminal velocity")
     def v(t):
         if t <= 5: return 8.5 * (1 - math.exp(-t / 1.4))
         return 2.6 + (8.5 * (1 - math.exp(-5 / 1.4)) - 2.6) * math.exp(-(t - 5) / 0.45)
@@ -236,10 +291,10 @@ def skydiver():
 
 
 def fluid():
-    a = Plot(yl="v", xl="t", aria="ball released from rest in oil reaches low terminal velocity quickly")
+    a = Plot(dn="+ve ↓ down", yl="v", xl="t", aria="ball released from rest in oil reaches low terminal velocity quickly")
     a.curve(lambda t: 7 * (1 - math.exp(-t / 2)), 0, 10, "o").t(9.8, 7.2, "in air", "t-o", 0, -4, "end")
     a.curve(lambda t: 3 * (1 - math.exp(-t / 0.9)), 0, 10, "d").t(9.8, 3, "in oil/water", "t-d", 0, -6, "end")
-    b = Plot(yl="v", xl="t", aria="ball enters water faster than terminal velocity and slows to terminal velocity")
+    b = Plot(dn="+ve ↓ down", yl="v", xl="t", aria="ball enters water faster than terminal velocity and slows to terminal velocity")
     b.curve(lambda t: 3 + 5 * math.exp(-t / 1.2), 0, 10).guide([(0, 3), (10, 3)]).hg(0, 3, "v_T").hg(0, 8, "v₀")
     b.t(1.5, 6, "D + U > W: slows", "t-d")
     return fig(("released from rest in liquid", a), ("enters liquid faster than v_T", b),
@@ -247,22 +302,22 @@ def fluid():
 
 
 def f_a():
-    a = Plot(yl="F", xl="a", aria="force against acceleration straight line through origin gradient m").path([(0, 0), (10, 8)]).t(5, 5.5, "gradient = m", "t-d", 0, 0, "end")
-    b = Plot(yl="a", xl="1/m", aria="acceleration against 1 over mass straight line gradient F").path([(0, 0), (10, 8)]).t(5, 5.5, "gradient = F", "t-d", 0, 0, "end")
-    c = Plot(yl="a", xl="F", aria="acceleration against force with friction: intercept on F axis").path([(2, 0), (10, 8)]).t(2, 0, "F needed to beat friction", "t-sm", 4, 14)
+    a = Plot(dn="+ve → along F", yl="F", xl="a", aria="force against acceleration straight line through origin gradient m").path([(0, 0), (10, 8)]).t(5, 5.5, "gradient = m", "t-d", 0, 0, "end")
+    b = Plot(dn="+ve → along F", yl="a", xl="1/m", aria="acceleration against 1 over mass straight line gradient F").path([(0, 0), (10, 8)]).t(5, 5.5, "gradient = F", "t-d", 0, 0, "end")
+    c = Plot(dn="+ve → along F", yl="a", xl="F", aria="acceleration against force with friction: intercept on F axis").path([(2, 0), (10, 8)]).t(2, 0, "F needed to beat friction", "t-sm", 4, 14)
     return fig(("F against a (constant m)", a), ("a against 1/m (constant F)", b), ("a against applied F, with friction", c),
                caption="F = ma: the straight line through the origin is the evidence for proportionality. An intercept means another force (friction) acts.")
 
 
 def p_t():
-    a = Plot(yl="p", xl="t", aria="momentum time straight line: constant force").path([(0, 2), (10, 9)]).t(5, 7, "gradient = F (constant)", "t-d", 0, 0, "end")
-    b = Plot(yl="p", xl="t", aria="momentum time curve levelling off: force decreasing").curve(lambda t: 8 * (1 - math.exp(-t / 3)), 0, 10).t(5, 3, "F decreasing → 0", "t-d")
+    a = Plot(dn="+ve → along F", yl="p", xl="t", aria="momentum time straight line: constant force").path([(0, 2), (10, 9)]).t(5, 7, "gradient = F (constant)", "t-d", 0, 0, "end")
+    b = Plot(dn="+ve → along F", yl="p", xl="t", aria="momentum time curve levelling off: force decreasing").curve(lambda t: 8 * (1 - math.exp(-t / 3)), 0, 10).t(5, 3, "F decreasing → 0", "t-d")
     return fig(("constant resultant force", a), ("force dies away", b),
                caption="Newton II: F = Δp/Δt. Gradient of p–t = resultant force; a horizontal p–t means F = 0 (momentum conserved).")
 
 
 def f_t():
-    p = Plot(yl="F", xl="t", aria="force time graph: hard impact tall narrow, soft impact low wide, equal areas")
+    p = Plot(dn="F on ball, sizes", yl="F", xl="t", aria="force time graph: hard impact tall narrow, soft impact low wide, equal areas")
     p.fill([(0.5, 0), (1.5, 9), (2.5, 0)], "fc").path([(0.5, 0), (1.5, 9), (2.5, 0)], "b")
     p.curve(lambda t: 3 * math.sin(math.pi * (t - 3) / 6) if 3 <= t <= 9 else 0, 3, 9, "d")
     p.t(1.6, 9, "hard (short Δt)", "t-b", 6, 4).t(6, 3, "soft / crumple zone", "t-d", 0, -6, "middle")
@@ -271,13 +326,13 @@ def f_t():
 
 
 def collisions():
-    v = Plot(yr=(-2, 8), yl="v", xl="t", aria="velocities of two trolleys before and after a collision")
+    v = Plot(dn="+ve → A's initial dirn", yr=(-2, 8), yl="v", xl="t", aria="velocities of two trolleys before and after a collision")
     v.path([(0, 6), (4, 6), (5, 4), (10, 4)], "d").path([(0, 0), (4, 0), (5, 4)], "s")
     v.t(1, 6, "A", "t-d", 0, -6).t(1, 0, "B", "t-s", 0, -6).t(7, 4, "stick together", "t-sm", 0, -8, "middle")
-    p = Plot(yr=(0, 10), yl="p", xl="t", aria="momentum of each trolley changes but total stays constant")
+    p = Plot(dn="+ve → A's initial dirn", yr=(0, 10), yl="p", xl="t", aria="momentum of each trolley changes but total stays constant")
     p.path([(0, 8), (10, 8)], "gr").path([(0, 8), (4, 8), (5, 5.33), (10, 5.33)], "d").path([(0, 0), (4, 0), (5, 2.67), (10, 2.67)], "s")
     p.t(10, 8, "total", "t-gr", 0, -6, "end").t(8, 5.33, "p_A", "t-d", 0, -6).t(8, 2.67, "p_B", "t-s", 0, -6)
-    k = Plot(yr=(0, 10), yl="E_k", xl="t", aria="total kinetic energy: elastic returns to start, inelastic ends lower")
+    k = Plot(dn="KE: scalar (no direction)", yr=(0, 10), yl="E_k", xl="t", aria="total kinetic energy: elastic returns to start, inelastic ends lower")
     k.path([(0, 8), (4, 8), (4.5, 6), (5, 8), (10, 8)], "gr").path([(4.5, 6), (5, 5.3), (10, 5.3)], "b")
     k.t(10, 8, "elastic", "t-gr", 0, -6, "end").t(10, 5.3, "inelastic", "t-b", 0, -6, "end")
     return fig(("velocity–time", v), ("momentum–time", p), ("total KE–time", k),
@@ -285,29 +340,29 @@ def collisions():
 
 
 def pressure():
-    a = Plot(yl="p", xl="depth h", aria="pressure against depth: straight line, intercept atmospheric pressure")
+    a = Plot(dn="scalar (no direction)", yl="p", xl="depth h", aria="pressure against depth: straight line, intercept atmospheric pressure")
     a.path([(0, 3), (10, 9)], "d").path([(0, 0), (10, 6)], "o").hg(0, 3, "p₀")
     a.t(6, 7.6, "total p = p₀ + ρgh", "t-d", 0, 0, "end").t(9, 4.5, "Δp = ρgh", "t-o", 0, 0, "end")
-    b = Plot(yl="U", xl="depth of base", aria="upthrust grows while object is submerging then stays constant")
+    b = Plot(dn="U ↑ (size)", yl="U", xl="depth of base", aria="upthrust grows while object is submerging then stays constant")
     b.path([(0, 0), (5, 7), (10, 7)]).vg(5, 7, "fully under").t(7.5, 7, "constant", "t-d", 0, -7, "middle")
-    c = Plot(yl="m", xl="V", aria="mass against volume straight line gradient density").path([(0, 0), (10, 8)]).t(5, 5.5, "gradient = ρ", "t-d", 0, 0, "end")
+    c = Plot(dn="scalar (no direction)", yl="m", xl="V", aria="mass against volume straight line gradient density").path([(0, 0), (10, 8)]).t(5, 5.5, "gradient = ρ", "t-d", 0, 0, "end")
     return fig(("pressure–depth", a), ("upthrust–depth", b), ("mass–volume", c),
                caption="Gradient of Δp–h = ρg. Upthrust = weight of fluid displaced = ρgV, so it stops increasing once fully submerged.")
 
 
 def f_s():
-    a = Plot(yl="F", xl="s", aria="constant force: rectangle area").fill([(0, 0), (0, 6), (8, 6), (8, 0)]).path([(0, 6), (8, 6)]).t(4, 3, "W = Fs", "t-pt", 0, 0, "middle")
-    b = Plot(yl="F", xl="s", aria="force increasing linearly: triangle area").fill([(0, 0), (8, 8), (8, 0)]).path([(0, 0), (8, 8)]).t(5.5, 2, "W = ½Fs", "t-pt", 0, 0, "middle")
-    c = Plot(yl="F", xl="s", aria="varying force: count squares under curve").area(lambda s: 2 + 6 * math.sin(s / 3), 0, 9).curve(lambda s: 2 + 6 * math.sin(s / 3), 0, 9).t(4.5, 2.5, "count squares", "t-pt", 0, 0, "middle")
+    a = Plot(dn="F along s", yl="F", xl="s", aria="constant force: rectangle area").fill([(0, 0), (0, 6), (8, 6), (8, 0)]).path([(0, 6), (8, 6)]).t(4, 3, "W = Fs", "t-pt", 0, 0, "middle")
+    b = Plot(dn="F along s", yl="F", xl="s", aria="force increasing linearly: triangle area").fill([(0, 0), (8, 8), (8, 0)]).path([(0, 0), (8, 8)]).t(5.5, 2, "W = ½Fs", "t-pt", 0, 0, "middle")
+    c = Plot(dn="F along s", yl="F", xl="s", aria="varying force: count squares under curve").area(lambda s: 2 + 6 * math.sin(s / 3), 0, 9).curve(lambda s: 2 + 6 * math.sin(s / 3), 0, 9).t(4.5, 2.5, "count squares", "t-pt", 0, 0, "middle")
     return fig(("constant force", a), ("force ∝ extension (spring)", b), ("varying force", c),
                caption="Work done = area under the force–displacement graph, using the force component ALONG the displacement.")
 
 
 def e_h():
-    a = Plot(yl="E", xl="height h", aria="no air resistance: GPE rises with height, KE falls, total constant")
+    a = Plot(dn="energy: scalar (no direction)", yl="E", xl="height h", aria="no air resistance: GPE rises with height, KE falls, total constant")
     a.path([(0, 0), (10, 8)], "s").path([(0, 8), (10, 0)], "d").path([(0, 8), (10, 8)], "gr")
     a.t(9, 5.6, "GPE", "t-s", 0, 0, "end").t(1.5, 5.6, "KE", "t-d").t(5, 8, "total", "t-gr", 0, -6, "middle")
-    b = Plot(yl="E", xl="distance fallen", aria="with air resistance: total energy falls, KE rises less")
+    b = Plot(dn="energy: scalar (no direction)", yl="E", xl="distance fallen", aria="with air resistance: total energy falls, KE rises less")
     b.path([(0, 8), (10, 0)], "s").path([(0, 0), (10, 5.6)], "d").path([(0, 8), (10, 5.6)], "gr")
     b.t(1.5, 5.4, "GPE", "t-s").t(9.6, 4.0, "KE", "t-d", 0, 0, "end").t(4, 7.2, "total", "t-gr", 0, -6)
     b.guide([(10, 8), (10, 5.6)])
@@ -316,10 +371,10 @@ def e_h():
 
 
 def e_t():
-    a = Plot(yl="E", xl="t", aria="dropped from rest: KE rises as t squared, GPE falls as a curve, total constant")
+    a = Plot(dn="energy: scalar (no direction)", yl="E", xl="t", aria="dropped from rest: KE rises as t squared, GPE falls as a curve, total constant")
     a.curve(lambda t: 0.08 * t * t, 0, 10, "d").curve(lambda t: 8 - 0.08 * t * t, 0, 10, "s").path([(0, 8), (10, 8)], "gr")
     a.t(3, 2.4, "KE ∝ t²", "t-d").t(1, 6.8, "GPE", "t-s")
-    b = Plot(yl="E", xl="t", aria="ball thrown up: KE U shaped touching zero at top, GPE inverted")
+    b = Plot(dn="energy: scalar (no direction)", yl="E", xl="t", aria="ball thrown up: KE U shaped touching zero at top, GPE inverted")
     b.curve(lambda t: 0.32 * (t - 5) ** 2, 0, 10, "d").curve(lambda t: 8 - 0.32 * (t - 5) ** 2, 0, 10, "s")
     b.t(9.4, 5.8, "KE", "t-d", -6, 0, "end").t(5, 8, "GPE max", "t-s", 0, -6, "middle")
     return fig(("dropped from rest", a), ("thrown up and caught", b),
@@ -327,25 +382,25 @@ def e_t():
 
 
 def ke_v():
-    a = Plot(yl="E_k", xl="v", aria="kinetic energy against speed parabola").curve(lambda v: 0.08 * v * v, 0, 10).t(3, 5, "E_k = ½mv²", "t-d")
-    b = Plot(yl="E_k", xl="v²", aria="kinetic energy against v squared straight line gradient half m").path([(0, 0), (10, 8)]).t(5, 5.5, "gradient = ½m", "t-d", 0, 0, "end")
-    c = Plot(yl="E_k", xl="p", aria="kinetic energy against momentum parabola").curve(lambda p: 0.08 * p * p, 0, 10).t(3, 5, "E_k = p²/2m", "t-d")
+    a = Plot(dn="energy: scalar (no direction)", yl="E_k", xl="v", aria="kinetic energy against speed parabola").curve(lambda v: 0.08 * v * v, 0, 10).t(3, 5, "E_k = ½mv²", "t-d")
+    b = Plot(dn="energy: scalar (no direction)", yl="E_k", xl="v²", aria="kinetic energy against v squared straight line gradient half m").path([(0, 0), (10, 8)]).t(5, 5.5, "gradient = ½m", "t-d", 0, 0, "end")
+    c = Plot(dn="energy: scalar (no direction)", yl="E_k", xl="p", aria="kinetic energy against momentum parabola").curve(lambda p: 0.08 * p * p, 0, 10).t(3, 5, "E_k = p²/2m", "t-d")
     return fig(("E_k against v", a), ("E_k against v²", b), ("E_k against p", c),
                caption="Doubling speed quadruples KE. Plot E_k against v² to get a straight line (Paper 3 linearising).")
 
 
 def power():
-    a = Plot(yl="F", xl="v", aria="driving force P over v hyperbola meets resistance at maximum speed")
+    a = Plot(dn="magnitudes only", yl="F", xl="v", aria="driving force P over v hyperbola meets resistance at maximum speed")
     a.curve(lambda v: 18 / v, 1.9, 10, "d").path([(0, 3), (10, 3)], "b").pt(6, 3).vg(6, 3, "v_max")
     a.t(2.3, 8.6, "D = P/v (P constant)", "t-d").t(10, 3, "resistance", "t-b", 0, -6, "end")
-    b = Plot(yl="P", xl="v", aria="power against speed for constant force straight line gradient F").path([(0, 0), (10, 8)]).t(5, 5.5, "P = Fv, gradient F", "t-d", 0, 0, "end")
-    c = Plot(yl="E", xl="t", aria="energy against time straight line gradient power").path([(0, 0), (10, 8)]).t(5, 5.5, "gradient = P", "t-d", 0, 0, "end")
+    b = Plot(dn="magnitudes only", yl="P", xl="v", aria="power against speed for constant force straight line gradient F").path([(0, 0), (10, 8)]).t(5, 5.5, "P = Fv, gradient F", "t-d", 0, 0, "end")
+    c = Plot(dn="magnitudes only", yl="E", xl="t", aria="energy against time straight line gradient power").path([(0, 0), (10, 8)]).t(5, 5.5, "gradient = P", "t-d", 0, 0, "end")
     return fig(("max speed at fixed power", a), ("constant force", b), ("work done–time", c),
                caption="P = Fv. At maximum speed acceleration is zero, so driving force = resistance: v_max = P / F_resist.")
 
 
 def linearise():
-    p = Plot(yl="s / m", xl="t² / s²", aria="distance fallen against t squared straight line gradient g over 2")
+    p = Plot(dn="+ve ↓ down", yl="s / m", xl="t² / s²", aria="distance fallen against t squared straight line gradient g over 2")
     for x, y in [(1, 0.9), (2.5, 2.4), (4, 3.7), (5.5, 5.3), (7, 6.6), (8.5, 8.1)]:
         p.pt(x, y)
     p.path([(0, 0), (9.6, 9.1)], "d").guide([(2, 1.9), (9, 1.9), (9, 8.53)])
@@ -354,21 +409,21 @@ def linearise():
 
 
 def we_vt():
-    p = Plot(xr=(0, 26), yr=(0, 24), yl="v / m s⁻¹", xl="t / s", aria="car journey v-t trapezium")
+    p = Plot(dn="+ve → forward", xr=(0, 26), yr=(0, 24), yl="v / m s⁻¹", xl="t / s", aria="car journey v-t trapezium")
     pts = [(0, 0), (8, 20), (20, 20), (25, 0)]
     p.fill(pts, "fb").path(pts).hg(8, 20, "20").vg(8, 20, "8").vg(20, 20, "20").t(25, 0, "25", "t-ax", 0, 14, "middle")
     return fig(p)
 
 
 def we_ft():
-    p = Plot(xr=(0, 10), yr=(0, 700), yl="F / N", xl="t / ms", aria="force on ball rises to 600 N and falls over 8 ms")
+    p = Plot(dn="+ve ← away from wall", xr=(0, 10), yr=(0, 700), yl="F / N", xl="t / ms", aria="force on ball rises to 600 N and falls over 8 ms")
     p.fill([(0, 0), (4, 600), (8, 0)], "fb").path([(0, 0), (4, 600), (8, 0)]).hg(4, 600, "600").t(8, 0, "8.0", "t-ax", 0, 14, "middle")
     return fig(p)
 
 
 def we_bounce():
     t1, t2 = 0.606, 0.404
-    v = Plot(xr=(0, 1.55), yr=(-5, 7), yl="v / m s⁻¹", xl="t / s", aria="sketch answer: v-t for bouncing ball, down positive")
+    v = Plot(dn="+ve ↓ down", xr=(0, 1.55), yr=(-5, 7), yl="v / m s⁻¹", xl="t / s", aria="sketch answer: v-t for bouncing ball, down positive")
     v.path([(0, 0), (t1, 5.94)]).guide([(t1, 5.94), (t1, -3.96)]).path([(t1, -3.96), (t1 + 2 * t2, 3.96)])
     v.hg(t1, 5.94, "5.94").t(0, -3.96, "−3.96", "t-ax", -5, 4, "end").guide([(t1, -3.96), (0, -3.96)])
     v.t(t1, 0, "0.61", "t-ax", -2, 14, "end").t(t1 + t2, 0, "1.01", "t-ax", 0, -6, "middle")
@@ -376,7 +431,7 @@ def we_bounce():
 
 
 def we_power():
-    p = Plot(xr=(0, 40), yr=(0, 8000), yl="F / N", xl="v / m s⁻¹", aria="driving force 60000 over v meets 2000 N resistance at 30 m/s", L=46)
+    p = Plot(dn="magnitudes only", xr=(0, 40), yr=(0, 8000), yl="F / N", xl="v / m s⁻¹", aria="driving force 60000 over v meets 2000 N resistance at 30 m/s", L=46)
     p.curve(lambda v: 60000 / v, 7.6, 40).path([(0, 2000), (40, 2000)], "b").pt(30, 2000).vg(30, 2000, "30")
     p.pt(15, 4000).hg(15, 4000, "4000").vg(15, 4000, "15").hg(0, 2000, "2000")
     return fig(p)
@@ -390,7 +445,7 @@ def build():
 <p class="cover-k">Graphs</p>
 <h1>Every AS graph, Kinematics → Work &amp; Energy</h1>
 <p class="lede">Displacement, velocity, acceleration, free fall, bouncing, projectiles, terminal velocity in air and liquids, force &amp; momentum, collisions, pressure, energy and power. For each: the shape, what the gradient means, what the area means, and the trap.</p>
-<div class="stat"><div><b>60+</b>graphs</div><div><b>4</b>worked examples</div><div><b>10</b>practice Qs</div></div>
+<div class="stat"><div><b>75+</b>graphs</div><div><b>4</b>worked examples</div><div><b>11</b>practice Qs</div></div>
 <p><a href="index.html">Open Revision Hub</a></p>
 <div class="swipehint">Swipe or use the arrows · tap ☰ for contents</div>""", sec="Start"))
 
@@ -410,6 +465,7 @@ def build():
 <tr><td class="k">m–V</td><td>density</td><td>—</td></tr>
 <tr><td class="k">p–h (liquid)</td><td>ρg</td><td>—</td></tr>
 </table></div>
+<div class="note link"><b>Direction tag</b>Every graph shows its sign convention in the top-right corner (e.g. "+ve ↓ down"). In an exam, state yours before you sketch: changing it flips every velocity and acceleration graph.</div>
 <div class="note tip"><b>Unit check</b>Gradient units = y-unit ÷ x-unit; area units = y-unit × x-unit. E.g. F–t area: N × s = N s = kg m s⁻¹, a momentum unit.</div>""", sec="Start"))
 
     # ---------------------------------------------------------- Kinematics
@@ -431,6 +487,18 @@ def build():
 <h2>Velocity–time: the shapes</h2>
 """ + vt_shapes() + rule("acceleration", "displacement") + r"""
 <p>Straight line \(\Rightarrow\) uniform acceleration \(\Rightarrow\) SUVAT is allowed. Curved \(\Rightarrow\) acceleration changing \(\Rightarrow\) no SUVAT; use the graph.</p>""", sec=S))
+
+    C.append(card("k-chg", "1 Kinematics", "Changing acceleration", "Concept", r"""
+<h2>Increasing / decreasing acceleration &amp; deceleration</h2>
+""" + changing_accel() + changing_accel_at() + r"""
+<div class="tw"><table>
+<tr><th>Description</th><th>v–t</th><th>a–t (forward +)</th></tr>
+<tr><td class="k">Decreasing acceleration</td><td>rising, getting flatter</td><td>positive, falling to 0</td></tr>
+<tr><td class="k">Increasing acceleration</td><td>rising, getting steeper</td><td>positive, rising</td></tr>
+<tr><td class="k">Increasing deceleration</td><td>falling, getting steeper</td><td>negative, more negative</td></tr>
+<tr><td class="k">Decreasing deceleration</td><td>falling, getting flatter</td><td>negative, rising to 0</td></tr>
+</table></div>
+<div class="note trap"><b>Trap</b>"Decreasing acceleration" still means speeding up, just less quickly. Falling with air resistance is the classic example; a car braking harder and harder is increasing deceleration.</div>""", sec=S))
 
     C.append(card("k-area", "1 Kinematics", "Area below the axis", "Concept", r"""
 <h2>When the v–t line crosses the time axis</h2>
@@ -463,7 +531,10 @@ def build():
 
     C.append(card("f-bounce", "2 Free fall", "Bouncing ball", "Concept", r"""
 <h2>Ball dropped and bouncing</h2>
+<h3>Taking DOWN as positive</h3>
 """ + bounce() + r"""
+<h3>Taking UP as positive</h3>
+""" + bounce_up() + r"""
 <ul><li>Contact time is tiny ⇒ the velocity jump is drawn (almost) vertical.</li>
 <li>Sign convention matters: with down positive, falling sections have positive v; rising sections negative v.</li>
 <li>Peak height ratio = KE ratio after/before bounce: \(h_2/h_1 = (v_2/v_1)^2\).</li></ul>
@@ -521,6 +592,16 @@ def build():
 <tr><td class="k">Viscous drag \(D\)</td><td>opposite to velocity</td><td>yes, increases</td></tr>
 </table></div>
 <p>Terminal condition: \(W = U + D\). A ball bearing in oil reaches \(v_T\) within a few cm: why the timing marks in the practical start well below the surface.</p>""", sec=S))
+
+    C.append(card("r-airliq", "3 Drag", "From air into liquid", "Concept", r"""
+<h2>Dropped through air, then into a liquid</h2>
+""" + air_liquid() + r"""
+<ol>
+<li><b>In air:</b> only weight acts (drag neglected), so \(a = g\): straight line, gradient \(g\).</li>
+<li><b>Entering faster than \(v_T\):</b> upthrust + viscous drag exceed weight, resultant force upward, so it decelerates. Drag falls as speed falls, so the deceleration decreases: curve flattens onto \(v_T\).</li>
+<li><b>Entering slower than \(v_T\):</b> \(W &gt; U + D\), still accelerates, but less than \(g\) (upthrust and drag). Acceleration decreases to zero at \(v_T\).</li>
+</ol>
+<div class="note trap"><b>Trap</b>On entry the velocity does NOT jump: only the gradient (acceleration) changes suddenly. The velocity curve is continuous, the a–t graph is not.</div>""", sec=S))
 
     # ---------------------------------------------------------- Dynamics
     S = "4 · Dynamics & momentum"
@@ -678,13 +759,16 @@ def build():
 <div class="ans"><b>Answer</b>\(6.0 = 3.0v\) ⇒ \(v = 2.0\ \text{m s}^{-1}\). \(p_A\): 6.0 → 4.0; \(p_B\): 0 → 2.0 (mirror image); total flat at 6.0 N s. KE: \(9.0 - \tfrac12(3.0)(2.0)^2 = 9.0 - 6.0 = 3.0\ \text{J}\) lost.</div></div>""", sec="Practice · 5–8"))
 
     C.append(card("pr3", "Practice", "Practice: pressure, energy", "Practice", r"""
-<h2>Practice · Pressure, work &amp; energy</h2>
+<h2>Practice · Pressure, energy, air → liquid</h2>
 <div class="pq"><div class="qh"><span>Q9 · energy</span><span class="mk">[5]</span></div>
 <p class="qt">A 0.50 kg ball is dropped from 10 m. (a) Sketch KE and GPE against height with no air resistance. (b) With a constant air resistance of 1.0 N, find the KE and speed at the ground.</p>
 <div class="ans"><b>Answer</b>(a) Two straight lines: GPE from 49 J at 10 m to 0; KE from 0 at 10 m to 49 J at ground; total flat at 49 J. (b) \(E_k = mgh - Fs = 49.05 - 10 = 39\ \text{J}\); \(v = \sqrt{2(39.05)/0.50} = 12.5\ \text{m s}^{-1}\).</div></div>
 <div class="pq"><div class="qh"><span>Q10 · F–s and p–h</span><span class="mk">[5]</span></div>
 <p class="qt">(a) A force rises linearly from 0 to 40 N over 0.20 m, then stays at 40 N for a further 0.30 m. Find the work done. (b) A total pressure–depth graph for a liquid has intercept \(1.0\times10^5\) Pa and reads \(1.49\times10^5\) Pa at 5.0 m. Find the density.</p>
-<div class="ans"><b>Answer</b>(a) \(W = \tfrac12(40)(0.20) + 40(0.30) = 4.0 + 12 = 16\ \text{J}\). (b) \(\rho = \dfrac{\Delta p}{g\Delta h} = \dfrac{4.9\times10^4}{9.81 \times 5.0} = 1.0\times10^3\ \text{kg m}^{-3}\).</div></div>""", sec="Practice · 9–10"))
+<div class="ans"><b>Answer</b>(a) \(W = \tfrac12(40)(0.20) + 40(0.30) = 4.0 + 12 = 16\ \text{J}\). (b) \(\rho = \dfrac{\Delta p}{g\Delta h} = \dfrac{4.9\times10^4}{9.81 \times 5.0} = 1.0\times10^3\ \text{kg m}^{-3}\).</div></div>
+<div class="pq"><div class="qh"><span>Q11 · sketch</span><span class="mk">[4]</span></div>
+<p class="qt">A stone is dropped from a bridge into a deep river. It hits the water at a speed greater than its terminal velocity in water. Taking downwards as positive and ignoring air resistance, sketch v–t and a–t from release until it has fallen a long way through the water.</p>
+<div class="ans"><b>Answer</b>v–t: straight line from 0, gradient \(g\), up to the entry speed; then a curve decreasing and flattening onto \(v_T\) (no jump in v at entry). a–t: horizontal at \(+g\); at entry a sudden drop to a large negative value; then a curve rising back to 0.</div></div>""", sec="Practice · 9–11"))
 
     # ---------------------------------------------------------- Summary
     C.append(card("sum", "Summary", "Graph cheat sheet", "Summary", r"""
@@ -723,6 +807,13 @@ FLASH = [
     ["Free fall", "Speed–time for a ball thrown up and caught?", "V shape: falls linearly to 0 at the top, rises linearly back."],
     ["Free fall", "Bouncing ball v–t: two key features?", "Straight segments all parallel (gradient g); velocity changes sign and decreases in magnitude at each bounce."],
     ["Free fall", "Height–time for a bouncing ball?", "Series of parabolic arcs with decreasing peak heights."],
+    ["Kinematics", "v–t shape for decreasing acceleration?", "Rising curve getting flatter (gradient positive but decreasing)."],
+    ["Kinematics", "v–t shape for increasing deceleration?", "Falling curve getting steeper (gradient increasingly negative)."],
+    ["Kinematics", "a–t for decreasing deceleration (forward +)?", "Negative values rising towards zero."],
+    ["Free fall", "Bouncing ball v–t with UP positive?", "Lines slope down (gradient −g); falling sections negative; each bounce jumps up from −v to a smaller +v."],
+    ["Free fall", "Bouncing ball a–t with up positive?", "Constant −g, with large positive spikes during each contact."],
+    ["Drag", "Dropped from air into liquid faster than v_T: v–t?", "Straight line gradient g in air, then curve decreasing and flattening to v_T. No jump in v at entry."],
+    ["Drag", "Dropped from air into liquid slower than v_T: v–t?", "Line gradient g, then gradient suddenly smaller and decreasing; curve rises to v_T."],
     ["Projectile", "Horizontal velocity–time (no drag)?", "Horizontal line: constant."],
     ["Projectile", "Vertical velocity–time (up +)?", "Straight line, gradient −g, zero at the top."],
     ["Projectile", "Minimum speed of an angled projectile?", "u cosθ at the top (not zero)."],
@@ -763,6 +854,15 @@ QUIZ = [
     {"s": "Free fall", "q": "Which describes the v–t graph of a bouncing ball (no air resistance)?",
      "o": ["Curved segments, all the same sign", "Parallel straight segments, sign reversing at each bounce", "Horizontal segments", "Straight segments with increasing gradient"], "c": 1,
      "e": "Free fall between bounces ⇒ gradient g each time; velocity reverses at impact."},
+    {"s": "Kinematics", "q": "A v–t graph is a rising curve that gets flatter. The object has…",
+     "o": ["increasing acceleration", "decreasing acceleration", "increasing deceleration", "decreasing deceleration"], "c": 1,
+     "e": "Rising ⇒ speeding up; flattening ⇒ gradient (acceleration) decreasing."},
+    {"s": "Free fall", "q": "A ball is dropped and bounces. Taking UP as positive, the straight sections of its v–t graph…",
+     "o": ["all slope upwards", "all slope downwards with gradient −g", "alternate up and down", "are horizontal"], "c": 1,
+     "e": "Between bounces only gravity acts: a = −g (up positive). Each bounce is a jump upward."},
+    {"s": "Drag", "q": "A stone enters water faster than its terminal velocity in water. Just after entry…",
+     "o": ["v drops suddenly to v_T", "the resultant force is upward and it decelerates", "acceleration is still g", "it moves upward"], "c": 1,
+     "e": "U + D > W ⇒ resultant upward ⇒ decelerates (still moving down). Velocity is continuous."},
     {"s": "Projectile", "q": "For a projectile with no air resistance, the horizontal component of velocity against time is…",
      "o": ["a straight line with gradient −g", "a horizontal line", "a parabola", "zero at the top"], "c": 1,
      "e": "No horizontal force ⇒ constant horizontal velocity."},
