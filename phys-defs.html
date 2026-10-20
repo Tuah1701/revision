@@ -1,0 +1,717 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
+</head><body>
+<title>Physics Definitions Deck</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Phys Defs">
+<meta name="theme-color" content="#11151C">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@500;600;700&display=swap">
+<style>
+/* Layout: one-card-per-screen swipe track (CSS scroll-snap) between a slim top bar and a bottom progress bar.
+   Each card scrolls vertically on its own; content column caps at ~680px so iPad landscape still reads like a page. */
+:root{
+  --bg:#11151C; --surface:#191E28; --surface2:#222937; --line:#2D3544;
+  --fg:#E7EAF0; --muted:#98A1B0; --accent:#F0B44A; --accent-soft:#3A2D12; --on-accent:#1B1404;
+  --teal:#5CC6BF; --teal-soft:#14302F; --good:#6FD39A; --good-soft:#15301F; --bad:#F2897F; --bad-soft:#3A1C1A;
+  --fill-a:rgba(240,180,74,.28); --fill-b:rgba(92,198,191,.26); --fill-c:rgba(242,137,127,.32);
+  --f-disp:"Bricolage Grotesque","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible","Segoe UI",system-ui,-apple-system,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){
+  --bg:#F4F5F8; --surface:#FFFFFF; --surface2:#ECEEF3; --line:#D7DBE3;
+  --fg:#171B23; --muted:#576070; --accent:#A66F07; --accent-soft:#FBEFD6; --on-accent:#FFFFFF;
+  --teal:#13807A; --teal-soft:#DDF2F0; --good:#1E7A47; --good-soft:#DDF1E5; --bad:#B23A30; --bad-soft:#F9E1DE;
+  --fill-a:rgba(214,150,30,.25); --fill-b:rgba(19,128,122,.20); --fill-c:rgba(178,58,48,.22);
+  color-scheme:light}}
+:root[data-theme="light"]{
+  --bg:#F4F5F8; --surface:#FFFFFF; --surface2:#ECEEF3; --line:#D7DBE3;
+  --fg:#171B23; --muted:#576070; --accent:#A66F07; --accent-soft:#FBEFD6; --on-accent:#FFFFFF;
+  --teal:#13807A; --teal-soft:#DDF2F0; --good:#1E7A47; --good-soft:#DDF1E5; --bad:#B23A30; --bad-soft:#F9E1DE;
+  --fill-a:rgba(214,150,30,.25); --fill-b:rgba(19,128,122,.20); --fill-c:rgba(178,58,48,.22);
+  color-scheme:light}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%;background:var(--bg);overscroll-behavior:none}
+body{margin:0;color:var(--fg);font:17px/1.55 var(--f-body);display:grid;grid-template-rows:auto 1fr auto;overflow:hidden;-webkit-text-size-adjust:100%}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* top bar */
+.top{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--line);background:var(--bg);min-width:0}
+.ib{all:unset;cursor:pointer;display:inline-grid;place-items:center;min-width:44px;height:44px;border-radius:10px;color:var(--fg)}
+.ib:hover{background:var(--surface2)}
+.ib svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.ttl{flex:1;min-width:0;line-height:1.15}
+.ttl b{display:block;font:700 15px/1.2 var(--f-disp);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ttl small{display:block;font:500 11.5px/1.3 var(--f-mono);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mode{all:unset;cursor:pointer;height:36px;padding:0 12px;border-radius:999px;border:1px solid var(--line);font:600 13.5px/36px var(--f-body);white-space:nowrap}
+.mode:hover{border-color:var(--accent)}
+@media (max-width:430px){.mode .lg{display:none}.mode{padding:0 10px}}
+
+/* track */
+.track{display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;min-height:0;overscroll-behavior-x:contain}
+.track::-webkit-scrollbar{display:none}
+.card{flex:0 0 100%;width:100%;scroll-snap-align:start;scroll-snap-stop:always;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-inline:16px}
+.ci{max-width:680px;margin:0 auto;padding-block:20px 48px;min-width:0}
+.ch{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px}
+.sec{font:600 11.5px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.kind{font:600 10.5px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:5px 8px}
+h1{font:800 clamp(34px,9vw,52px)/1.02 var(--f-disp);letter-spacing:-.02em;margin:.2em 0 .3em;text-wrap:balance}
+h2{font:750 clamp(25px,6.4vw,32px)/1.12 var(--f-disp);letter-spacing:-.01em;margin:0 0 .5em;text-wrap:balance}
+h3{font:700 19px/1.25 var(--f-disp);margin:1.4em 0 .45em;text-wrap:balance}
+p{margin:.5em 0} ul,ol{margin:.4em 0 .8em;padding-left:1.25em} li{margin:.28em 0}
+b,strong{font-weight:700}
+.lede{color:var(--muted);font-size:17.5px}
+.mono{font-family:var(--f-mono);font-size:.88em}
+.def{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 15px;margin:12px 0}
+.def .lab{display:flex;justify-content:space-between;gap:8px;font:600 11px/1.3 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+.def .lab i{font-style:normal;color:var(--muted)}
+.def p{margin:.2em 0}
+.note{border-radius:12px;padding:11px 14px;margin:12px 0;font-size:16px}
+.note>b:first-child{display:block;font:600 11px/1.3 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px}
+.note.trap{background:var(--bad-soft)} .note.trap>b:first-child{color:var(--bad)}
+.note.tip{background:var(--good-soft)} .note.tip>b:first-child{color:var(--good)}
+.note.link{background:var(--teal-soft)} .note.link>b:first-child{color:var(--teal)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:10px;margin:12px 0}
+.two>div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:11px 14px;min-width:0}
+.two h4{font:700 12px/1.3 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin:0 0 4px}
+.two h4.t{color:var(--teal)} .two h4.g{color:var(--good)} .two h4.r{color:var(--bad)}
+.two p,.two ul{margin:.2em 0;font-size:16px}
+.chain{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0;font:600 14.5px/1.3 var(--f-body)}
+.chain span{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 9px}
+.chain i{font-style:normal;color:var(--accent);font-weight:800}
+.formula{font:600 15px/1.5 var(--f-mono);background:var(--surface);border:1px dashed var(--muted);border-radius:10px;padding:9px 12px;margin:10px 0;overflow-x:auto}
+.tw{overflow-x:auto;margin:12px 0;border:1px solid var(--line);border-radius:12px;overscroll-behavior-x:contain}
+table{border-collapse:collapse;width:100%;font-size:15px;line-height:1.4;background:var(--surface)}
+.tw.wide table{min-width:560px}
+th,td{padding:8px 10px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+tr:last-child td{border-bottom:0}
+th{font:600 10.5px/1.3 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--surface2)}
+td.n,th.n{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-size:14px}
+td.k{font-weight:700}
+.tag{display:inline-block;font:600 10.5px/1 var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:4px 7px;border-radius:6px;margin-right:6px;vertical-align:2px}
+
+/* diagrams */
+figure.dg{margin:14px 0;display:grid;gap:10px}
+figure.dg.multi{grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr))}
+.pnl{min-width:0}
+.ptitle{font:600 11px/1.3 var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+figure.dg svg{width:100%;height:auto;display:block;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+figcaption{font-size:14.5px;color:var(--muted);grid-column:1/-1}
+svg text{font-family:var(--f-body);fill:var(--fg)}
+svg .ax{stroke:var(--fg);stroke-width:1.5;fill:none}
+svg .k{fill:none;stroke-width:2.6;stroke-linecap:round}
+svg .d{stroke:var(--accent)} svg .s{stroke:var(--teal)} svg .o{stroke:var(--muted);stroke-dasharray:6 4;stroke-width:2}
+svg .b{stroke:var(--bad)} svg .gr{stroke:var(--good)}
+svg .g{stroke:var(--muted);stroke-width:1;stroke-dasharray:3 3;fill:none}
+svg .ar{stroke:var(--fg);stroke-width:1.8} svg .arh{fill:var(--fg)}
+svg .pt{fill:var(--fg)} svg .pto{fill:var(--surface);stroke:var(--fg);stroke-width:1.6}
+svg .fa{fill:var(--fill-a)} svg .fb{fill:var(--fill-b)} svg .fc{fill:var(--fill-c)}
+svg .t-ax{font-size:12px;font-weight:700;fill:var(--muted)}
+svg .t-axl{font-size:12px;font-weight:700;fill:var(--fg)}
+svg .t-pt{font-size:13px;font-weight:700}
+svg .t-sm{font-size:11.5px;fill:var(--muted)}
+svg .t-d{fill:var(--accent);font-size:12.5px;font-weight:700} svg .t-s{fill:var(--teal);font-size:12.5px;font-weight:700}
+svg .t-o{fill:var(--muted);font-size:12.5px;font-weight:700} svg .t-b{fill:var(--bad);font-size:12.5px;font-weight:700}
+svg .t-gr{fill:var(--good);font-size:12.5px;font-weight:700}
+
+/* reveal: worked-example steps and practice answers */
+ol.steps{list-style:none;padding:0;margin:12px 0;counter-reset:st;display:grid;gap:8px}
+ol.steps>li{counter-increment:st;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 14px 10px 46px;position:relative;margin:0}
+ol.steps>li::before{content:counter(st);position:absolute;left:12px;top:10px;width:24px;height:24px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font:700 13px/24px var(--f-mono);text-align:center}
+.rvbar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.btn{all:unset;cursor:pointer;min-height:44px;padding:0 16px;border-radius:12px;display:inline-flex;align-items:center;gap:8px;font:700 15px/1 var(--f-body);border:1px solid var(--line);background:var(--surface)}
+.btn.pri{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.btn[disabled]{opacity:.45;cursor:default}
+.btn.good{border-color:var(--good);color:var(--good)} .btn.bad{border-color:var(--bad);color:var(--bad)}
+.pq{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:12px 0}
+.pq .qh{display:flex;justify-content:space-between;gap:8px;font:600 11px/1.3 var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.pq .qh .mk{color:var(--accent)}
+.pq .qt{margin:.35em 0 .5em}
+.pq .ans{border-top:1px dashed var(--line);margin-top:8px;padding-top:8px}
+.pq .ans>b:first-child{font:600 11px/1 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--good);margin-right:6px}
+.swipehint{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:14.5px;margin-top:22px}
+.toc-mini{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:8px;margin:14px 0}
+.toc-mini button{all:unset;cursor:pointer;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.toc-mini button:hover{border-color:var(--accent)}
+.toc-mini b{display:block;font:800 20px/1 var(--f-disp);color:var(--accent);margin-bottom:4px}
+.toc-mini span{font-size:14.5px;color:var(--muted)}
+.cover-k{font:800 clamp(80px,26vw,150px)/.85 var(--f-disp);color:var(--accent);letter-spacing:-.04em;margin:8px 0 0}
+.stat{display:flex;gap:18px;flex-wrap:wrap;margin:16px 0;font:600 14px/1.3 var(--f-mono);color:var(--muted)}
+.stat b{display:block;font:800 26px/1 var(--f-disp);color:var(--fg)}
+a{color:var(--accent)}
+
+/* bottom bar */
+.bot{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;padding:8px 12px;border-top:1px solid var(--line);background:var(--bg)}
+.prog{display:grid;gap:5px;min-width:0}
+.bar{height:4px;background:var(--surface2);border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+.cnt{font:600 12.5px/1 var(--f-mono);color:var(--muted);text-align:center;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* sheets (contents, flashcards, quiz) */
+.sheet{position:fixed;inset:0;z-index:20;background:var(--bg);display:grid;grid-template-rows:auto 1fr;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.sheet .top{border-bottom:1px solid var(--line)}
+.sbody{overflow-y:auto;padding-inline:16px;-webkit-overflow-scrolling:touch}
+.sbody>.in{max-width:680px;margin:0 auto;padding-block:14px 40px}
+.tocgrp{font:600 11px/1.3 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--accent);margin:18px 0 6px}
+.tocitem{all:unset;cursor:pointer;display:grid;grid-template-columns:32px 1fr auto;gap:8px;align-items:baseline;width:100%;box-sizing:border-box;padding:10px 8px;border-radius:10px}
+.tocitem:hover,.tocitem.cur{background:var(--surface)}
+.tocitem .no{font:600 12px/1 var(--f-mono);color:var(--muted)}
+.tocitem .kd{font:600 10px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 12px}
+.chip{all:unset;cursor:pointer;min-height:34px;padding:0 12px;border-radius:999px;border:1px solid var(--line);font:600 13.5px/34px var(--f-body)}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.fc{perspective:1200px;height:min(56vh,380px);cursor:pointer;margin:6px 0 12px}
+.fc-in{position:relative;width:100%;height:100%;transition:transform .45s;transform-style:preserve-3d}
+.fc.flip .fc-in{transform:rotateY(180deg)}
+.fc-f{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:18px;border:1px solid var(--line);background:var(--surface);padding:42px 22px 30px;display:flex;flex-direction:column;justify-content:center;overflow:auto;font-size:19px;line-height:1.45}
+.fc-f.back{transform:rotateY(180deg);background:var(--accent-soft);font-size:17.5px}
+.fc-f .ft{position:absolute;top:14px;left:18px;right:18px;display:flex;justify-content:space-between;font:600 11px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.fc-f.front .q{font:700 21px/1.3 var(--f-disp)}
+.fcrow{display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between}
+.mcq{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}
+.mcq .qh{display:flex;justify-content:space-between;gap:8px;font:600 11px/1.3 var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.mcq .qt{margin:.4em 0 .7em;font-weight:700}
+.opts{display:grid;gap:6px}
+.opt{all:unset;cursor:pointer;display:grid;grid-template-columns:26px 1fr;gap:8px;align-items:baseline;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font-size:16px;line-height:1.4}
+.opt b{font:700 13px/1 var(--f-mono);color:var(--accent)}
+.opt.right{background:var(--good-soft);border-color:var(--good)} .opt.wrong{background:var(--bad-soft);border-color:var(--bad)}
+.mcq.done .opt{cursor:default}
+.mcq .ex{margin-top:10px;font-size:15.5px;border-top:1px dashed var(--line);padding-top:10px}
+.score{position:sticky;top:0;z-index:2;background:var(--bg);padding-block:10px;display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px solid var(--line);font:600 14px var(--f-body)}
+.score .num{font:700 16px var(--f-mono);color:var(--accent);font-variant-numeric:tabular-nums}
+mjx-container{max-width:100%;overflow-x:auto;overflow-y:hidden}
+
+/* ---------- handwriting notes ---------- */
+.wrow{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-start;margin:10px 0}
+.btn.write{border-color:var(--teal);color:var(--teal)}
+.btn.write svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.wthumb{display:block;max-width:150px;width:100%;border:1px solid var(--line);border-radius:10px;cursor:pointer;background:var(--surface)}
+.wmeta{font:600 11.5px/1.3 var(--f-mono);color:var(--muted)}
+#noteSheet{display:flex;flex-direction:column;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+#noteSheet>.npages{flex:1;min-height:0}
+.ntools{display:flex;gap:6px;align-items:center;padding:6px 10px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none;background:var(--bg)}
+.ntools::-webkit-scrollbar{display:none}
+.tl{all:unset;cursor:pointer;flex:none;display:inline-grid;place-items:center;min-width:38px;height:40px;border-radius:10px;border:1px solid transparent;font:700 13px/1 var(--f-body)}
+.tl svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.tl[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.tl[disabled]{opacity:.35;cursor:default}
+.tl .dot{width:20px;height:20px;border-radius:50%;border:2px solid var(--line)}
+.tl[aria-pressed="true"] .dot{border-color:var(--accent)}
+.sep{flex:none;width:1px;height:26px;background:var(--line);margin:0 2px}
+.nq{border-bottom:1px solid var(--line);background:var(--surface);padding:8px 16px;max-height:34vh;overflow-y:auto;font-size:15.5px}
+.nq .in{max-width:680px;margin:0 auto}
+.nq p{margin:.3em 0}
+.nq .tw{margin:6px 0}
+.npages{overflow:auto;padding:14px 12px 60px;background:var(--surface2);touch-action:none;overscroll-behavior:contain}
+.npage{position:relative;margin:0 auto 14px;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.25);overflow:hidden}
+.npage canvas{display:block;width:100%;height:auto;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.npage .pn{position:absolute;right:10px;bottom:8px;font:600 11px/1 var(--f-mono);color:var(--muted);pointer-events:none}
+.nhint{font-size:13px;color:var(--muted);text-align:center;margin:4px 0 0}
+
+@media (prefers-reduced-motion:reduce){.fc-in,.bar i{transition:none}.track{scroll-behavior:auto}}
+</style>
+
+<header class="top">
+  <a class="ib" href="index.html" aria-label="Revision Hub"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7M6 9.5V20h12V9.5"/></svg></a><button class="ib" id="tocBtn" type="button" aria-label="Contents"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/></svg></button>
+  <div class="ttl"><b>Physics · Definitions</b><small>9702 · AS · all chapters</small></div>
+  <button class="mode" id="fcBtn" type="button">Cards<span class="lg"> · 100</span></button>
+  <button class="mode" id="qBtn" type="button">Quiz<span class="lg"> · 18</span></button>
+  <button class="ib" id="themeBtn" type="button" aria-label="Switch light or dark"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4L6 18M18 6l1.4-1.4"/></svg></button>
+</header>
+<main class="track" id="track"><section class="card" data-id="cover" data-group="Start" data-title="Physics definitions" data-kind="Cover"><div class="ci"><div class="ch"><span class="sec">Start</span><span class="kind">Cover</span></div>
+<p class="sec" style="margin:0">CAIE 9702 · AS Level · Definitions</p>
+<p class="cover-k">Def</p>
+<h1>Definitions &amp; comparisons by chapter</h1>
+<p class="lede">From Muhammad Afiq bin Abdul Wahid's definitions sheet. Blanks on the sheet are filled in and marked "added".</p>
+<div class="stat"><div><b>78</b>definitions</div><div><b>17</b>estimates</div><div><b>12</b>chapters</div></div>
+<p><a href="index.html">Open Revision Hub</a></p>
+<div class="swipehint">Swipe or use the arrows · tap ☰ for contents</div></div></section><section class="card" data-id="how" data-group="Start" data-title="How definitions are marked" data-kind="Overview"><div class="ci"><div class="ch"><span class="sec">Start</span><span class="kind">Overview</span></div>
+<h2>Definitions are free marks, if the wording is exact</h2>
+<p class="lede">A "define" or "state" question usually has 1–2 marks for one or two key phrases. Vague words score zero.</p>
+<div class="chain"><span>1 · Say what it is (quantity / ratio / rate)</span><i>→</i><span>2 · Key phrase ("per unit", "rate of change of")</span><i>→</i><span>3 · Condition (e.g. "limit of proportionality not exceeded")</span></div>
+<div class="note tip"><b>Method tonight</b>Cover the definition, say it out loud, check it word for word. Use the Cards button (top right) to drill, and put misses in the "Again" pile.</div>
+<div class="note trap"><b>Words that lose marks</b>"amount" instead of "rate of change", "distance" instead of "perpendicular distance", leaving out "positive" (field strength) or "original" (stress).</div></div></section><section class="card" data-id="ch1-0" data-group="Ch 1 · Physical quantities &amp; units" data-title="Physical quantities &amp; units" data-kind="Definitions"><div class="ci"><div class="ch"><span class="sec">Ch 1</span><span class="kind">Definitions</span></div><h2>Chapter 1: Physical quantities &amp; units</h2><div class="def"><div class="lab"><span>Base quantities</span><i>Ch 1</i></div><p>Fundamental units that are not consist of combination of any units</p></div><div class="def"><div class="lab"><span>Derived quantities</span><i>Ch 1</i></div><p>Unit that are expressed in terms of base units</p></div><div class="def"><div class="lab"><span>Vector quantity</span><i>Ch 1</i></div><p>Quantity that has both magnitude and direction</p></div><div class="def"><div class="lab"><span>Scalar quantity</span><i>Ch 1</i></div><p>Quantity that has only magnitude but no direction</p></div><div class="note trap"><b>Mark-scheme wording</b>Base quantities: <b>mass, length, time, current, temperature, amount of substance</b> (SI base units kg, m, s, A, K, mol). Learn the list; derived units are products/quotients of base units.</div></div></section><section class="card" data-id="est" data-group="Ch 1 · Physical quantities &amp; units" data-title="Estimations" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">Ch 1</span><span class="kind">Concept</span></div>
+<h2>Estimations (order of magnitude)</h2>
+<div class="tw"><table><tr><th>Quantity</th><th>Estimate</th></tr><tr><td class="k">Acceleration of a family car</td><td>2 m s⁻²</td></tr><tr><td class="k">Acceleration of free fall on the Moon</td><td>1.6 m s⁻² <i>(added)</i></td></tr><tr><td class="k">Walking speed</td><td>1 m s⁻¹</td></tr><tr><td class="k">Car speed</td><td>20 m s⁻¹</td></tr><tr><td class="k">Sprinter speed</td><td>10 m s⁻¹</td></tr><tr><td class="k">Mass of an orange</td><td>100 g</td></tr><tr><td class="k">Height of room in a house</td><td>2 m</td></tr><tr><td class="k">Diameter of a pencil</td><td>1 cm</td></tr><tr><td class="k">Volume of a small bean</td><td>0.5 cm³</td></tr><tr><td class="k">Speed of a jet</td><td>200 m s⁻¹</td></tr><tr><td class="k">Temperature of human body</td><td>310 K</td></tr><tr><td class="k">Diameter of hair</td><td>0.5 mm</td></tr><tr><td class="k">Young&#x27;s modulus of a metal wire</td><td>10¹¹ Pa</td></tr><tr><td class="k">Resistivity of copper</td><td>10⁻⁸ Ω m</td></tr><tr><td class="k">Resistivity of an insulator</td><td>10¹¹ Ω m</td></tr><tr><td class="k">EMF of a car battery</td><td>12 V</td></tr><tr><td class="k">Current in domestic appliance</td><td>13 A</td></tr></table></div>
+<div class="note tip"><b>Paper 1</b>Estimation MCQs only need the right power of ten. Eliminate options that are 100× out first.</div></div></section><section class="card" data-id="ch2-0" data-group="Ch 2 · Measurement techniques" data-title="Measurement techniques" data-kind="Definitions"><div class="ci"><div class="ch"><span class="sec">Ch 2</span><span class="kind">Definitions</span></div><h2>Chapter 2: Measurement techniques</h2><div class="def"><div class="lab"><span>Systematic error</span><i>Ch 2</i></div><p>Readings are consistently being either above or below true value</p></div><div class="def"><div class="lab"><span>Random error</span><i>Ch 2</i></div><p>Readings are scattered around true value</p></div><div class="def"><div class="lab"><span>Accuracy</span><i>Ch 2</i></div><p>The degree to which the values obtained approach true value and is influenced by size of systematic error</p></div><div class="def"><div class="lab"><span>Precision</span><i>Ch 2</i></div><p>The size of the smallest division and is determined by the size of random error</p></div><div class="def"><div class="lab"><span>Uncertainty</span><i>Ch 2</i></div><p>The total range of values within which the measurement is likely to lie</p></div><div class="note trap"><b>Precision</b>Cambridge treats precision as <b>how close repeated readings are to each other</b> (small random error, small spread). Accuracy = how close to the true value (small systematic error).</div></div></section><section class="card" data-id="ch3-0" data-group="Ch 3 · Kinematics" data-title="Kinematics" data-kind="Definitions"><div class="ci"><div class="ch"><span class="sec">Ch 3</span><span class="kind">Definitions</span></div><h2>Chapter 3: Kinematics</h2><div class="def"><div class="lab"><span>Distance</span><i>Ch 3</i></div><p>The total length of path covered by a moving object irrespective of the direction of the motion</p></div><div class="def"><div class="lab"><span>Displacement</span><i>Ch 3</i></div><p>The shortest distance an object travels from a reference point in a specified direction</p></div><div class="def"><div class="lab"><span>Velocity</span><i>Ch 3</i></div><p>The rate of change of displacement</p></div><div class="def"><div class="lab"><span>Speed</span><i>Ch 3</i></div><p>The rate of change of distance</p></div><div class="def"><div class="lab"><span>Acceleration</span><i>Ch 3</i></div><p>The rate of change of velocity</p></div><div class="note tip"><b>Speed vs velocity</b>Speed is a scalar, velocity a vector. In the exam: velocity = <b>rate of change of displacement</b>, acceleration = <b>rate of change of velocity</b>. Don't write "speed per time".</div></div></section><section class="card" data-id="ch4-0" data-group="Ch 4 · Dynamics" data-title="Dynamics" data-kind="Definitions"><div class="ci"><div class="ch"><span class="sec">Ch 4</span><span class="kind">Definitions</span></div><h2>Chapter 4: Dynamics</h2><div class="def"><div class="lab"><span>Newton&#x27;s First Law</span><i>Ch 4</i></div><p>Every body continues in a state of rest, or with uniform velocity, unless acted on by an external force.</p></div><div class="def"><div class="lab"><span>Newton&#x27;s Second Law</span><i>Ch 4</i></div><p>For a body of a constant mass, the resultant force is proportional to the rate of change of its momentum.</p></div><div class="def"><div class="lab"><span>Newton&#x27;s Third Law</span><i>Ch 4</i></div><p>When two bodies interact, the forces they exert on each other are equal in magnitude and opposite in direction.</p></div><div class="def"><div class="lab"><span>Conservation of Momentum</span><i>Ch 4</i></div><p>In any closed system, the total momentum of the system remains constant given there is no external force.</p></div><div class="def"><div class="lab"><span>Force</span><i>Ch 4</i></div><p>Rate of change of momentum</p></div><div class="def"><div class="lab"><span>Momentum</span><i>Ch 4</i></div><p>The product of its mass and its velocity</p></div><div class="def"><div class="lab"><span>Weight</span><i>Ch 4</i></div><p>The force of gravity on a mass of object</p></div><div class="def"><div class="lab"><span>Elastic collision</span><i>Ch 4</i></div><p>Total kinetic energy before = after collision</p></div><div class="note tip"><b>Newton's 2nd law</b>"Resultant force is proportional to the rate of change of momentum <b>and acts in the direction of</b> the change in momentum." The direction part is often the second mark.</div></div></section><section class="card" data-id="ch5-0" data-group="Ch 5 · Forces, density and pressure" data-title="Forces, density and pressure" data-kind="Definitions"><div class="ci"><div class="ch"><span class="sec">Ch 5</span><span class="kind">Definitions</span></div><h2>Chapter 5: Forces, density and pressure</h2><div class="def"><div class="lab"><span>Torque</span><i>Ch 5</i></div><p>The product of one of the forces and the perpendicular distance between forces</p></div><div class="def"><div class="lab"><span>Centre of gravity</span><i>Ch 5</i></div><p>The point at which the whole weight of a body seems to act.</p></div><div class="def"><div class="lab"><span>Couple</span><i>Ch 5</i></div><p>A pair of equal parallel forces that are opposite in direction in which the line do not coincide.</p></div><div class="def"><div class="lab"><span>Moment</span><i>Ch 5</i></div><p>The product of the force and the perpendicular distance between the line of the action of the force from the pivot</p></div><div class="def"><div class="lab"><span>The principle of moments</span><i>Ch 5</i></div><p>For a body to be in rotational equilibrium, the sum of the clockwise moment at any point must be = to the sum of the anti clockwise moment about the same point</p></div><div class="def"><div class="lab"><span>Density</span><i>Ch 5</i></div><p>Mass per unit volume</p></div><div class="def"><div class="lab"><span>Pressure</span><i>Ch 5</i></div><p>Force acting perpendicularly per unit cross sectional area</p></div><div class="note trap"><b>Torque of a couple (lost 2 marks in Set 3)</b>Write: <b>one of the forces × the perpendicular distance between the lines of action of the forces</b>. Say "lines of action", not just "between forces".</div></div></section><section class="card" data-id="ch6-0" data-group="Ch 6 · Work, energy and power" data-title="Work, energy and power" data-kind="Definitions"><div class="ci"><div class="ch"><span class="sec">Ch 6</span><span class="kind">Definitions</span></div><h2>Chapter 6: Work, energy and power</h2><div class="def"><div class="lab"><span>Work</span><i>Ch 6</i></div><p>The product of force and the distance moved in the direction of the force</p></div><div class="def"><div class="lab"><span>Principle of Conservation of Energy</span><i>Ch 6</i></div><p>Energy can neither be created nor destroyed. It can only be converted from one form to another.</p></div><div class="def"><div class="lab"><span>Gravitational Potential Energy</span><i>Ch 6</i></div><p>Energy stored due to position of a mass in a gravitational field.</p></div><div class="def"><div class="lab"><span>Kinetic Energy</span><i>Ch 6</i></div><p>Energy stored by a mass due to its motion.</p></div><div class="def"><div class="lab"><span>Elastic Potential Energy</span><i>Ch 6</i></div><p>Energy stored due to deformation of the object; by either compressing or stretching.</p></div><div class="def"><div class="lab"><span>Electrostatic potential energy</span><i>Ch 6</i></div><p>Energy stored due to position of a charge in an electric field</p></div><div class="def"><div class="lab"><span>Power</span><i>Ch 6</i></div><p>Rate of doing work</p></div><div class="def"><div class="lab"><span>Efficiency</span><i>Ch 6</i></div><p>Useful energy output per total energy input</p></div><div class="note trap"><b>GPE / KE (lost 2 marks in Set 3)</b>Keyword pattern: energy stored <b>in</b> ___ <b>due to</b> ___. GPE: energy a mass has due to its position in a gravitational field. KE: energy a mass has due to its motion. Work: force × distance moved <b>in the direction of the force</b>.</div><div class="note link"><b>Keyword (from the sheet)</b>Potential energy: energy stored in ____ due to ______.</div></div></section><section class="card" data-id="ch9-0" data-group="Ch 9 · Deformation of solids" data-title="Deformation of solids" data-kind="Definitions"><div class="ci"><div class="ch"><span class="sec">Ch 9</span><span class="kind">Definitions</span></div><h2>Chapter 9: Deformation of solids</h2><div class="def"><div class="lab"><span>Hooke&#x27;s Law</span><i>Ch 9</i></div><p>Applied force is directly proportional to the extension produced provided that elastic limit is not exceeded.</p></div><div class="def"><div class="lab"><span>Plastic Deformation</span><i>Ch 9</i></div><p>The ability of object to change its shape and hence does not return to its original shape after applied force is removed</p></div><div class="def"><div class="lab"><span>Elastic Deformation</span><i>Ch 9</i></div><p>The ability of object to change its shape and hence return to its original shape after applied force is removed</p></div><div class="def"><div class="lab"><span>Stress</span><i>Ch 9</i></div><p>Force per unit original cross sectional area</p></div><div class="def"><div class="lab"><span>Strain</span><i>Ch 9</i></div><p>The ratio of extension to its original length</p></div><div class="def"><div class="lab"><span>Young&#x27;s Modulus</span><i>Ch 9</i></div><p>The ratio of stress over strain given that limit of proportionality is not exceeded.</p></div><div class="def"><div class="lab"><span>Elastic Limit</span><i>Ch 9</i></div><p>The point beyond which material does not return to its original shape when force applied is removed.</p></div><div class="def"><div class="lab"><span>Ultimate tensile stress</span><i>Ch 9</i></div><p>Maximum force per unit original cross sectional area that an object can support before it breaks</p></div><div class="note tip"><b>Young modulus</b>Stress/strain, valid only up to the <b>limit of proportionality</b>. Hooke's law: force ∝ extension up to the limit of proportionality.</div></div></section><section class="card" data-id="ch14-0" data-group="Ch 14 · Waves" data-title="Waves (1/2)" data-kind="Definitions"><div class="ci"><div class="ch"><span class="sec">Ch 14</span><span class="kind">Definitions</span></div><h2>Chapter 14: Waves (1/2)</h2><div class="def"><div class="lab"><span>Frequency</span><i>Ch 14</i></div><p>The number of oscillation per unit time of the source</p></div><div class="def"><div class="lab"><span>Transverse wave</span><i>Ch 14</i></div><p>Wave in which the vibration of the particles on the wave is normal to the direction of the propagation of the wave&#x27;s energy.</p></div><div class="def"><div class="lab"><span>Longitudinal wave</span><i>Ch 14</i></div><p>Wave in which the vibration of the particles on the wave is parallel to the direction of the propagation of the wave&#x27;s energy.</p></div><div class="def"><div class="lab"><span>Polarisation</span><i>Ch 14</i></div><p>The condition of waves in which particles are made to vibrate in one direction on a single plane.</p></div><div class="def"><div class="lab"><span>Doppler Effect</span><i>Ch 14</i></div><p>The change in frequency observed due to the relative motion between wave source and observer.</p></div><div class="def"><div class="lab"><span>Displacement</span><i>Ch 14</i></div><p>The distance of a point on wave from its undisturbed or rest position</p></div></div></section><section class="card" data-id="ch14-1" data-group="Ch 14 · Waves" data-title="Waves (2/2)" data-kind="Definitions"><div class="ci"><div class="ch"><span class="sec">Ch 14</span><span class="kind">Definitions</span></div><h2>Chapter 14: Waves (2/2)</h2><div class="def"><div class="lab"><span>Amplitude</span><i>Ch 14</i></div><p>The max distance of a point on wave from its undisturbed or rest position</p></div><div class="def"><div class="lab"><span>Wavelength</span><i>Ch 14</i></div><p>The shortest distance between two successive points that are in phase</p></div><div class="def"><div class="lab"><span>Period</span><i>Ch 14</i></div><p>The time for one complete oscillation to occur</p></div><div class="def"><div class="lab"><span>Intensity</span><i>Ch 14</i></div><p>The rate of energy transmitted per unit perpendicular area to the direction of wave propagation</p></div><div class="def"><div class="lab"><span>Phase difference</span><i>blank on sheet · added</i></div><p>The fraction of a cycle (expressed as an angle, in degrees or radians) by which one oscillation leads or lags another.</p></div><div class="def"><div class="lab"><span>Speed</span><i>blank on sheet · added</i></div><p>The distance travelled by the wave (wavefront) per unit time.</p></div><div class="note tip"><b>Wavelength</b>"Distance between two adjacent points <b>in phase</b>" (or adjacent crests). Intensity = power per unit area normal to the direction of travel; intensity ∝ amplitude².</div></div></section><section class="card" data-id="ch15-0" data-group="Ch 15 · Superposition" data-title="Superposition (1/2)" data-kind="Definitions"><div class="ci"><div class="ch"><span class="sec">Ch 15</span><span class="kind">Definitions</span></div><h2>Chapter 15: Superposition (1/2)</h2><div class="def"><div class="lab"><span>Principle of Superposition of Waves</span><i>Ch 15</i></div><p>When two or more waves meet at a point, the resultant displacement is equal to the sum of the individual displacement of the waves.</p></div><div class="def"><div class="lab"><span>Coherent Source</span><i>Ch 15</i></div><p>Waves of same frequency and constant phase difference.</p></div><div class="def"><div class="lab"><span>Coherence</span><i>Ch 15</i></div><p>Two or more waves that originates from a source which have constant phase difference and same frequency and wavelength.</p></div><div class="def"><div class="lab"><span>Diffraction</span><i>Ch 15</i></div><p>The spreading or bending of waves when passing through a gap or rounding an obstacle</p></div><div class="def"><div class="lab"><span>Node</span><i>Ch 15</i></div><p>The point with no displacement as a result of destructive interference</p></div><div class="def"><div class="lab"><span>Antinode</span><i>Ch 15</i></div><p>The point with maximum displacement as a result of constructive interference.</p></div></div></section><section class="card" data-id="ch15-1" data-group="Ch 15 · Superposition" data-title="Superposition (2/2)" data-kind="Definitions"><div class="ci"><div class="ch"><span class="sec">Ch 15</span><span class="kind">Definitions</span></div><h2>Chapter 15: Superposition (2/2)</h2><div class="def"><div class="lab"><span>Constructive interference</span><i>Ch 15</i></div><p>When two waves with maximum displacement meet, resulting in a wave with amplitude of sum of the amplitudes of the individual waves</p></div><div class="def"><div class="lab"><span>Destructive interference</span><i>Ch 15</i></div><p>When two waves with maximum and minimum displacement meet, resulting in a wave with zero displacement.</p></div><div class="def"><div class="lab"><span>Condition of interference</span><i>Ch 15</i></div><p>Same types of waves · meet at a point · same direction of polarisation</p></div><div class="note tip"><b>Coherent</b>Coherent = <b>constant phase difference</b> (and so the same frequency). For observable two-source interference also need similar amplitudes.</div></div></section><section class="card" data-id="ch17-0" data-group="Ch 17 · Electric fields" data-title="Electric fields" data-kind="Definitions"><div class="ci"><div class="ch"><span class="sec">Ch 17</span><span class="kind">Definitions</span></div><h2>Chapter 17: Electric fields</h2><div class="def"><div class="lab"><span>Electric field</span><i>Ch 17</i></div><p>The region of space where a stationary charge experiences force</p></div><div class="def"><div class="lab"><span>Electric field strength</span><i>Ch 17</i></div><p>The force per unit positive charge at that point</p></div><div class="def"><div class="lab"><span>Direction of electric field</span><i>Ch 17</i></div><p>Direction in which a positive charge would move if it is free to do so.</p></div><div class="note tip"><b>Field strength</b>Force per unit <b>positive</b> charge. The word "positive" is the mark.</div></div></section><section class="card" data-id="ch19-0" data-group="Ch 19 · Current of electricity" data-title="Current of electricity" data-kind="Definitions"><div class="ci"><div class="ch"><span class="sec">Ch 19</span><span class="kind">Definitions</span></div><h2>Chapter 19: Current of electricity</h2><div class="def"><div class="lab"><span>Electric Current</span><i>Ch 19</i></div><p>The rate of flow of electric charge</p></div><div class="def"><div class="lab"><span>Ohm&#x27;s Law</span><i>Ch 19</i></div><p>The current in a conductor is directly proportional to the potential difference across its ends, provided its temperature and other physical conditions remain constant.</p></div><div class="def"><div class="lab"><span>Resistance</span><i>Ch 19</i></div><p>The ratio of the potential difference across a conductor to the current flowing through it</p></div><div class="def"><div class="lab"><span>Potential difference</span><i>Ch 19</i></div><p>Energy transferred from electrical energy to other forms of energy per unit charge from one point to another point.</p></div><div class="def"><div class="lab"><span>Electromotive Force</span><i>Ch 19</i></div><p>Energy transferred from other forms of energy to electrical energy per unit charge to move around a complete circuit.</p></div><div class="def"><div class="lab"><span>Semiconductor</span><i>Ch 19</i></div><p>Materials which have intermediate electrical conductivity which varies substantially with temperature</p></div><div class="def"><div class="lab"><span>Electrical power</span><i>blank on sheet · added</i></div><p>The rate of electrical energy transfer (work done per unit time): P = VI.</p></div><div class="note tip"><b>p.d. vs e.m.f.</b>p.d.: electrical → other forms, per unit charge. e.m.f.: other forms → electrical, per unit charge. Resistance = p.d. / current, NOT "gradient of the I–V graph".</div></div></section><section class="card" data-id="ch20-0" data-group="Ch 20 · D.C. circuits" data-title="D.C. circuits" data-kind="Definitions"><div class="ci"><div class="ch"><span class="sec">Ch 20</span><span class="kind">Definitions</span></div><h2>Chapter 20: D.C. circuits</h2><div class="def"><div class="lab"><span>Kirchhoff&#x27;s First Law</span><i>Ch 20</i></div><p>The sum of the current entering a junction is equal to the sum of the current leaving it.</p></div><div class="def"><div class="lab"><span>Kirchhoff&#x27;s Second Law</span><i>Ch 20</i></div><p>The sum of electromotive force is equal to the sum of potential difference for any closed loop in a circuit.</p></div><div class="note link"><b>What the laws conserve</b>Kirchhoff 1 = conservation of <b>charge</b>. Kirchhoff 2 = conservation of <b>energy</b>.</div></div></section><section class="card" data-id="cmp0" data-group="Comparisons" data-title="Stationary vs progressive waves" data-kind="Comparison"><div class="ci"><div class="ch"><span class="sec">Compare</span><span class="kind">Comparison</span></div>
+<h2>Stationary vs progressive waves</h2>
+<div class="tw"><table><tr><th></th><th>Stationary</th><th>Progressive</th></tr><tr><td class="k">A · Amplitude</td><td>Varies between two nodes</td><td>The same for all points</td></tr><tr><td class="k">P · Phase</td><td>All points between two adjacent nodes are in phase</td><td>Not in phase</td></tr><tr><td class="k">E · Energy</td><td>Energy is not transmitted</td><td>Energy is transmitted</td></tr></table></div><div class="note tip"><b>Memory hook: A-P-E</b>Amplitude, Phase, Energy: three differences, one mark each.</div></div></section><section class="card" data-id="cmp1" data-group="Comparisons" data-title="Current vs static electricity" data-kind="Comparison"><div class="ci"><div class="ch"><span class="sec">Compare</span><span class="kind">Comparison</span></div>
+<h2>Current vs static electricity</h2>
+<div class="tw"><table><tr><th></th><th>Current electricity</th><th>Static electricity</th></tr><tr><td class="k">Net flow of charge</td><td>There <b>is</b> a net flow of charge in a certain direction</td><td>There is <b>no</b> net flow of charge in a certain direction</td></tr></table></div></div></section><section class="card" data-id="cmp2" data-group="Comparisons" data-title="Conductor vs insulator" data-kind="Comparison"><div class="ci"><div class="ch"><span class="sec">Compare</span><span class="kind">Comparison</span></div>
+<h2>Conductor vs insulator</h2>
+<div class="tw"><table><tr><th></th><th>Conductor</th><th>Insulator</th></tr><tr><td class="k">Mobile charge carriers</td><td>Material that <b>has</b> mobile charge carriers (electrons and ions) which drift to constitute electric current</td><td>Material that <b>doesn't have</b> mobile charge carriers</td></tr></table></div></div></section><section class="card" data-id="we1" data-group="Worked examples" data-title="Define the torque of a couple" data-kind="Worked example"><div class="ci"><div class="ch"><span class="sec">Worked example</span><span class="kind">Worked example</span></div>
+<h2>Define the torque of a couple [2]</h2>
+<p><b>Q:</b> Define the torque of a couple.</p>
+<ol class="steps">
+<li><b>B1:</b> one of the forces (not "the sum of the forces")</li>
+<li><b>B1:</b> × the <b>perpendicular distance between the lines of action</b> of the forces</li>
+<li><b>Full answer:</b> The torque of a couple is the product of one of the forces and the perpendicular distance between their lines of action.</li>
+</ol>
+<div class="note trap"><b>Where marks go</b>"Force × distance" alone scores 0: no "one of", no "perpendicular".</div></div></section><section class="card" data-id="we2" data-group="Worked examples" data-title="Distinguish p.d. and e.m.f." data-kind="Worked example"><div class="ci"><div class="ch"><span class="sec">Worked example</span><span class="kind">Worked example</span></div>
+<h2>Distinguish between e.m.f. and p.d. [2]</h2>
+<p><b>Q:</b> Distinguish between the electromotive force of a source and the potential difference across a resistor.</p>
+<ol class="steps">
+<li><b>B1 (e.m.f.):</b> energy transferred from other forms <b>to electrical</b> energy per unit charge</li>
+<li><b>B1 (p.d.):</b> energy transferred from electrical energy <b>to other forms</b> per unit charge</li>
+<li>Both need "per unit charge"; the direction of the energy transfer is what distinguishes them.</li>
+</ol></div></section><section class="card" data-id="we3" data-group="Worked examples" data-title="Stationary vs progressive" data-kind="Worked example"><div class="ci"><div class="ch"><span class="sec">Worked example</span><span class="kind">Worked example</span></div>
+<h2>State two differences between stationary and progressive waves [2]</h2>
+<ol class="steps">
+<li><b>B1 (Amplitude):</b> in a stationary wave the amplitude varies between nodes; in a progressive wave all points have the same amplitude.</li>
+<li><b>B1 (Phase):</b> between two adjacent nodes all points are in phase; in a progressive wave adjacent points are not in phase.</li>
+<li><b>Alternative B1 (Energy):</b> a stationary wave does not transmit energy; a progressive wave does.</li>
+</ol>
+<div class="note tip"><b>Write both sides</b>Each difference must say what happens in <b>both</b> waves to earn the mark.</div></div></section><section class="card" data-id="mist" data-group="Common mistakes" data-title="Common mistakes" data-kind="Mistakes"><div class="ci"><div class="ch"><span class="sec">Mistakes</span><span class="kind">Mistakes</span></div>
+<h2>Common mistakes on definitions</h2>
+<div class="tw"><table><tr><th>Mistake</th><th>Fix</th></tr>
+<tr><td class="k">Moment = force × distance</td><td>× <b>perpendicular</b> distance from the pivot to the <b>line of action</b></td></tr>
+<tr><td class="k">Stress = force / area</td><td>Force per unit <b>original</b> cross-sectional area</td></tr>
+<tr><td class="k">Field strength = force per unit charge</td><td>Per unit <b>positive</b> charge</td></tr>
+<tr><td class="k">Work = force × distance</td><td>Distance moved <b>in the direction of the force</b></td></tr>
+<tr><td class="k">Coherent = same frequency</td><td><b>Constant phase difference</b></td></tr>
+<tr><td class="k">Resistance = gradient of V–I graph</td><td>Ratio V/I at that point</td></tr>
+<tr><td class="k">Mixing up p.d. and e.m.f.</td><td>Direction of energy conversion</td></tr>
+<tr><td class="k">Elastic collision = momentum conserved</td><td>Momentum is always conserved; elastic means <b>KE</b> conserved too</td></tr>
+</table></div></div></section><section class="card" data-id="pr" data-group="Practice" data-title="Practice: define it" data-kind="Practice"><div class="ci"><div class="ch"><span class="sec">Practice</span><span class="kind">Practice</span></div><h2>Practice · write them out</h2><div class="pq"><div class="qh"><span>Q1 · Ch 4</span><span class="mk">[2]</span></div><p class="qt">State Newton&#x27;s second law of motion.</p><div class="ans"><b>Answer</b>For a body of constant mass, the resultant force is proportional to the rate of change of its momentum (and acts in the direction of the change in momentum).</div></div><div class="pq"><div class="qh"><span>Q2 · Ch 6</span><span class="mk">[1]</span></div><p class="qt">Define gravitational potential energy.</p><div class="ans"><b>Answer</b>Energy stored due to the position of a mass in a gravitational field.</div></div><div class="pq"><div class="qh"><span>Q3 · Ch 9</span><span class="mk">[2]</span></div><p class="qt">Define the Young modulus.</p><div class="ans"><b>Answer</b>The ratio of stress to strain, provided the limit of proportionality is not exceeded.</div></div><div class="pq"><div class="qh"><span>Q4 · Ch 15</span><span class="mk">[2]</span></div><p class="qt">State the principle of superposition.</p><div class="ans"><b>Answer</b>When two or more waves meet at a point, the resultant displacement is the sum of the individual displacements of the waves.</div></div><div class="pq"><div class="qh"><span>Q5 · Ch 20</span><span class="mk">[2]</span></div><p class="qt">State Kirchhoff&#x27;s second law and the quantity it conserves.</p><div class="ans"><b>Answer</b>The sum of the e.m.f.s equals the sum of the p.d.s around any closed loop in a circuit. It conserves energy.</div></div></div></section><section class="card" data-id="sum" data-group="Summary" data-title="One-line summary" data-kind="Summary"><div class="ci"><div class="ch"><span class="sec">Summary</span><span class="kind">Summary</span></div>
+<h2>The patterns behind almost every definition</h2>
+<div class="tw"><table><tr><th>Pattern</th><th>Examples</th></tr>
+<tr><td class="k">Rate of change of ___</td><td>velocity, acceleration, force (of momentum), current (of charge), power (of work)</td></tr>
+<tr><td class="k">___ per unit ___</td><td>density, pressure, stress, field strength, p.d., e.m.f., intensity</td></tr>
+<tr><td class="k">Ratio ___ / ___</td><td>strain, Young modulus, resistance, efficiency</td></tr>
+<tr><td class="k">Product ___ × ___</td><td>momentum, moment, torque, work</td></tr>
+<tr><td class="k">Energy stored in ___ due to ___</td><td>GPE, KE, EPE, electric PE</td></tr>
+<tr><td class="k">Law + condition</td><td>Hooke's, Ohm's, Young modulus, conservation of momentum</td></tr>
+</table></div></div></section></main>
+<footer class="bot">
+  <button class="ib" id="prevBtn" type="button" aria-label="Previous card"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+  <div class="prog"><div class="bar"><i id="barFill"></i></div><div class="cnt" id="cnt">1 / 26</div></div>
+  <button class="ib" id="nextBtn" type="button" aria-label="Next card"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+</footer>
+
+<div class="sheet" id="tocSheet" hidden>
+  <header class="top"><div class="ttl"><b>Contents</b><small>26 cards · tap to jump</small></div>
+  <button class="ib" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></header>
+  <div class="sbody"><div class="in" id="tocList"></div></div>
+</div>
+<div class="sheet" id="fcSheet" hidden>
+  <header class="top"><div class="ttl"><b>Flashcards</b><small>Tap the card to flip · Space flips on a keyboard</small></div>
+  <button class="ib" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></header>
+  <div class="sbody"><div class="in">
+    <div class="chips" id="fcChips"></div>
+    <div class="fc" id="fc"><div class="fc-in">
+      <div class="fc-f front"><div class="ft"><span id="fcT"></span><span>Question</span></div><div class="q" id="fcQ"></div></div>
+      <div class="fc-f back"><div class="ft"><span id="fcT2"></span><span>Answer</span></div><div id="fcA"></div></div>
+    </div></div>
+    <div class="fcrow"><button class="btn bad" id="fcAgain" type="button">Again</button><span class="cnt" id="fcN" style="align-self:center"></span><button class="btn good" id="fcGot" type="button">Got it</button></div>
+    <div class="fcrow" style="margin-top:8px"><button class="btn" id="fcPrev" type="button">← Prev</button><button class="btn" id="fcShuf" type="button">Shuffle</button><button class="btn" id="fcNext" type="button">Next →</button></div>
+    <p class="lede" style="font-size:14.5px;margin-top:14px">"Again" puts the card in the Again pile so you can drill only the ones you missed.</p>
+  </div></div>
+</div>
+<div class="sheet" id="qSheet" hidden>
+  <header class="top"><div class="ttl"><b>Definitions quiz</b><small>Pick an answer to see the explanation</small></div>
+  <button class="ib" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></header>
+  <div class="sbody"><div class="in">
+    <div class="score"><span>Score <span class="num" id="qScore"></span></span><button class="btn" id="qReset" type="button">Reset</button></div>
+    <div id="qList"></div>
+  </div></div>
+</div>
+
+<div class="sheet" id="noteSheet" hidden>
+  <header class="top">
+    <div class="ttl"><b id="nTitle">Your working</b><small id="nSub">Saved on this device</small></div>
+    <button class="tl" id="nQ" type="button" aria-pressed="true" aria-label="Show question"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9.5 9.5a2.5 2.5 0 114 2c-1 .7-1.5 1.2-1.5 2.5M12 17h.01"/></svg></button>
+    <button class="tl" id="nUndo" type="button" aria-label="Undo"><svg viewBox="0 0 24 24"><path d="M9 7L4 12l5 5"/><path d="M4 12h11a5 5 0 010 10h-2"/></svg></button>
+    <button class="tl" id="nRedo" type="button" aria-label="Redo"><svg viewBox="0 0 24 24"><path d="M15 7l5 5-5 5"/><path d="M20 12H9a5 5 0 000 10h2"/></svg></button>
+    <button class="btn pri" id="nDone" type="button">Done</button>
+  </header>
+  <div class="ntools" role="toolbar" aria-label="Writing tools">
+    <button class="tl" data-tool="pen" type="button" aria-label="Pen" aria-pressed="true"><svg viewBox="0 0 24 24"><path d="M4 20l4-1 11-11-3-3L5 16l-1 4z"/><path d="M14 6l3 3"/></svg></button>
+    <button class="tl" data-tool="hl" type="button" aria-label="Highlighter" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M9 15l-3 5h6l1-2"/><path d="M9 15l7-11 4 3-7 11z"/></svg></button>
+    <button class="tl" data-tool="er" type="button" aria-label="Eraser" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M8 20h12"/><path d="M4.5 14.5l9-9 6 6-7.5 7.5H9z"/></svg></button>
+    <span class="sep"></span>
+    <button class="tl" data-col="ink" type="button" aria-label="Black ink" aria-pressed="true"><span class="dot" style="background:var(--fg)"></span></button>
+    <button class="tl" data-col="blue" type="button" aria-label="Blue ink" aria-pressed="false"><span class="dot" style="background:#3E7BFA"></span></button>
+    <button class="tl" data-col="red" type="button" aria-label="Red ink" aria-pressed="false"><span class="dot" style="background:#E5484D"></span></button>
+    <button class="tl" data-col="green" type="button" aria-label="Green ink" aria-pressed="false"><span class="dot" style="background:#2FA36B"></span></button>
+    <span class="sep"></span>
+    <button class="tl" data-size="1" type="button" aria-label="Fine" aria-pressed="false">S</button>
+    <button class="tl" data-size="2" type="button" aria-label="Medium" aria-pressed="true">M</button>
+    <button class="tl" data-size="3" type="button" aria-label="Thick" aria-pressed="false">L</button>
+    <span class="sep"></span>
+    <button class="tl" data-bg="lined" type="button" aria-label="Lined paper" aria-pressed="true">≡</button>
+    <button class="tl" data-bg="grid" type="button" aria-label="Grid paper" aria-pressed="false">#</button>
+    <button class="tl" data-bg="blank" type="button" aria-label="Blank paper" aria-pressed="false">□</button>
+    <span class="sep"></span>
+    <button class="tl" id="nFinger" type="button" aria-label="Draw with finger" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M9 11V5a1.5 1.5 0 013 0v6"/><path d="M12 10.5V9a1.5 1.5 0 013 0v2"/><path d="M15 11a1.5 1.5 0 013 0v3a6 6 0 01-6 6h-1a6 6 0 01-5-3l-2-3.5a1.5 1.5 0 012.5-1.6L9 13"/></svg></button>
+    <button class="tl" id="nZoom" type="button" aria-label="Zoom level, tap to reset" style="min-width:52px">100%</button>
+    <button class="tl" id="nAdd" type="button" aria-label="Add page"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M12 9v6M9 12h6"/></svg></button>
+    <button class="tl" id="nClear" type="button" aria-label="Clear this note"><svg viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button>
+  </div>
+  <div class="nq" id="nQBox"><div class="in" id="nQText"></div></div>
+  <div class="npages" id="nPages"></div>
+</div>
+
+<script>var DECK={"key": "deck-9702-defs", "flash": [["Ch 1", "Define: Base quantities", "Fundamental units that are not consist of combination of any units"], ["Ch 1", "Define: Derived quantities", "Unit that are expressed in terms of base units"], ["Ch 1", "Define: Vector quantity", "Quantity that has both magnitude and direction"], ["Ch 1", "Define: Scalar quantity", "Quantity that has only magnitude but no direction"], ["Ch 2", "Define: Systematic error", "Readings are consistently being either above or below true value"], ["Ch 2", "Define: Random error", "Readings are scattered around true value"], ["Ch 2", "Define: Accuracy", "The degree to which the values obtained approach true value and is influenced by size of systematic error"], ["Ch 2", "Define: Precision", "The size of the smallest division and is determined by the size of random error"], ["Ch 2", "Define: Uncertainty", "The total range of values within which the measurement is likely to lie"], ["Ch 3", "Define: Distance", "The total length of path covered by a moving object irrespective of the direction of the motion"], ["Ch 3", "Define: Displacement", "The shortest distance an object travels from a reference point in a specified direction"], ["Ch 3", "Define: Velocity", "The rate of change of displacement"], ["Ch 3", "Define: Speed", "The rate of change of distance"], ["Ch 3", "Define: Acceleration", "The rate of change of velocity"], ["Ch 4", "Define: Newton's First Law", "Every body continues in a state of rest, or with uniform velocity, unless acted on by an external force."], ["Ch 4", "Define: Newton's Second Law", "For a body of a constant mass, the resultant force is proportional to the rate of change of its momentum."], ["Ch 4", "Define: Newton's Third Law", "When two bodies interact, the forces they exert on each other are equal in magnitude and opposite in direction."], ["Ch 4", "Define: Conservation of Momentum", "In any closed system, the total momentum of the system remains constant given there is no external force."], ["Ch 4", "Define: Force", "Rate of change of momentum"], ["Ch 4", "Define: Momentum", "The product of its mass and its velocity"], ["Ch 4", "Define: Weight", "The force of gravity on a mass of object"], ["Ch 4", "Define: Elastic collision", "Total kinetic energy before = after collision"], ["Ch 5", "Define: Torque", "The product of one of the forces and the perpendicular distance between forces"], ["Ch 5", "Define: Centre of gravity", "The point at which the whole weight of a body seems to act."], ["Ch 5", "Define: Couple", "A pair of equal parallel forces that are opposite in direction in which the line do not coincide."], ["Ch 5", "Define: Moment", "The product of the force and the perpendicular distance between the line of the action of the force from the pivot"], ["Ch 5", "Define: The principle of moments", "For a body to be in rotational equilibrium, the sum of the clockwise moment at any point must be = to the sum of the anti clockwise moment about the same point"], ["Ch 5", "Define: Density", "Mass per unit volume"], ["Ch 5", "Define: Pressure", "Force acting perpendicularly per unit cross sectional area"], ["Ch 6", "Define: Work", "The product of force and the distance moved in the direction of the force"], ["Ch 6", "Define: Principle of Conservation of Energy", "Energy can neither be created nor destroyed. It can only be converted from one form to another."], ["Ch 6", "Define: Gravitational Potential Energy", "Energy stored due to position of a mass in a gravitational field."], ["Ch 6", "Define: Kinetic Energy", "Energy stored by a mass due to its motion."], ["Ch 6", "Define: Elastic Potential Energy", "Energy stored due to deformation of the object; by either compressing or stretching."], ["Ch 6", "Define: Electrostatic potential energy", "Energy stored due to position of a charge in an electric field"], ["Ch 6", "Define: Power", "Rate of doing work"], ["Ch 6", "Define: Efficiency", "Useful energy output per total energy input"], ["Ch 9", "Define: Hooke's Law", "Applied force is directly proportional to the extension produced provided that elastic limit is not exceeded."], ["Ch 9", "Define: Plastic Deformation", "The ability of object to change its shape and hence does not return to its original shape after applied force is removed"], ["Ch 9", "Define: Elastic Deformation", "The ability of object to change its shape and hence return to its original shape after applied force is removed"], ["Ch 9", "Define: Stress", "Force per unit original cross sectional area"], ["Ch 9", "Define: Strain", "The ratio of extension to its original length"], ["Ch 9", "Define: Young's Modulus", "The ratio of stress over strain given that limit of proportionality is not exceeded."], ["Ch 9", "Define: Elastic Limit", "The point beyond which material does not return to its original shape when force applied is removed."], ["Ch 9", "Define: Ultimate tensile stress", "Maximum force per unit original cross sectional area that an object can support before it breaks"], ["Ch 14", "Define: Frequency", "The number of oscillation per unit time of the source"], ["Ch 14", "Define: Transverse wave", "Wave in which the vibration of the particles on the wave is normal to the direction of the propagation of the wave's energy."], ["Ch 14", "Define: Longitudinal wave", "Wave in which the vibration of the particles on the wave is parallel to the direction of the propagation of the wave's energy."], ["Ch 14", "Define: Polarisation", "The condition of waves in which particles are made to vibrate in one direction on a single plane."], ["Ch 14", "Define: Doppler Effect", "The change in frequency observed due to the relative motion between wave source and observer."], ["Ch 14", "Define: Displacement", "The distance of a point on wave from its undisturbed or rest position"], ["Ch 14", "Define: Amplitude", "The max distance of a point on wave from its undisturbed or rest position"], ["Ch 14", "Define: Wavelength", "The shortest distance between two successive points that are in phase"], ["Ch 14", "Define: Period", "The time for one complete oscillation to occur"], ["Ch 14", "Define: Intensity", "The rate of energy transmitted per unit perpendicular area to the direction of wave propagation"], ["Ch 14", "Define: Phase difference", "The fraction of a cycle (expressed as an angle, in degrees or radians) by which one oscillation leads or lags another."], ["Ch 14", "Define: Speed", "The distance travelled by the wave (wavefront) per unit time."], ["Ch 15", "Define: Principle of Superposition of Waves", "When two or more waves meet at a point, the resultant displacement is equal to the sum of the individual displacement of the waves."], ["Ch 15", "Define: Coherent Source", "Waves of same frequency and constant phase difference."], ["Ch 15", "Define: Coherence", "Two or more waves that originates from a source which have constant phase difference and same frequency and wavelength."], ["Ch 15", "Define: Diffraction", "The spreading or bending of waves when passing through a gap or rounding an obstacle"], ["Ch 15", "Define: Node", "The point with no displacement as a result of destructive interference"], ["Ch 15", "Define: Antinode", "The point with maximum displacement as a result of constructive interference."], ["Ch 15", "Define: Constructive interference", "When two waves with maximum displacement meet, resulting in a wave with amplitude of sum of the amplitudes of the individual waves"], ["Ch 15", "Define: Destructive interference", "When two waves with maximum and minimum displacement meet, resulting in a wave with zero displacement."], ["Ch 15", "Define: Condition of interference", "Same types of waves · meet at a point · same direction of polarisation"], ["Ch 17", "Define: Electric field", "The region of space where a stationary charge experiences force"], ["Ch 17", "Define: Electric field strength", "The force per unit positive charge at that point"], ["Ch 17", "Define: Direction of electric field", "Direction in which a positive charge would move if it is free to do so."], ["Ch 19", "Define: Electric Current", "The rate of flow of electric charge"], ["Ch 19", "Define: Ohm's Law", "The current in a conductor is directly proportional to the potential difference across its ends, provided its temperature and other physical conditions remain constant."], ["Ch 19", "Define: Resistance", "The ratio of the potential difference across a conductor to the current flowing through it"], ["Ch 19", "Define: Potential difference", "Energy transferred from electrical energy to other forms of energy per unit charge from one point to another point."], ["Ch 19", "Define: Electromotive Force", "Energy transferred from other forms of energy to electrical energy per unit charge to move around a complete circuit."], ["Ch 19", "Define: Semiconductor", "Materials which have intermediate electrical conductivity which varies substantially with temperature"], ["Ch 19", "Define: Electrical power", "The rate of electrical energy transfer (work done per unit time): P = VI."], ["Ch 20", "Define: Kirchhoff's First Law", "The sum of the current entering a junction is equal to the sum of the current leaving it."], ["Ch 20", "Define: Kirchhoff's Second Law", "The sum of electromotive force is equal to the sum of potential difference for any closed loop in a circuit."], ["Estimate", "Estimate: Acceleration of a family car", "2 m s⁻²"], ["Estimate", "Estimate: Acceleration of free fall on the Moon", "1.6 m s⁻²"], ["Estimate", "Estimate: Walking speed", "1 m s⁻¹"], ["Estimate", "Estimate: Car speed", "20 m s⁻¹"], ["Estimate", "Estimate: Sprinter speed", "10 m s⁻¹"], ["Estimate", "Estimate: Mass of an orange", "100 g"], ["Estimate", "Estimate: Height of room in a house", "2 m"], ["Estimate", "Estimate: Diameter of a pencil", "1 cm"], ["Estimate", "Estimate: Volume of a small bean", "0.5 cm³"], ["Estimate", "Estimate: Speed of a jet", "200 m s⁻¹"], ["Estimate", "Estimate: Temperature of human body", "310 K"], ["Estimate", "Estimate: Diameter of hair", "0.5 mm"], ["Estimate", "Estimate: Young's modulus of a metal wire", "10¹¹ Pa"], ["Estimate", "Estimate: Resistivity of copper", "10⁻⁸ Ω m"], ["Estimate", "Estimate: Resistivity of an insulator", "10¹¹ Ω m"], ["Estimate", "Estimate: EMF of a car battery", "12 V"], ["Estimate", "Estimate: Current in domestic appliance", "13 A"], ["Compare", "Stationary vs progressive: amplitude?", "Stationary: varies between nodes. Progressive: same for all points."], ["Compare", "Stationary vs progressive: phase?", "Stationary: all points between adjacent nodes in phase. Progressive: not in phase."], ["Compare", "Stationary vs progressive: energy?", "Stationary: not transmitted. Progressive: transmitted."], ["Compare", "Current vs static electricity?", "Current: there is a net flow of charge in a certain direction. Static: there is none."], ["Compare", "Conductor vs insulator?", "Conductor has mobile charge carriers (electrons and ions) that drift to form a current; insulator doesn't."]], "quiz": [{"s": "Ch 2", "q": "Readings that are consistently above the true value show…", "o": ["random error", "systematic error", "high precision", "zero error only when using a ruler"], "c": 1, "e": "Systematic error: readings consistently above or below the true value. Random error scatters readings around it."}, {"s": "Ch 2", "q": "Accuracy is mainly affected by the size of the…", "o": ["random error", "smallest division", "systematic error", "number of readings"], "c": 2, "e": "Accuracy = closeness to the true value, influenced by systematic error."}, {"s": "Ch 1", "q": "Which is a scalar?", "o": ["Displacement", "Momentum", "Weight", "Kinetic energy"], "c": 3, "e": "Energy has magnitude only. The other three have direction."}, {"s": "Ch 3", "q": "Velocity is defined as the rate of change of…", "o": ["distance", "speed", "displacement", "acceleration"], "c": 2, "e": "Velocity = rate of change of displacement; speed = rate of change of distance."}, {"s": "Ch 4", "q": "Force is defined as the…", "o": ["product of mass and velocity", "rate of change of momentum", "mass × distance", "rate of change of kinetic energy"], "c": 1, "e": "Force = rate of change of momentum. A is momentum."}, {"s": "Ch 4", "q": "In an elastic collision, which is conserved?", "o": ["Momentum only", "Kinetic energy only", "Both momentum and total kinetic energy", "Neither"], "c": 2, "e": "Momentum is always conserved (no external force); elastic means total KE before = after as well."}, {"s": "Ch 5", "q": "A couple consists of…", "o": ["two equal forces along the same line in opposite directions", "two equal parallel forces in opposite directions whose lines do not coincide", "two unequal parallel forces", "one force and a pivot"], "c": 1, "e": "Equal, parallel, opposite, and the lines of action do not coincide. A would give zero torque."}, {"s": "Ch 5", "q": "Pressure is…", "o": ["force × area", "force acting perpendicularly per unit area", "force per unit volume", "mass per unit area"], "c": 1, "e": "Pressure = normal force per unit cross-sectional area."}, {"s": "Ch 6", "q": "Efficiency is defined as…", "o": ["total input / useful output", "useful energy output / total energy input", "work done / time", "wasted energy / total energy"], "c": 1, "e": "Efficiency = useful energy output per total energy input."}, {"s": "Ch 9", "q": "Stress is force per unit…", "o": ["extension", "original length", "original cross-sectional area", "volume"], "c": 2, "e": "Stress uses the ORIGINAL cross-sectional area."}, {"s": "Ch 9", "q": "The Young modulus is stress/strain provided that…", "o": ["the wire is copper", "the limit of proportionality is not exceeded", "the wire has broken", "the extension is constant"], "c": 1, "e": "Valid only up to the limit of proportionality."}, {"s": "Ch 14", "q": "In a transverse wave, particles vibrate…", "o": ["parallel to energy propagation", "normal to energy propagation", "in circles only", "not at all"], "c": 1, "e": "Transverse: normal (perpendicular). Longitudinal: parallel."}, {"s": "Ch 14", "q": "Wavelength is the shortest distance between two successive points that are…", "o": ["at rest", "in phase", "in antiphase", "at maximum displacement only"], "c": 1, "e": "Successive points in phase."}, {"s": "Ch 15", "q": "Two sources are coherent if they have…", "o": ["the same amplitude", "a constant phase difference", "the same intensity", "different frequencies"], "c": 1, "e": "Coherent = constant phase difference (hence same frequency)."}, {"s": "Ch 15", "q": "Which is TRUE of a stationary wave?", "o": ["Energy is transmitted", "All points have the same amplitude", "All points between adjacent nodes are in phase", "Adjacent points are never in phase"], "c": 2, "e": "A-P-E: amplitude varies, points between adjacent nodes in phase, no energy transmitted."}, {"s": "Ch 17", "q": "Electric field strength is the force per unit…", "o": ["charge", "positive charge", "mass", "area"], "c": 1, "e": "Per unit POSITIVE charge. Leaving out 'positive' loses the mark."}, {"s": "Ch 19", "q": "E.m.f. is energy transferred…", "o": ["from electrical to other forms per unit charge", "from other forms to electrical per unit charge", "per unit time", "per unit current"], "c": 1, "e": "E.m.f.: other → electrical. P.d.: electrical → other."}, {"s": "Ch 20", "q": "Kirchhoff's first law is a consequence of conservation of…", "o": ["energy", "momentum", "charge", "mass"], "c": 2, "e": "Current in = current out at a junction: charge is conserved. The second law conserves energy."}]};</script>
+<script>
+(function(){
+var KEY=DECK.key, root=document.documentElement;
+function sget(k){try{return localStorage.getItem(KEY+':'+k)}catch(e){return null}}
+function sset(k,v){try{localStorage.setItem(KEY+':'+k,v)}catch(e){}}
+/* theme: dark by default, light on request */
+root.setAttribute('data-theme',sget('theme')||'dark');
+document.getElementById('themeBtn').addEventListener('click',function(){
+  var t=root.getAttribute('data-theme')==='dark'?'light':'dark';root.setAttribute('data-theme',t);sset('theme',t);});
+
+var track=document.getElementById('track'), cards=[].slice.call(track.querySelectorAll('.card'));
+var N=cards.length, cur=0, bar=document.getElementById('barFill'), cnt=document.getElementById('cnt');
+function width(){return track.clientWidth}
+function update(i){cur=i;bar.style.width=((i+1)/N*100)+'%';
+  cnt.textContent=(i+1)+' / '+N+' · '+cards[i].dataset.title;sset('pos',i);
+  document.getElementById('prevBtn').disabled=i===0;document.getElementById('nextBtn').disabled=i===N-1;}
+function go(i,smooth){i=Math.max(0,Math.min(N-1,i));
+  track.scrollTo({left:i*width(),behavior:smooth===false?'auto':'smooth'});update(i);}
+var t0;track.addEventListener('scroll',function(){clearTimeout(t0);t0=setTimeout(function(){
+  var i=Math.round(track.scrollLeft/width());if(i!==cur)update(i);},80);},{passive:true});
+window.addEventListener('resize',function(){track.scrollTo({left:cur*width(),behavior:'auto'});});
+document.getElementById('prevBtn').addEventListener('click',function(){go(cur-1)});
+document.getElementById('nextBtn').addEventListener('click',function(){go(cur+1)});
+document.addEventListener('keydown',function(e){
+  if(document.querySelector('.sheet:not([hidden])'))return;
+  if(e.key==='ArrowRight'||e.key==='PageDown'){go(cur+1);e.preventDefault();}
+  if(e.key==='ArrowLeft'||e.key==='PageUp'){go(cur-1);e.preventDefault();}});
+document.querySelectorAll('[data-goto]').forEach(function(b){b.addEventListener('click',function(){
+  var t=b.getAttribute('data-goto');for(var i=0;i<N;i++){if(cards[i].dataset.id===t){go(i);return;}}});});
+
+/* tap-to-reveal: worked-example steps */
+document.querySelectorAll('ol.steps').forEach(function(ol){
+  var li=[].slice.call(ol.children),shown=0;li.forEach(function(x){x.hidden=true});
+  var bar=document.createElement('div');bar.className='rvbar';
+  var nb=document.createElement('button');nb.className='btn pri';nb.type='button';
+  var ab=document.createElement('button');ab.className='btn';ab.type='button';ab.textContent='Show all';
+  function paint(){nb.textContent=shown<li.length?('Show step '+(shown+1)+' of '+li.length):'All steps shown';
+    nb.disabled=shown>=li.length;ab.hidden=shown>=li.length;}
+  nb.addEventListener('click',function(){if(shown<li.length){li[shown].hidden=false;shown++;paint();}});
+  ab.addEventListener('click',function(){li.forEach(function(x){x.hidden=false});shown=li.length;paint();});
+  bar.appendChild(nb);bar.appendChild(ab);ol.parentNode.insertBefore(bar,ol.nextSibling);paint();});
+/* tap-to-reveal: practice answers */
+document.querySelectorAll('.pq').forEach(function(q){
+  var a=q.querySelector('.ans');if(!a)return;a.hidden=true;
+  var b=document.createElement('button');b.className='btn';b.type='button';b.textContent='Show answer';
+  b.addEventListener('click',function(){a.hidden=!a.hidden;b.textContent=a.hidden?'Show answer':'Hide answer';});
+  q.insertBefore(b,a);});
+document.querySelectorAll('[data-revealall]').forEach(function(b){b.addEventListener('click',function(){
+  var c=b.closest('.card');c.querySelectorAll('.pq .ans').forEach(function(a){a.hidden=false});
+  c.querySelectorAll('.pq .btn').forEach(function(x){x.textContent='Hide answer'});});});
+
+/* sheets */
+function openSheet(id){document.getElementById(id).hidden=false;}
+function closeSheets(){document.querySelectorAll('.sheet').forEach(function(s){s.hidden=true});}
+document.querySelectorAll('[data-close]').forEach(function(b){b.addEventListener('click',closeSheets)});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeSheets();});
+
+/* contents */
+var toc=document.getElementById('tocList'),lastSec=null;
+cards.forEach(function(c,i){
+  var s=c.dataset.group;if(s!==lastSec){var g=document.createElement('div');g.className='tocgrp';g.textContent=s;toc.appendChild(g);lastSec=s;}
+  var b=document.createElement('button');b.className='tocitem';b.type='button';
+  b.innerHTML='<span class="no">'+(i+1)+'</span><span></span><span class="kd"></span>';
+  b.children[1].textContent=c.dataset.title;b.children[2].textContent=c.dataset.kind;
+  b.addEventListener('click',function(){closeSheets();go(i,false);});toc.appendChild(b);});
+document.getElementById('tocBtn').addEventListener('click',function(){
+  [].forEach.call(toc.querySelectorAll('.tocitem'),function(b,i){b.classList.toggle('cur',i===cur)});
+  openSheet('tocSheet');var c=toc.querySelector('.cur');if(c)c.scrollIntoView({block:'center'});});
+
+/* flashcards */
+var F=DECK.flash,topics=['All'];F.forEach(function(c){if(topics.indexOf(c[0])<0)topics.push(c[0])});topics.push('Again pile');
+var filt='All',order=[],fi=0,again={};
+var chipBox=document.getElementById('fcChips'),fc=document.getElementById('fc');
+topics.forEach(function(t){var b=document.createElement('button');b.className='chip';b.type='button';b.textContent=t;
+  b.setAttribute('aria-pressed',t===filt?'true':'false');
+  b.addEventListener('click',function(){filt=t;[].forEach.call(chipBox.children,function(x){x.setAttribute('aria-pressed',x===b?'true':'false')});build();});
+  chipBox.appendChild(b);});
+function build(){order=[];F.forEach(function(c,i){if(filt==='All'||c[0]===filt||(filt==='Again pile'&&again[i]))order.push(i)});fi=0;show();}
+function show(){fc.classList.remove('flip');var q=document.getElementById('fcQ'),a=document.getElementById('fcA');
+  if(!order.length){q.textContent=filt==='Again pile'?'Nothing in the Again pile yet.':'No cards.';a.textContent='';document.getElementById('fcN').textContent='0 cards';return;}
+  var c=F[order[fi]];q.innerHTML=c[1];a.innerHTML=c[2];
+  document.getElementById('fcT').textContent=c[0];document.getElementById('fcT2').textContent=c[0];
+  document.getElementById('fcN').textContent=(fi+1)+' / '+order.length;}
+fc.addEventListener('click',function(){fc.classList.toggle('flip')});
+document.getElementById('fcPrev').addEventListener('click',function(){if(order.length){fi=(fi-1+order.length)%order.length;show();}});
+document.getElementById('fcNext').addEventListener('click',function(){if(order.length){fi=(fi+1)%order.length;show();}});
+document.getElementById('fcShuf').addEventListener('click',function(){for(var i=order.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=order[i];order[i]=order[j];order[j]=t;}fi=0;show();});
+document.getElementById('fcAgain').addEventListener('click',function(){if(order.length){again[order[fi]]=1;fi=(fi+1)%order.length;show();}});
+document.getElementById('fcGot').addEventListener('click',function(){if(!order.length)return;delete again[order[fi]];
+  if(filt==='Again pile'){order.splice(fi,1);if(fi>=order.length)fi=0;}else fi=(fi+1)%order.length;show();});
+document.addEventListener('keydown',function(e){if(document.getElementById('fcSheet').hidden)return;
+  if(e.key===' '){fc.classList.toggle('flip');e.preventDefault();}
+  if(e.key==='ArrowRight')document.getElementById('fcNext').click();
+  if(e.key==='ArrowLeft')document.getElementById('fcPrev').click();});
+document.getElementById('fcBtn').addEventListener('click',function(){openSheet('fcSheet');});
+build();
+
+/* quiz */
+var Q=DECK.quiz,list=document.getElementById('qList'),right=0,done=0;
+function renderQ(){list.innerHTML='';right=0;done=0;paintS();
+  Q.forEach(function(it,qi){var box=document.createElement('div');box.className='mcq';
+    box.innerHTML='<div class="qh"><span>Q'+(qi+1)+'</span><span></span></div><p class="qt"></p><div class="opts"></div>';
+    box.querySelector('.qh span:last-child').textContent=it.s;box.querySelector('.qt').innerHTML=it.q;
+    var opts=box.querySelector('.opts');
+    it.o.forEach(function(t,oi){var b=document.createElement('button');b.type='button';b.className='opt';
+      b.innerHTML='<b>'+'ABCD'[oi]+'</b><span></span>';b.querySelector('span').innerHTML=t;
+      b.addEventListener('click',function(){if(box.classList.contains('done'))return;box.classList.add('done');done++;
+        var ok=oi===it.c;if(ok)right++;b.classList.add(ok?'right':'wrong');opts.children[it.c].classList.add('right');
+        var ex=document.createElement('div');ex.className='ex';
+        ex.innerHTML='<b style="color:var('+(ok?'--good':'--bad')+')">'+(ok?'Correct. ':'Answer: '+'ABCD'[it.c]+'. ')+'</b>'+it.e;box.appendChild(ex);paintS();});
+      opts.appendChild(b);});
+    list.appendChild(box);});}
+function paintS(){document.getElementById('qScore').textContent=right+' / '+done+' answered of '+Q.length;}
+document.getElementById('qReset').addEventListener('click',function(){renderQ();list.parentNode.parentNode.scrollTop=0;});
+document.getElementById('qBtn').addEventListener('click',function(){openSheet('qSheet');});
+renderQ();
+
+
+/* ---------- handwriting notes ---------- */
+(function(){
+var NK=KEY+':note:', L=1000, PH=1414;              // logical page: 1000 × 1414 (A4)
+var COLS={blue:'#3E7BFA',red:'#E5484D',green:'#2FA36B'};
+var SIZES={1:2.2,2:3.6,3:6};
+var sheet=document.getElementById('noteSheet'), pagesBox=document.getElementById('nPages');
+var st={tool:'pen',col:'ink',size:2,finger:false}, note=null, nid=null, undo=[], redo=[], onSave=null;
+try{var s=JSON.parse(localStorage.getItem(KEY+':notetools')||'null');if(s)for(var k in s)st[k]=s[k];}catch(e){}
+function css(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
+function colOf(c){return c==='ink'?css('--fg'):(COLS[c]||c);}
+function load(id){try{var n=JSON.parse(localStorage.getItem(NK+id)||'null');if(n&&n.pages)return n;}catch(e){}return {bg:'lined',pages:[[]]};}
+function hasInk(n){return n.pages.some(function(p){return p.length;});}
+var saveT;
+function save(){clearTimeout(saveT);saveT=setTimeout(function(){
+  var sub=document.getElementById('nSub');
+  try{ if(hasInk(note)) localStorage.setItem(NK+nid,JSON.stringify(note)); else localStorage.removeItem(NK+nid);
+    sub.textContent='Saved on this device';
+  }catch(e){ sub.textContent='Storage full: clear an old note to keep saving'; }
+  if(onSave)onSave();},350);}
+function saveTools(){try{localStorage.setItem(KEY+':notetools',JSON.stringify(st));}catch(e){}}
+
+/* drawing */
+function paintBg(ctx,bg){
+  ctx.fillStyle=css('--surface');ctx.fillRect(0,0,L,PH);
+  ctx.strokeStyle=css('--line');ctx.lineWidth=1.2;ctx.beginPath();
+  if(bg==='lined'){for(var y=110;y<PH-40;y+=44){ctx.moveTo(40,y);ctx.lineTo(L-40,y);}}
+  if(bg==='grid'){for(var x=0;x<=L;x+=40){ctx.moveTo(x,0);ctx.lineTo(x,PH);}for(var y2=0;y2<=PH;y2+=40){ctx.moveTo(0,y2);ctx.lineTo(L,y2);}}
+  ctx.stroke();
+}
+function drawStroke(ctx,s){
+  var p=s.p;if(!p.length)return;
+  ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle=colOf(s.c);
+  if(s.t==='h'){ctx.globalAlpha=.32;ctx.lineWidth=s.w;ctx.beginPath();ctx.moveTo(p[0],p[1]);
+    for(var i=3;i<p.length;i+=3)ctx.lineTo(p[i],p[i+1]);if(p.length===3)ctx.lineTo(p[0]+.1,p[1]);ctx.stroke();ctx.globalAlpha=1;return;}
+  if(p.length===3){ctx.fillStyle=ctx.strokeStyle;ctx.beginPath();ctx.arc(p[0],p[1],s.w*(.35+p[2]/10)/2,0,7);ctx.fill();return;}
+  for(var j=3;j<p.length;j+=3){ctx.lineWidth=s.w*(.35+(p[j+2]+p[j-1])/20);ctx.beginPath();
+    var mx=(p[j-3]+p[j])/2,my=(p[j-2]+p[j+1])/2;
+    if(j>3){ctx.moveTo((p[j-6]+p[j-3])/2,(p[j-5]+p[j-2])/2);ctx.quadraticCurveTo(p[j-3],p[j-2],mx,my);}else{ctx.moveTo(p[0],p[1]);ctx.lineTo(mx,my);}
+    if(j===p.length-3)ctx.lineTo(p[j],p[j+1]);ctx.stroke();}
+}
+function render(ctx,page,bg){paintBg(ctx,bg);page.forEach(function(s){drawStroke(ctx,s);});}
+function fit(cv){var w=cv.clientWidth||cv.parentNode.clientWidth,d=window.devicePixelRatio||1;
+  cv.width=Math.round(w*d);cv.height=Math.round(w*PH/L*d);var ctx=cv.getContext('2d');ctx.setTransform(cv.width/L,0,0,cv.width/L,0,0);return ctx;}
+
+/* pages: one gesture handler on the whole paper area (pen draws; one finger pans; two fingers pinch-zoom) */
+var views=[], zoom=1, ZMIN=.5, ZMAX=4;
+try{zoom=+localStorage.getItem(KEY+':notezoom')||1;}catch(e){}
+function baseW(){return Math.max(240,Math.min(pagesBox.clientWidth-24,900));}
+function pageW(){return Math.round(baseW()*zoom);}
+function build(){pagesBox.innerHTML='';views=[];
+  note.pages.forEach(function(pg,i){
+    var wrap=document.createElement('div');wrap.className='npage';
+    var cv=document.createElement('canvas');cv.setAttribute('aria-label','Writing page '+(i+1));
+    var pn=document.createElement('span');pn.className='pn';pn.textContent=(i+1)+' / '+note.pages.length;
+    wrap.appendChild(cv);wrap.appendChild(pn);pagesBox.appendChild(wrap);
+    views.push({cv:cv,wrap:wrap,i:i});});
+  var h=document.createElement('p');h.className='nhint';
+  h.textContent=st.finger?'Finger draws. Pinch with two fingers to zoom.':'Write with Apple Pencil. One finger scrolls, two fingers pinch to zoom.';
+  pagesBox.appendChild(h);
+  layout();requestAnimationFrame(redrawAll);}
+function layout(){var w=pageW();views.forEach(function(v){v.wrap.style.width=w+'px';});paintZoom();}
+function fit(cv){var w=cv.clientWidth||pageW(),h=w*PH/L,d=window.devicePixelRatio||1;
+  d=Math.min(d,Math.sqrt(16e6/(w*h)));                      // iPad canvas memory limit
+  cv.width=Math.round(w*d);cv.height=Math.round(h*d);var ctx=cv.getContext('2d');ctx.setTransform(cv.width/L,0,0,cv.width/L,0,0);return ctx;}
+function redraw(v){v.ctx=fit(v.cv);render(v.ctx,note.pages[v.i],note.bg);}
+function redrawAll(){views.forEach(redraw);}
+window.addEventListener('resize',function(){if(!sheet.hidden){layout();redrawAll();}});
+function paintZoom(){var z=document.getElementById('nZoom');if(z)z.textContent=Math.round(zoom*100)+'%';}
+function setZoom(z,cx,cy){ // keep the point (cx,cy) in the paper area fixed on screen
+  z=Math.max(ZMIN,Math.min(ZMAX,z));var r=pagesBox.getBoundingClientRect(),ox=cx-r.left,oy=cy-r.top;
+  var ax=(pagesBox.scrollLeft+ox)/zoom,ay=(pagesBox.scrollTop+oy)/zoom;zoom=z;layout();
+  pagesBox.scrollLeft=ax*zoom-ox;pagesBox.scrollTop=ay*zoom-oy;}
+var zt;function zoomDone(){clearTimeout(zt);zt=setTimeout(function(){redrawAll();try{localStorage.setItem(KEY+':notezoom',zoom);}catch(e){}},120);}
+
+function viewAt(x,y){for(var i=0;i<views.length;i++){var r=views[i].cv.getBoundingClientRect();
+  if(x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom)return views[i];}return null;}
+function pos(v,e){var r=v.cv.getBoundingClientRect(),k=L/r.width;
+  var pr=e.pointerType==='pen'?(e.pressure||.5):.5;return [Math.round((e.clientX-r.left)*k*10)/10,Math.round((e.clientY-r.top)*k*10)/10,Math.round(pr*9)];}
+
+/* iOS: stop Safari treating pen or finger movement as scrolling, text selection or the callout menu.
+   Without this a quick vertical stroke after a horizontal one gets cancelled (the "+" problem). */
+['touchstart','touchmove'].forEach(function(t){pagesBox.addEventListener(t,function(e){if(e.cancelable)e.preventDefault();},{passive:false});});
+sheet.addEventListener('selectstart',function(e){e.preventDefault();});
+pagesBox.addEventListener('contextmenu',function(e){e.preventDefault();});
+
+var touches={},mode=null,cur=null,curV=null,drawPid=null,live=null,pan=null,pinch=null;
+function nTouch(){return Object.keys(touches).length;}
+function pinchInfo(){var k=Object.keys(touches),a=touches[k[0]],b=touches[k[1]];
+  return {d:Math.hypot(a.x-b.x,a.y-b.y)||1,x:(a.x+b.x)/2,y:(a.y+b.y)/2};}
+function startStroke(v,e){var p=pos(v,e);curV=v;
+  if(st.tool==='er'){cur={er:true,removed:[]};erase(v,p);return;}
+  cur={t:st.tool==='hl'?'h':'p',c:st.tool==='hl'?'#F5C400':st.col,w:st.tool==='hl'?SIZES[st.size]*5:SIZES[st.size],p:p.slice()};
+  if(cur.t==='h')live=note.pages[v.i].slice();
+  drawStroke(v.ctx,cur);}
+function moveStroke(e){var v=curV,evs=e.getCoalescedEvents?e.getCoalescedEvents():[e];if(!evs.length)evs=[e];
+  evs.forEach(function(ev){var p=pos(v,ev);
+    if(cur.er){erase(v,p);return;}
+    var q=cur.p,n=q.length;if(Math.abs(q[n-3]-p[0])+Math.abs(q[n-2]-p[1])<1.2)return;
+    q.push(p[0],p[1],p[2]);
+    if(cur.t==='p')drawStroke(v.ctx,{t:'p',c:cur.c,w:cur.w,p:q.slice(Math.max(0,q.length-9))});});
+  if(cur.t==='h'){render(v.ctx,live,note.bg);drawStroke(v.ctx,cur);}}
+function endStroke(keep){var v=curV;
+  if(cur&&keep!==false){
+    if(cur.er){if(cur.removed.length){undo.push({k:'er',i:v.i,items:cur.removed});redo=[];}}
+    else{note.pages[v.i].push(cur);undo.push({k:'add',i:v.i,s:cur});redo=[];}}
+  if(cur&&keep===false&&cur.er)cur.removed.slice().reverse().forEach(function(it){note.pages[v.i].splice(it.at,0,it.s);});
+  cur=null;live=null;curV=null;drawPid=null;mode=null;if(v)redraw(v);paintUR();save();}
+function erase(v,p){var pg=note.pages[v.i],r=14/Math.min(zoom,2)*1.2,hit=false;
+  for(var i=pg.length-1;i>=0;i--){var q=pg[i].p;
+    for(var j=0;j<q.length;j+=3){if(Math.abs(q[j]-p[0])<r&&Math.abs(q[j+1]-p[1])<r){cur.removed.push({s:pg[i],at:i});pg.splice(i,1);hit=true;break;}}}
+  if(hit)render(v.ctx,pg,note.bg);}
+
+pagesBox.addEventListener('pointerdown',function(e){
+  try{var sel=window.getSelection&&window.getSelection();if(sel&&sel.removeAllRanges)sel.removeAllRanges();}catch(x){}
+  if(e.pointerType==='pen'&&!st.penSeen){st.penSeen=true;saveTools();}
+  var isTouch=e.pointerType==='touch';
+  if(isTouch){
+    if(mode==='draw'&&!drawIsTouch)return;                       // palm resting while the pen writes
+    touches[e.pointerId]={x:e.clientX,y:e.clientY};try{pagesBox.setPointerCapture(e.pointerId);}catch(x){}
+    if(nTouch()===2){if(mode==='draw')endStroke(false);var pi=pinchInfo();pinch={d:pi.d,z:zoom};pan=null;mode='pinch';return;}
+    if(nTouch()>2)return;
+    if(st.penSeen&&!st.finger){mode='pan';pan={x:e.clientX,y:e.clientY,l:pagesBox.scrollLeft,t:pagesBox.scrollTop};return;}
+  }
+  if(mode==='draw')return;
+  var v=viewAt(e.clientX,e.clientY);if(!v)return;
+  if(mode==='pan')pan=null;
+  e.preventDefault();mode='draw';drawPid=e.pointerId;drawIsTouch=isTouch;
+  if(!isTouch){try{pagesBox.setPointerCapture(e.pointerId);}catch(x){}}
+  startStroke(v,e);});
+var drawIsTouch=false;
+pagesBox.addEventListener('pointermove',function(e){
+  if(touches[e.pointerId]){touches[e.pointerId]={x:e.clientX,y:e.clientY};
+    if(mode==='pinch'&&nTouch()>=2){var pi=pinchInfo();setZoom(pinch.z*pi.d/pinch.d,pi.x,pi.y);
+      if(pinch.mx!=null){pagesBox.scrollLeft-=pi.x-pinch.mx;pagesBox.scrollTop-=pi.y-pinch.my;}
+      pinch.mx=pi.x;pinch.my=pi.y;e.preventDefault();return;}
+    if(mode==='pan'&&pan){pagesBox.scrollLeft=pan.l-(e.clientX-pan.x);pagesBox.scrollTop=pan.t-(e.clientY-pan.y);return;}}
+  if(mode==='draw'&&e.pointerId===drawPid&&cur){e.preventDefault();moveStroke(e);}});
+function up(e){
+  if(touches[e.pointerId]){delete touches[e.pointerId];
+    if(mode==='pinch'){if(nTouch()<2){mode=nTouch()?'wait':null;pan=null;zoomDone();}return;}
+    if(mode==='wait'&&!nTouch())mode=null;
+    if(mode==='pan'){mode=null;pan=null;return;}}
+  if(mode==='draw'&&e.pointerId===drawPid)endStroke(true);}
+pagesBox.addEventListener('pointerup',up);pagesBox.addEventListener('pointercancel',up);
+pagesBox.addEventListener('wheel',function(e){if(!e.ctrlKey)return;e.preventDefault();setZoom(zoom*Math.exp(-e.deltaY/200),e.clientX,e.clientY);zoomDone();},{passive:false});
+function paintUR(){document.getElementById('nUndo').disabled=!undo.length;document.getElementById('nRedo').disabled=!redo.length;}
+document.getElementById('nUndo').addEventListener('click',function(){var a=undo.pop();if(!a)return;
+  if(a.k==='add'){var pg=note.pages[a.i],k=pg.lastIndexOf(a.s);if(k>=0)pg.splice(k,1);}
+  if(a.k==='er'){a.items.slice().reverse().forEach(function(it){note.pages[a.i].splice(it.at,0,it.s);});}
+  if(a.k==='clear'){note.pages=a.pages;build();}
+  if(a.k==='page'){note.pages.pop();build();}
+  redo.push(a);if(views[a.i])redraw(views[a.i]);paintUR();save();});
+document.getElementById('nRedo').addEventListener('click',function(){var a=redo.pop();if(!a)return;
+  if(a.k==='add')note.pages[a.i].push(a.s);
+  if(a.k==='er')a.items.forEach(function(it){var pg=note.pages[a.i],k=pg.indexOf(it.s);if(k>=0)pg.splice(k,1);});
+  if(a.k==='clear'){note.pages=[[]];build();}
+  if(a.k==='page'){note.pages.push([]);build();}
+  undo.push(a);if(views[a.i])redraw(views[a.i]);paintUR();save();});
+
+/* toolbar */
+function paintTools(){
+  sheet.querySelectorAll('[data-tool]').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.tool===st.tool);});
+  sheet.querySelectorAll('[data-col]').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.col===st.col);});
+  sheet.querySelectorAll('[data-size]').forEach(function(b){b.setAttribute('aria-pressed',+b.dataset.size===+st.size);});
+  sheet.querySelectorAll('[data-bg]').forEach(function(b){b.setAttribute('aria-pressed',note&&b.dataset.bg===note.bg);});
+  document.getElementById('nFinger').setAttribute('aria-pressed',!!st.finger);}
+sheet.querySelectorAll('[data-tool]').forEach(function(b){b.addEventListener('click',function(){st.tool=b.dataset.tool;paintTools();saveTools();});});
+sheet.querySelectorAll('[data-col]').forEach(function(b){b.addEventListener('click',function(){st.col=b.dataset.col;if(st.tool!=='pen')st.tool='pen';paintTools();saveTools();});});
+sheet.querySelectorAll('[data-size]').forEach(function(b){b.addEventListener('click',function(){st.size=+b.dataset.size;paintTools();saveTools();});});
+sheet.querySelectorAll('[data-bg]').forEach(function(b){b.addEventListener('click',function(){note.bg=b.dataset.bg;paintTools();redrawAll();save();});});
+document.getElementById('nZoom').addEventListener('click',function(){var r=pagesBox.getBoundingClientRect();setZoom(1,r.left+r.width/2,r.top);zoomDone();});
+document.getElementById('nFinger').addEventListener('click',function(){st.finger=!st.finger;paintTools();saveTools();build();});
+document.getElementById('nAdd').addEventListener('click',function(){note.pages.push([]);undo.push({k:'page',i:note.pages.length-1});redo=[];build();paintUR();save();
+  setTimeout(function(){pagesBox.scrollTop=pagesBox.scrollHeight;},60);});
+var clearArm=false,clearBtn=document.getElementById('nClear');
+clearBtn.addEventListener('click',function(){
+  if(!clearArm){clearArm=true;document.getElementById('nSub').textContent='Tap the bin again to clear every page';setTimeout(function(){clearArm=false;document.getElementById('nSub').textContent='Saved on this device';},3000);return;}
+  clearArm=false;undo.push({k:'clear',i:0,pages:note.pages});redo=[];note.pages=[[]];build();paintUR();save();});
+var qBtn=document.getElementById('nQ');
+qBtn.addEventListener('click',function(){var box=document.getElementById('nQBox');box.hidden=!box.hidden;qBtn.setAttribute('aria-pressed',!box.hidden);});
+
+/* open / close */
+function open(id,title,qNode,after){
+  nid=id;note=load(id);undo=[];redo=[];onSave=after;
+  document.getElementById('nTitle').textContent=title;document.getElementById('nSub').textContent='Saved on this device';
+  var qt=document.getElementById('nQText');qt.innerHTML='';
+  if(qNode){qNode.forEach(function(n){var c=n.cloneNode(true);c.querySelectorAll('button,.wrow,.ans,.rvbar').forEach(function(x){x.remove();});qt.appendChild(c);});}
+  document.getElementById('nQBox').hidden=!qNode;qBtn.setAttribute('aria-pressed',!!qNode);
+  sheet.hidden=false;paintTools();paintUR();build();pagesBox.scrollTop=0;
+  if(window.MathJax&&MathJax.typesetPromise)MathJax.typesetPromise([qt]).catch(function(){});}
+document.getElementById('nDone').addEventListener('click',function(){clearTimeout(saveT);
+  try{if(hasInk(note))localStorage.setItem(NK+nid,JSON.stringify(note));else localStorage.removeItem(NK+nid);}catch(e){}
+  sheet.hidden=true;if(onSave)onSave();});
+
+/* thumbnails + buttons on cards */
+function thumb(id){var n=load(id);if(!hasInk(n))return null;
+  var c=document.createElement('canvas');c.width=360;c.height=Math.round(360*PH/L);var ctx=c.getContext('2d');
+  ctx.setTransform(360/L,0,0,360/L,0,0);render(ctx,n.pages[0],n.bg);return {src:c.toDataURL('image/png'),pages:n.pages.length};}
+var PEN='<svg viewBox="0 0 24 24"><path d="M4 20l4-1 11-11-3-3L5 16l-1 4z"/><path d="M14 6l3 3"/></svg>';
+function attach(anchor,where,id,title,qNodes){
+  var row=document.createElement('div');row.className='wrow';
+  var b=document.createElement('button');b.type='button';b.className='btn write';
+  var img=document.createElement('img');img.className='wthumb';img.alt='Your handwritten working';
+  var meta=document.createElement('span');meta.className='wmeta';
+  row.appendChild(b);row.appendChild(meta);
+  function paint(){var t=thumb(id);
+    b.innerHTML=PEN+(t?'Edit your working':'Write your working');
+    if(t){img.src=t.src;meta.textContent=t.pages>1?t.pages+' pages':'';if(!img.parentNode)row.appendChild(img);}
+    else{if(img.parentNode)img.remove();meta.textContent='';}}
+  function go(){open(id,title,qNodes,paint);}
+  b.addEventListener('click',go);img.addEventListener('click',go);
+  if(where==='before')anchor.parentNode.insertBefore(row,anchor);else anchor.parentNode.insertBefore(row,anchor.nextSibling);
+  paint();}
+cards.forEach(function(c){
+  var title=c.dataset.title, cid=c.dataset.id;
+  if(c.dataset.kind==='Worked example'){
+    var ci=c.querySelector('.ci'),first=ci.querySelector('ol.steps');
+    if(first){var q=[].slice.call(ci.children).filter(function(n){return n.matches('p:not(.sec),.tw,figure,.formula');});
+      attach(first,'before',cid,title,q);}}
+  c.querySelectorAll('.pq').forEach(function(pq,i){var qt=pq.querySelector('.qt');if(!qt)return;
+    var lab=pq.querySelector('.qh span');attach(qt,'after',cid+'-q'+(i+1),(lab?lab.textContent:'Question '+(i+1)),[qt]);});
+});
+})();
+
+/* start where you left off */
+var start=parseInt(sget('pos')||'0',10);if(!(start>=0&&start<N))start=0;
+var h=(location.hash||'').slice(1);if(h){cards.forEach(function(c,i){if(c.dataset.id===h)start=i});}
+requestAnimationFrame(function(){go(start,false);});
+})();
+</script>
+
+<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(function(r){document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')r.update().catch(function(){});});}).catch(function(){});var had=!!navigator.serviceWorker.controller,done=false;navigator.serviceWorker.addEventListener('controllerchange',function(){if(had&&!done){done=true;location.reload();}});}</script>
+</body></html>

@@ -16,6 +16,7 @@ DECKS = {  # published artifact URL -> local file in the app
 APP_DECKS = {
     "deck-econ-essaybank.html": "econ-essay-bank.html",
     "deck-maths-p4.html": "maths-p4.html",
+    "deck-phys-defs.html": "phys-defs.html",
 }
 
 TIMER = SRC / "data/timer-source.html"
