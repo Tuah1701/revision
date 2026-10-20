@@ -558,7 +558,7 @@ ul.keys li{background:var(--surface);border:1px solid var(--line);border-radius:
     </div></div>
     <div class="fcrow"><button class="btn bad" id="fcAgain" type="button">Again</button><span class="cnt" id="fcN" style="align-self:center"></span><button class="btn good" id="fcGot" type="button">Got it</button></div>
     <div class="fcrow" style="margin-top:8px"><button class="btn" id="fcPrev" type="button">← Prev</button><button class="btn" id="fcShuf" type="button">Shuffle</button><button class="btn" id="fcNext" type="button">Next →</button></div>
-    <p class="lede" style="font-size:14.5px;margin-top:14px">"Again" puts the card in the Again pile so you can drill only the ones you missed.</p>
+    <p class="lede" style="font-size:14.5px;margin-top:14px">Tap several topics to mix them; tap All to reset. "Again" puts the card in the Again pile so you can drill only the ones you missed.</p>
   </div></div>
 </div>
 <div class="sheet" id="qSheet" hidden>
@@ -677,15 +677,22 @@ document.getElementById('tocBtn').addEventListener('click',function(){
 
 /* flashcards */
 var F=DECK.flash,topics=['All'];F.forEach(function(c){if(topics.indexOf(c[0])<0)topics.push(c[0])});topics.push('Again pile');
-var filt='All',order=[],fi=0,again={};
+var sel={},againMode=false,order=[],fi=0,again={};
+try{JSON.parse(sget('fcsel')||'[]').forEach(function(t){if(topics.indexOf(t)>0)sel[t]=1})}catch(e){}
 var chipBox=document.getElementById('fcChips'),fc=document.getElementById('fc');
+function paintChips(){var none=!Object.keys(sel).length;
+  [].forEach.call(chipBox.children,function(x){var t=x.textContent;
+    x.setAttribute('aria-pressed',(t==='Again pile'?againMode:t==='All'?(!againMode&&none):(!againMode&&!!sel[t]))?'true':'false')});}
 topics.forEach(function(t){var b=document.createElement('button');b.className='chip';b.type='button';b.textContent=t;
-  b.setAttribute('aria-pressed',t===filt?'true':'false');
-  b.addEventListener('click',function(){filt=t;[].forEach.call(chipBox.children,function(x){x.setAttribute('aria-pressed',x===b?'true':'false')});build();});
+  b.addEventListener('click',function(){
+    if(t==='Again pile'){againMode=!againMode;}
+    else{againMode=false;if(t==='All')sel={};else if(sel[t])delete sel[t];else sel[t]=1;sset('fcsel',JSON.stringify(Object.keys(sel)));}
+    paintChips();build();});
   chipBox.appendChild(b);});
-function build(){order=[];F.forEach(function(c,i){if(filt==='All'||c[0]===filt||(filt==='Again pile'&&again[i]))order.push(i)});fi=0;show();}
+function build(){var none=!Object.keys(sel).length;order=[];
+  F.forEach(function(c,i){if(againMode?again[i]:(none||sel[c[0]]))order.push(i)});fi=0;paintChips();show();}
 function show(){fc.classList.remove('flip');var q=document.getElementById('fcQ'),a=document.getElementById('fcA');
-  if(!order.length){q.textContent=filt==='Again pile'?'Nothing in the Again pile yet.':'No cards.';a.textContent='';document.getElementById('fcN').textContent='0 cards';return;}
+  if(!order.length){q.textContent=againMode?'Nothing in the Again pile yet.':'No cards.';a.textContent='';document.getElementById('fcN').textContent='0 cards';return;}
   var c=F[order[fi]];q.innerHTML=c[1];a.innerHTML=c[2];
   document.getElementById('fcT').textContent=c[0];document.getElementById('fcT2').textContent=c[0];
   document.getElementById('fcN').textContent=(fi+1)+' / '+order.length;}
@@ -695,7 +702,7 @@ document.getElementById('fcNext').addEventListener('click',function(){if(order.l
 document.getElementById('fcShuf').addEventListener('click',function(){for(var i=order.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=order[i];order[i]=order[j];order[j]=t;}fi=0;show();});
 document.getElementById('fcAgain').addEventListener('click',function(){if(order.length){again[order[fi]]=1;fi=(fi+1)%order.length;show();}});
 document.getElementById('fcGot').addEventListener('click',function(){if(!order.length)return;delete again[order[fi]];
-  if(filt==='Again pile'){order.splice(fi,1);if(fi>=order.length)fi=0;}else fi=(fi+1)%order.length;show();});
+  if(againMode){order.splice(fi,1);if(fi>=order.length)fi=0;}else fi=(fi+1)%order.length;show();});
 document.addEventListener('keydown',function(e){if(document.getElementById('fcSheet').hidden)return;
   if(e.key===' '){fc.classList.toggle('flip');e.preventDefault();}
   if(e.key==='ArrowRight')document.getElementById('fcNext').click();

@@ -52,7 +52,7 @@ CHAPTERS = [
     (6, "Work, energy and power", [
         ("Work", "The product of force and the distance moved in the direction of the force"),
         ("Principle of Conservation of Energy", "Energy can neither be created nor destroyed. It can only be converted from one form to another."),
-        ("Gravitational Potential Energy", "The energy an object has due to its height in a gravitational field."),
+        ("Gravitational Potential Energy", "The energy an object has due to its height (position) in a gravitational field."),
         ("Kinetic Energy", "Energy an object has due to its motion (or velocity)."),
         ("Elastic Potential Energy", "The energy stored within a material (e.g. in a spring) when it is stretched or compressed."),
         ("Electrostatic potential energy", "Energy stored due to position of a charge in an electric field"),
@@ -268,7 +268,7 @@ def build():
 
     pqs = [
         ("Ch 4", 2, "State Newton's second law of motion.", "For a body of constant mass, the resultant force is proportional to the rate of change of its momentum (and acts in the direction of the change in momentum)."),
-        ("Ch 6", 1, "Define gravitational potential energy.", "The energy an object has due to its height in a gravitational field."),
+        ("Ch 6", 1, "Define gravitational potential energy.", "The energy an object has due to its height (position) in a gravitational field."),
         ("Ch 9", 2, "Define the Young modulus.", "The ratio of stress to strain, provided the limit of proportionality is not exceeded."),
         ("Ch 15", 2, "State the principle of superposition.", "When two or more waves meet at a point, the resultant displacement is the sum of the individual displacements of the waves."),
         ("Ch 20", 2, "State Kirchhoff's second law and the quantity it conserves.", "The sum of the e.m.f.s equals the sum of the p.d.s around any closed loop in a circuit. It conserves energy."),
