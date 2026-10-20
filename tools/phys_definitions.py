@@ -11,8 +11,9 @@ e = html.escape
 # (chapter number, chapter title, [(term, definition, added?)])
 CHAPTERS = [
     (1, "Physical quantities & units", [
-        ("Base quantities", "Fundamental units that are not consist of combination of any units"),
-        ("Derived quantities", "Unit that are expressed in terms of base units"),
+        ("Base quantities", "Fundamental quantities that cannot be expressed in terms of other quantities: mass, length, time, electric current, thermodynamic temperature and amount of substance.", "corrected"),
+        ("SI base units", "kg (mass), m (length), s (time), A (current), K (temperature), mol (amount of substance).", "corrected"),
+        ("Derived quantities", "Quantities expressed in terms of base quantities; their units are products or quotients of base units (e.g. N = kg m s⁻²).", "corrected"),
         ("Vector quantity", "Quantity that has both magnitude and direction"),
         ("Scalar quantity", "Quantity that has only magnitude but no direction"),
     ]),
@@ -162,7 +163,7 @@ def defs(items, ch):
 
 # exam-wording notes where the sheet's phrasing would lose marks (shown under the chapter card)
 NOTES = {
-    1: ('trap', "Mark-scheme wording", "Base quantities: <b>mass, length, time, current, temperature, amount of substance</b> (SI base units kg, m, s, A, K, mol). Learn the list; derived units are products/quotients of base units."),
+    1: ('trap', "Mark-scheme wording", "The sheet mixed up <b>quantities</b> and <b>units</b>. Mass is a base quantity; kg is its base unit. Charge is NOT a base quantity (C = A s), and neither is force or energy."),
     2: ('trap', "Precision", "Cambridge treats precision as <b>how close repeated readings are to each other</b> (small random error, small spread). Accuracy = how close to the true value (small systematic error)."),
     3: ('tip', "Speed vs velocity", "Speed is a scalar, velocity a vector. In the exam: velocity = <b>rate of change of displacement</b>, acceleration = <b>rate of change of velocity</b>. Don't write \"speed per time\"."),
     4: ('tip', "Newton's 2nd law", "\"Resultant force is proportional to the rate of change of momentum <b>and acts in the direction of</b> the change in momentum.\" The direction part is often the second mark."),
