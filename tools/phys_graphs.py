@@ -325,6 +325,26 @@ def f_t():
     return fig(p, caption="Area under F–t = impulse = Δp. Same Δp spread over a longer time ⇒ smaller peak force (airbags, crumple zones, bending knees).")
 
 
+def f_step():
+    T = 5
+    f = Plot(dn="+ve → along F", yr=(0, 10), yl="F", xl="t", aria="force constant F0 until time T then zero; shaded area is impulse F0 T")
+    f.fill([(0, 0), (0, 7), (T, 7), (T, 0)], "fb").path([(0, 7), (T, 7)]).guide([(T, 7), (T, 0)]).path([(T, 0), (10, 0)])
+    f.hg(0, 7, "F₀").t(T, 0, "T", "t-ax", 0, 14, "middle").t(2.5, 3.5, "area = F₀T", "t-d", 0, 4, "middle").t(7.5, 0, "F = 0", "t-sm", 0, -8, "middle")
+    pp = Plot(dn="+ve → along F", yr=(0, 10), yl="Δp", xl="t", aria="impulse rises linearly to F0 T then stays constant")
+    pp.path([(0, 0), (T, 7), (10, 7)]).vg(T, 7, "T").hg(T, 7, "F₀T").t(4.7, 1.4, "gradient = F₀", "t-d", 0, 0, "end").t(7.5, 7, "constant", "t-sm", 0, -8, "middle")
+    v = Plot(dn="+ve → along F", yr=(0, 10), yl="v", xl="t", aria="velocity rises linearly from u to v then constant velocity")
+    v.path([(0, 2.5), (T, 7.5), (10, 7.5)]).vg(T, 7.5, "T").hg(0, 2.5, "u").hg(T, 7.5, "v").t(4.7, 1.9, "gradient = F₀/m", "t-d", 0, 0, "end").t(7.5, 7.5, "constant v", "t-sm", 0, -8, "middle")
+    return fig(("force–time", f), ("impulse (Δp)–time", pp), ("velocity–time", v),
+               caption="While F acts, momentum grows at a steady rate F₀. When F switches off, Δp and v stop changing: they flatten, they do NOT fall back to zero (N1).")
+
+
+def we_step():
+    p = Plot(dn="+ve → along F", xr=(0, 1.0), yr=(0, 10), yl="F / N", xl="t / s", aria="force 8 N for 0.5 s then zero")
+    p.fill([(0, 0), (0, 8), (0.5, 8), (0.5, 0)], "fb").path([(0, 8), (0.5, 8)]).guide([(0.5, 8), (0.5, 0)]).path([(0.5, 0), (1.0, 0)])
+    p.hg(0, 8, "8.0").t(0.5, 0, "0.50", "t-ax", 0, 14, "middle")
+    return fig(p)
+
+
 def collisions():
     v = Plot(dn="+ve → A's initial dirn", yr=(-2, 8), yl="v", xl="t", aria="velocities of two trolleys before and after a collision")
     v.path([(0, 6), (4, 6), (5, 4), (10, 4)], "d").path([(0, 0), (4, 0), (5, 4)], "s")
@@ -621,6 +641,12 @@ def build():
 <p>\(\text{impulse} = \int F\,dt = \Delta p = m(v - u)\). For a triangle: \(\tfrac12 \times F_{\max} \times \Delta t\).</p>
 <div class="note tip"><b>Units</b>Impulse in N s; momentum in kg m s⁻¹. They are the same unit.</div>""", sec=S))
 
+    C.append(card("d-step", "4 Dynamics", "Force on, then off", "Concept", r"""
+<h2>Constant force, then zero</h2>
+""" + f_step() + r"""
+<p>\(J = F_0 T = \Delta p = m(v - u)\Rightarrow v = u + \dfrac{F_0 T}{m}\). During \(0 \le t \le T\): \(a = F_0/m\) (straight v–t). After \(T\): \(a = 0\).</p>
+<div class="note trap"><b>Trap</b>F = 0 does NOT mean v = 0. Only the gradient of the v–t (and p–t) graph drops to zero; the object keeps the velocity it reached.</div>""", sec=S))
+
     C.append(card("d-coll", "4 Dynamics", "Collision graphs", "Concept", r"""
 <h2>Two trolleys colliding</h2>
 """ + collisions() + r"""
@@ -698,6 +724,18 @@ def build():
 <li>(c) Speed unchanged ⇒ KE unchanged ⇒ elastic. """ + tg("B1") + r"""</li>
 </ol>
 <div class="note trap"><b>Trap</b>Ignoring the sign of \(u\) gives \(2.4 = 0.060(v - 20)\Rightarrow v = 60\ \text{m s}^{-1}\): impossible (more KE than it arrived with). For a rebound, \(|\Delta p| = m(v + u)\).</div>""", sec=S))
+
+    C.append(card("we3b", "Worked", "Force switched off", "Worked example", r"""
+<h2>Constant force for a time, then zero</h2>
+""" + we_step() + r"""
+<p><b>Q:</b> A trolley of mass 2.0 kg moves at 3.0 m s⁻¹. A resultant force acts on it along its motion as shown. Find (a) the impulse, (b) the velocity at t = 0.50 s, (c) the velocity at t = 1.0 s, and sketch the v–t graph. [6]</p>
+<ol class="steps">
+<li>""" + tg("C1") + r""" (a) Impulse = area \(= F_0 T = 8.0 \times 0.50 = 4.0\ \text{N s}\) """ + tg("A1") + r"""</li>
+<li>""" + tg("C1") + r""" (b) \(F_0 T = m(v - u)\): \(4.0 = 2.0(v - 3.0)\Rightarrow v = 5.0\ \text{m s}^{-1}\) """ + tg("A1") + r"""</li>
+<li>(c) After 0.50 s the resultant force is zero, so \(a = 0\): \(v = 5.0\ \text{m s}^{-1}\) """ + tg("B1") + r"""</li>
+<li>""" + tg("B1") + r""" Sketch: straight line from 3.0 to 5.0 m s⁻¹ over 0–0.50 s (gradient \(F_0/m = 4.0\ \text{m s}^{-2}\)), then horizontal at 5.0 m s⁻¹.</li>
+</ol>
+<div class="note trap"><b>Trap</b>Drawing v falling back to zero after the force stops: that would need a force in the opposite direction.</div>""", sec=S))
 
     C.append(card("we4", "Worked", "Max speed from P = Fv", "Worked example", r"""
 <h2>Driving force against speed</h2>
@@ -836,6 +874,8 @@ FLASH = [
     ["Energy", "Which plot of E_k gives a straight line through the origin?", "E_k against v² (gradient ½m)."],
     ["Power", "Gradient of energy–time (work–time)?", "Power."],
     ["Power", "Condition for maximum speed at constant power?", "Driving force (P/v) = resistive force; a = 0."],
+    ["Dynamics", "Constant force F₀ acts for time T, then F = 0. Shape of v–t?", "Straight line of gradient F₀/m up to T, then horizontal: constant velocity (not back to zero)."],
+    ["Dynamics", "Constant force F₀ for time T: impulse and final velocity?", "J = F₀T = Δp, so v = u + F₀T/m."],
 ]
 
 QUIZ = [
@@ -899,6 +939,9 @@ QUIZ = [
     {"s": "Power", "q": "A car at constant power P against constant resistance R reaches maximum speed…",
      "o": ["P × R", "P / R", "R / P", "√(P/R)"], "c": 1,
      "e": "At v_max, driving force = R and P = Rv ⇒ v = P/R."},
+    {"s": "Dynamics", "q": "A constant resultant force acts on a moving object for time T and then becomes zero. After T the object…",
+     "o": ["slows down to rest", "moves at constant velocity", "keeps accelerating at the same rate", "moves at constant acceleration in reverse"], "c": 1,
+     "e": "Zero resultant force ⇒ zero acceleration (N1). v–t becomes horizontal at the velocity reached at T."},
 ]
 
 
