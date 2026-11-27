@@ -3,6 +3,7 @@ Built from Tuah's CollaNote notebooks 6.1, 6.2, Material Types and Exercise (KYU
 Cambridge notation, g = 9.81 m s⁻², answers to 2-3 s.f."""
 import pathlib
 import engine
+from fixids import unique_markers
 from engine import card
 from diagrams import fig
 from phys_graphs import Plot, tg
@@ -406,7 +407,7 @@ def write():
     cards = build()
     out = engine.render(meta, cards, FLASH, QUIZ, math=True)
     out = out.replace("<b>Paper 1 quiz</b>", "<b>Deformation quiz</b>").replace('<figure class="dg">', '<figure class="dg" style="max-width:520px">')
-    (HERE / "deck-phys-deformation.html").write_text(out, encoding="utf8")
+    (HERE / "deck-phys-deformation.html").write_text(unique_markers(out), encoding="utf8")
     print("phys deformation", len(out), "bytes,", len(cards), "cards,", len(FLASH), "flashcards,", len(QUIZ), "quiz")
     return cards
 

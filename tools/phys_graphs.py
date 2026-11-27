@@ -3,6 +3,7 @@
 pressure & upthrust, work-energy-power). Cambridge notation, g = 9.81 m s⁻², answers to 2-3 s.f."""
 import math, pathlib
 import engine
+from fixids import unique_markers
 from engine import card
 from diagrams import fig
 
@@ -951,7 +952,7 @@ def write():
     cards = build()
     out = engine.render(meta, cards, FLASH, QUIZ, math=True)
     out = out.replace("<b>Paper 1 quiz</b>", "<b>Graphs quiz</b>").replace('<figure class="dg">', '<figure class="dg" style="max-width:520px">')
-    (HERE / "deck-phys-graphs.html").write_text(out, encoding="utf8")
+    (HERE / "deck-phys-graphs.html").write_text(unique_markers(out), encoding="utf8")
     print("phys graphs", len(out), "bytes,", len(cards), "cards,", len(FLASH), "flashcards,", len(QUIZ), "quiz")
     return cards
 

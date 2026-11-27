@@ -2,6 +2,7 @@
 (Forces & equilibrium, Kinematics, Newton's laws, Momentum, Work-energy-power). g = 10, answers to 3 s.f."""
 import math, pathlib
 import engine
+from fixids import unique_markers
 from engine import card
 from diagrams import Fig, fig
 
@@ -669,7 +670,7 @@ def write():
     cards = build()
     out = engine.render(meta, cards, FLASH, QUIZ, math=True)
     out = out.replace("<b>Paper 1 quiz</b>", "<b>Paper 4 quiz</b>")
-    (HERE / "deck-maths-p4.html").write_text(out, encoding="utf8")
+    (HERE / "deck-maths-p4.html").write_text(unique_markers(out), encoding="utf8")
     print("p4 mechanics", len(out), "bytes,", len(cards), "cards,", len(FLASH), "flashcards,", len(QUIZ), "quiz")
     return cards
 

@@ -1,0 +1,828 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
+</head><body>
+<title>Kinematics Deck</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Phys Ch2">
+<meta name="theme-color" content="#11151C">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@500;600;700&display=swap">
+<style>
+/* Layout: one-card-per-screen swipe track (CSS scroll-snap) between a slim top bar and a bottom progress bar.
+   Each card scrolls vertically on its own; content column caps at ~680px so iPad landscape still reads like a page. */
+:root{
+  --bg:#11151C; --surface:#191E28; --surface2:#222937; --line:#2D3544;
+  --fg:#E7EAF0; --muted:#98A1B0; --accent:#F0B44A; --accent-soft:#3A2D12; --on-accent:#1B1404;
+  --teal:#5CC6BF; --teal-soft:#14302F; --good:#6FD39A; --good-soft:#15301F; --bad:#F2897F; --bad-soft:#3A1C1A;
+  --fill-a:rgba(240,180,74,.28); --fill-b:rgba(92,198,191,.26); --fill-c:rgba(242,137,127,.32);
+  --f-disp:"Bricolage Grotesque","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible","Segoe UI",system-ui,-apple-system,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){
+  --bg:#F4F5F8; --surface:#FFFFFF; --surface2:#ECEEF3; --line:#D7DBE3;
+  --fg:#171B23; --muted:#576070; --accent:#A66F07; --accent-soft:#FBEFD6; --on-accent:#FFFFFF;
+  --teal:#13807A; --teal-soft:#DDF2F0; --good:#1E7A47; --good-soft:#DDF1E5; --bad:#B23A30; --bad-soft:#F9E1DE;
+  --fill-a:rgba(214,150,30,.25); --fill-b:rgba(19,128,122,.20); --fill-c:rgba(178,58,48,.22);
+  color-scheme:light}}
+:root[data-theme="light"]{
+  --bg:#F4F5F8; --surface:#FFFFFF; --surface2:#ECEEF3; --line:#D7DBE3;
+  --fg:#171B23; --muted:#576070; --accent:#A66F07; --accent-soft:#FBEFD6; --on-accent:#FFFFFF;
+  --teal:#13807A; --teal-soft:#DDF2F0; --good:#1E7A47; --good-soft:#DDF1E5; --bad:#B23A30; --bad-soft:#F9E1DE;
+  --fill-a:rgba(214,150,30,.25); --fill-b:rgba(19,128,122,.20); --fill-c:rgba(178,58,48,.22);
+  color-scheme:light}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%;background:var(--bg);overscroll-behavior:none}
+body{margin:0;color:var(--fg);font:17px/1.55 var(--f-body);display:grid;grid-template-rows:auto 1fr auto;overflow:hidden;-webkit-text-size-adjust:100%}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* top bar */
+.top{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--line);background:var(--bg);min-width:0}
+.ib{all:unset;cursor:pointer;display:inline-grid;place-items:center;min-width:44px;height:44px;border-radius:10px;color:var(--fg)}
+.ib:hover{background:var(--surface2)}
+.ib svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.ttl{flex:1;min-width:0;line-height:1.15}
+.ttl b{display:block;font:700 15px/1.2 var(--f-disp);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ttl small{display:block;font:500 11.5px/1.3 var(--f-mono);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mode{all:unset;cursor:pointer;height:36px;padding:0 12px;border-radius:999px;border:1px solid var(--line);font:600 13.5px/36px var(--f-body);white-space:nowrap}
+.mode:hover{border-color:var(--accent)}
+@media (max-width:430px){.mode .lg{display:none}.mode{padding:0 10px}}
+
+/* track */
+.track{display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;min-height:0;overscroll-behavior-x:contain}
+.track::-webkit-scrollbar{display:none}
+.card{flex:0 0 100%;width:100%;scroll-snap-align:start;scroll-snap-stop:always;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-inline:16px}
+.ci{max-width:680px;margin:0 auto;padding-block:20px 48px;min-width:0}
+.ch{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px}
+.sec{font:600 11.5px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.kind{font:600 10.5px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:5px 8px}
+h1{font:800 clamp(34px,9vw,52px)/1.02 var(--f-disp);letter-spacing:-.02em;margin:.2em 0 .3em;text-wrap:balance}
+h2{font:750 clamp(25px,6.4vw,32px)/1.12 var(--f-disp);letter-spacing:-.01em;margin:0 0 .5em;text-wrap:balance}
+h3{font:700 19px/1.25 var(--f-disp);margin:1.4em 0 .45em;text-wrap:balance}
+p{margin:.5em 0} ul,ol{margin:.4em 0 .8em;padding-left:1.25em} li{margin:.28em 0}
+b,strong{font-weight:700}
+.lede{color:var(--muted);font-size:17.5px}
+.mono{font-family:var(--f-mono);font-size:.88em}
+.def{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 15px;margin:12px 0}
+.def .lab{display:flex;justify-content:space-between;gap:8px;font:600 11px/1.3 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+.def .lab i{font-style:normal;color:var(--muted)}
+.def p{margin:.2em 0}
+.note{border-radius:12px;padding:11px 14px;margin:12px 0;font-size:16px}
+.note>b:first-child{display:block;font:600 11px/1.3 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px}
+.note.trap{background:var(--bad-soft)} .note.trap>b:first-child{color:var(--bad)}
+.note.tip{background:var(--good-soft)} .note.tip>b:first-child{color:var(--good)}
+.note.link{background:var(--teal-soft)} .note.link>b:first-child{color:var(--teal)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:10px;margin:12px 0}
+.two>div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:11px 14px;min-width:0}
+.two h4{font:700 12px/1.3 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin:0 0 4px}
+.two h4.t{color:var(--teal)} .two h4.g{color:var(--good)} .two h4.r{color:var(--bad)}
+.two p,.two ul{margin:.2em 0;font-size:16px}
+.chain{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0;font:600 14.5px/1.3 var(--f-body)}
+.chain span{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 9px}
+.chain i{font-style:normal;color:var(--accent);font-weight:800}
+.formula{font:600 15px/1.5 var(--f-mono);background:var(--surface);border:1px dashed var(--muted);border-radius:10px;padding:9px 12px;margin:10px 0;overflow-x:auto}
+.tw{overflow-x:auto;margin:12px 0;border:1px solid var(--line);border-radius:12px;overscroll-behavior-x:contain}
+table{border-collapse:collapse;width:100%;font-size:15px;line-height:1.4;background:var(--surface)}
+.tw.wide table{min-width:560px}
+th,td{padding:8px 10px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+tr:last-child td{border-bottom:0}
+th{font:600 10.5px/1.3 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--surface2)}
+td.n,th.n{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-size:14px}
+td.k{font-weight:700}
+.tag{display:inline-block;font:600 10.5px/1 var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:4px 7px;border-radius:6px;margin-right:6px;vertical-align:2px}
+
+/* diagrams */
+figure.dg{margin:14px 0;display:grid;gap:10px}
+figure.dg.multi{grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr))}
+.pnl{min-width:0}
+.ptitle{font:600 11px/1.3 var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+figure.dg svg{width:100%;height:auto;display:block;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+figcaption{font-size:14.5px;color:var(--muted);grid-column:1/-1}
+svg text{font-family:var(--f-body);fill:var(--fg)}
+svg .ax{stroke:var(--fg);stroke-width:1.5;fill:none}
+svg .k{fill:none;stroke-width:2.6;stroke-linecap:round}
+svg .d{stroke:var(--accent)} svg .s{stroke:var(--teal)} svg .o{stroke:var(--muted);stroke-dasharray:6 4;stroke-width:2}
+svg .b{stroke:var(--bad)} svg .gr{stroke:var(--good)}
+svg .g{stroke:var(--muted);stroke-width:1;stroke-dasharray:3 3;fill:none}
+svg .ar{stroke:var(--fg);stroke-width:1.8} svg .arh{fill:var(--fg)}
+svg .pt{fill:var(--fg)} svg .pto{fill:var(--surface);stroke:var(--fg);stroke-width:1.6}
+svg .fa{fill:var(--fill-a)} svg .fb{fill:var(--fill-b)} svg .fc{fill:var(--fill-c)}
+svg .t-ax{font-size:12px;font-weight:700;fill:var(--muted)}
+svg .t-axl{font-size:12px;font-weight:700;fill:var(--fg)}
+svg .t-pt{font-size:13px;font-weight:700}
+svg .t-sm{font-size:11.5px;fill:var(--muted)}
+svg .t-d{fill:var(--accent);font-size:12.5px;font-weight:700} svg .t-s{fill:var(--teal);font-size:12.5px;font-weight:700}
+svg .t-o{fill:var(--muted);font-size:12.5px;font-weight:700} svg .t-b{fill:var(--bad);font-size:12.5px;font-weight:700}
+svg .t-gr{fill:var(--good);font-size:12.5px;font-weight:700}
+
+/* reveal: worked-example steps and practice answers */
+ol.steps{list-style:none;padding:0;margin:12px 0;counter-reset:st;display:grid;gap:8px}
+ol.steps>li{counter-increment:st;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 14px 10px 46px;position:relative;margin:0}
+ol.steps>li::before{content:counter(st);position:absolute;left:12px;top:10px;width:24px;height:24px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font:700 13px/24px var(--f-mono);text-align:center}
+.rvbar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.btn{all:unset;cursor:pointer;min-height:44px;padding:0 16px;border-radius:12px;display:inline-flex;align-items:center;gap:8px;font:700 15px/1 var(--f-body);border:1px solid var(--line);background:var(--surface)}
+.btn.pri{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.btn[disabled]{opacity:.45;cursor:default}
+.btn.good{border-color:var(--good);color:var(--good)} .btn.bad{border-color:var(--bad);color:var(--bad)}
+.pq{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:12px 0}
+.pq .qh{display:flex;justify-content:space-between;gap:8px;font:600 11px/1.3 var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.pq .qh .mk{color:var(--accent)}
+.pq .qt{margin:.35em 0 .5em}
+.pq .ans{border-top:1px dashed var(--line);margin-top:8px;padding-top:8px}
+.pq .ans>b:first-child{font:600 11px/1 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--good);margin-right:6px}
+.swipehint{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:14.5px;margin-top:22px}
+.toc-mini{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:8px;margin:14px 0}
+.toc-mini button{all:unset;cursor:pointer;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.toc-mini button:hover{border-color:var(--accent)}
+.toc-mini b{display:block;font:800 20px/1 var(--f-disp);color:var(--accent);margin-bottom:4px}
+.toc-mini span{font-size:14.5px;color:var(--muted)}
+.cover-k{font:800 clamp(80px,26vw,150px)/.85 var(--f-disp);color:var(--accent);letter-spacing:-.04em;margin:8px 0 0}
+.stat{display:flex;gap:18px;flex-wrap:wrap;margin:16px 0;font:600 14px/1.3 var(--f-mono);color:var(--muted)}
+.stat b{display:block;font:800 26px/1 var(--f-disp);color:var(--fg)}
+a{color:var(--accent)}
+
+/* bottom bar */
+.bot{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;padding:8px 12px;border-top:1px solid var(--line);background:var(--bg)}
+.prog{display:grid;gap:5px;min-width:0}
+.bar{height:4px;background:var(--surface2);border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+.cnt{font:600 12.5px/1 var(--f-mono);color:var(--muted);text-align:center;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* sheets (contents, flashcards, quiz) */
+.sheet{position:fixed;inset:0;z-index:20;background:var(--bg);display:grid;grid-template-rows:auto 1fr;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.sheet .top{border-bottom:1px solid var(--line)}
+.sbody{overflow-y:auto;padding-inline:16px;-webkit-overflow-scrolling:touch}
+.sbody>.in{max-width:680px;margin:0 auto;padding-block:14px 40px}
+.tocgrp{font:600 11px/1.3 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--accent);margin:18px 0 6px}
+.tocitem{all:unset;cursor:pointer;display:grid;grid-template-columns:32px 1fr auto;gap:8px;align-items:baseline;width:100%;box-sizing:border-box;padding:10px 8px;border-radius:10px}
+.tocitem:hover,.tocitem.cur{background:var(--surface)}
+.tocitem .no{font:600 12px/1 var(--f-mono);color:var(--muted)}
+.tocitem .kd{font:600 10px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 12px}
+.chip{all:unset;cursor:pointer;min-height:34px;padding:0 12px;border-radius:999px;border:1px solid var(--line);font:600 13.5px/34px var(--f-body)}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.fc{perspective:1200px;height:min(56vh,380px);cursor:pointer;margin:6px 0 12px}
+.fc-in{position:relative;width:100%;height:100%;transition:transform .45s;transform-style:preserve-3d}
+.fc.flip .fc-in{transform:rotateY(180deg)}
+.fc-f{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:18px;border:1px solid var(--line);background:var(--surface);padding:42px 22px 30px;display:flex;flex-direction:column;justify-content:center;overflow:auto;font-size:19px;line-height:1.45}
+.fc-f.back{transform:rotateY(180deg);background:var(--accent-soft);font-size:17.5px}
+.fc-f .ft{position:absolute;top:14px;left:18px;right:18px;display:flex;justify-content:space-between;font:600 11px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.fc-f.front .q{font:700 21px/1.3 var(--f-disp)}
+.fcrow{display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between}
+.mcq{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}
+.mcq .qh{display:flex;justify-content:space-between;gap:8px;font:600 11px/1.3 var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.mcq .qt{margin:.4em 0 .7em;font-weight:700}
+.opts{display:grid;gap:6px}
+.opt{all:unset;cursor:pointer;display:grid;grid-template-columns:26px 1fr;gap:8px;align-items:baseline;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font-size:16px;line-height:1.4}
+.opt b{font:700 13px/1 var(--f-mono);color:var(--accent)}
+.opt.right{background:var(--good-soft);border-color:var(--good)} .opt.wrong{background:var(--bad-soft);border-color:var(--bad)}
+.mcq.done .opt{cursor:default}
+.mcq .ex{margin-top:10px;font-size:15.5px;border-top:1px dashed var(--line);padding-top:10px}
+.score{position:sticky;top:0;z-index:2;background:var(--bg);padding-block:10px;display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px solid var(--line);font:600 14px var(--f-body)}
+.score .num{font:700 16px var(--f-mono);color:var(--accent);font-variant-numeric:tabular-nums}
+mjx-container{max-width:100%;overflow-x:auto;overflow-y:hidden}
+
+/* ---------- handwriting notes ---------- */
+.wrow{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-start;margin:10px 0}
+.btn.write{border-color:var(--teal);color:var(--teal)}
+.btn.write svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.wthumb{display:block;max-width:150px;width:100%;border:1px solid var(--line);border-radius:10px;cursor:pointer;background:var(--surface)}
+.wmeta{font:600 11.5px/1.3 var(--f-mono);color:var(--muted)}
+#noteSheet{display:flex;flex-direction:column;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+#noteSheet>.npages{flex:1;min-height:0}
+.ntools{display:flex;gap:6px;align-items:center;padding:6px 10px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none;background:var(--bg)}
+.ntools::-webkit-scrollbar{display:none}
+.tl{all:unset;cursor:pointer;flex:none;display:inline-grid;place-items:center;min-width:38px;height:40px;border-radius:10px;border:1px solid transparent;font:700 13px/1 var(--f-body)}
+.tl svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.tl[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.tl[disabled]{opacity:.35;cursor:default}
+.tl .dot{width:20px;height:20px;border-radius:50%;border:2px solid var(--line)}
+.tl[aria-pressed="true"] .dot{border-color:var(--accent)}
+.sep{flex:none;width:1px;height:26px;background:var(--line);margin:0 2px}
+.nq{border-bottom:1px solid var(--line);background:var(--surface);padding:8px 16px;max-height:34vh;overflow-y:auto;font-size:15.5px}
+.nq .in{max-width:680px;margin:0 auto}
+.nq p{margin:.3em 0}
+.nq .tw{margin:6px 0}
+.npages{overflow:auto;padding:14px 12px 60px;background:var(--surface2);touch-action:none;overscroll-behavior:contain}
+.npage{position:relative;margin:0 auto 14px;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.25);overflow:hidden}
+.npage canvas{display:block;width:100%;height:auto;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.npage .pn{position:absolute;right:10px;bottom:8px;font:600 11px/1 var(--f-mono);color:var(--muted);pointer-events:none}
+.nhint{font-size:13px;color:var(--muted);text-align:center;margin:4px 0 0}
+
+@media (prefers-reduced-motion:reduce){.fc-in,.bar i{transition:none}.track{scroll-behavior:auto}}
+</style>
+<script>window.MathJax={tex:{inlineMath:[["\\(","\\)"]]},svg:{fontCache:"global"},options:{enableMenu:false}};</script><script src="mathjax/tex-svg.js"></script>
+<header class="top">
+  <a class="ib" href="index.html" aria-label="Revision Hub"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7M6 9.5V20h12V9.5"/></svg></a><button class="ib" id="tocBtn" type="button" aria-label="Contents"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/></svg></button>
+  <div class="ttl"><b>Physics · Kinematics</b><small>9702 · AS · Chapter 2</small></div>
+  <button class="mode" id="fcBtn" type="button">Cards<span class="lg"> · 24</span></button>
+  <button class="mode" id="qBtn" type="button">Quiz<span class="lg"> · 8</span></button>
+  <button class="ib" id="themeBtn" type="button" aria-label="Switch light or dark"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4L6 18M18 6l1.4-1.4"/></svg></button>
+</header>
+<main class="track" id="track"><section class="card" data-id="cover" data-group="Start" data-title="Kinematics" data-kind="Cover"><div class="ci"><div class="ch"><span class="sec">Start</span><span class="kind">Cover</span></div>
+<p class="sec" style="margin:0">CAIE 9702 · AS Level · Chapter 2</p>
+<p class="cover-k">v</p>
+<h1>Kinematics</h1>
+<p class="lede">Displacement, velocity and acceleration; s–t, v–t and a–t graphs; SUVAT; stopping distance; free fall and terminal velocity; projectiles. Built from your Chapter 2 topical notes and the past-paper questions done in class.</p>
+<div class="stat"><div><b>4</b>worked examples</div><div><b>6</b>practice Qs</div><div><b>24</b>flashcards</div></div>
+<p><a href="index.html">Open Revision Hub</a></p>
+<div class="swipehint">Swipe or use the arrows · tap ☰ for contents</div></div></section><section class="card" data-id="big" data-group="Start" data-title="The big picture" data-kind="Overview"><div class="ci"><div class="ch"><span class="sec">Start</span><span class="kind">Overview</span></div>
+<h2>Describing motion without forces</h2>
+<div class="chain"><span>Choose + direction</span><i>→</i><span>List s u v a t</span><i>→</i><span>Pick the SUVAT missing one</span><i>→</i><span>Check sign of answer</span></div>
+<div class="tw"><table>
+<tr><th>Graph</th><th>Gradient</th><th>Area under</th></tr>
+<tr><td class="k">s–t</td><td>velocity</td><td>(no meaning)</td></tr>
+<tr><td class="k">v–t</td><td>acceleration</td><td>displacement</td></tr>
+<tr><td class="k">a–t</td><td>(not needed)</td><td>change in velocity</td></tr>
+</table></div>
+<div class="note link"><b>More graphs</b>Your Physics Graphs deck has every shape (bouncing ball, air resistance, curved graphs) in detail.</div></div></section><section class="card" data-id="defs" data-group="Definitions" data-title="Displacement, velocity, acceleration" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">Definitions</span><span class="kind">Concept</span></div>
+<h2>Definitions to memorise</h2>
+<div class="def"><div class="lab">Displacement</div><p>The distance moved <b>in a specified direction</b> from a fixed point: \(\Delta x = x_f - x_i\).</p></div>
+<div class="def"><div class="lab">Speed</div><p>The <b>rate of change of distance</b>.</p></div>
+<div class="def"><div class="lab">Velocity</div><p>The <b>rate of change of displacement</b>.</p></div>
+<div class="def"><div class="lab">Acceleration</div><p>The <b>rate of change of velocity</b>.</p></div>
+<div class="note tip"><b>Your notes</b>From −2.5 m to −10 m the displacement is −7.5 m; the sign shows direction. Average velocity = total displacement ÷ total time, which can be 0 for a round trip even though average speed isn't.</div></div></section><section class="card" data-id="graphs" data-group="Definitions" data-title="Sketching s–t to v–t to a–t" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">Definitions</span><span class="kind">Concept</span></div>
+<h2>Reading one graph off another</h2>
+<ul>
+<li><b>v at any instant</b> = gradient of the s–t graph (draw a <b>tangent</b> if curved).</li>
+<li>s–t <b>straight</b> ⇒ constant v; <b>curving up</b> ⇒ speeding up; <b>flat</b> ⇒ at rest; <b>peak</b> ⇒ v = 0 (turning point).</li>
+<li><b>a</b> = gradient of v–t. Straight v–t ⇒ constant a.</li>
+<li>v–t <b>crosses the axis</b> ⇒ object reverses direction.</li>
+</ul>
+<figure class="dg multi"><div class="pnl"><p class="ptitle">Displacement</p><svg viewBox="0 0 300 200" role="img" aria-label="s-t for a ball thrown up: parabola"><defs><marker id="gh3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0,0 L10,5 L0,10 z"/></marker></defs><path class="k d" d="M34.0,176.0 L38.0,166.9 L42.1,158.0 L46.1,149.5 L50.1,141.3 L54.1,133.4 L58.2,125.8 L62.2,118.5 L66.2,111.5 L70.3,104.9 L74.3,98.5 L78.3,92.5 L82.3,86.7 L86.4,81.3 L90.4,76.2 L94.4,71.4 L98.5,66.9 L102.5,62.7 L106.5,58.8 L110.5,55.2 L114.6,52.0 L118.6,49.0 L122.6,46.4 L126.6,44.1 L130.7,42.1 L134.7,40.4 L138.7,39.0 L142.8,37.9 L146.8,37.1 L150.8,36.6 L154.8,36.5 L158.9,36.6 L162.9,37.1 L166.9,37.9 L171.0,39.0 L175.0,40.4 L179.0,42.1 L183.0,44.1 L187.1,46.4 L191.1,49.0 L195.1,52.0 L199.2,55.2 L203.2,58.8 L207.2,62.7 L211.2,66.9 L215.3,71.4 L219.3,76.2 L223.3,81.3 L227.4,86.7 L231.4,92.5 L235.4,98.5 L239.4,104.9 L243.5,111.5 L247.5,118.5 L251.5,125.8 L255.5,133.4 L259.6,141.3 L263.6,149.5 L267.6,158.0 L271.7,166.9 L275.7,176.0"/><path class="ax" d="M34.0,16 L34.0,176.0"/><path class="ax" d="M34.0,176.0 L292.0,176.0"/><text class="t-axl" x="39.0" y="14" text-anchor="start">s</text><text class="t-axl" x="296.0" y="192.0" text-anchor="end">t</text><text class="t-ax" x="29.0" y="190.0" text-anchor="end">0</text><text class="t-dn" x="294" y="15" text-anchor="end" style="font-size:10.5px;font-weight:700;fill:var(--teal)">+ve ↑</text></svg></div><div class="pnl"><p class="ptitle">Velocity</p><svg viewBox="0 0 300 200" role="img" aria-label="v-t for a ball thrown up: straight line from +u to −u"><defs><marker id="gh4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0,0 L10,5 L0,10 z"/></marker></defs><path class="k d" d="M34.0,30.2 L275.7,169.8"/><text class="t-s" x="159.0" y="92.0" text-anchor="start">v = 0 at top</text><path class="ax" d="M34.0,16 L34.0,182.0"/><path class="ax" d="M34.0,100.0 L292.0,100.0"/><text class="t-axl" x="39.0" y="14" text-anchor="start">v</text><text class="t-axl" x="296.0" y="94.0" text-anchor="end">t</text><text class="t-ax" x="29.0" y="114.0" text-anchor="end">0</text><text class="t-dn" x="294" y="15" text-anchor="end" style="font-size:10.5px;font-weight:700;fill:var(--teal)">+ve ↑</text></svg></div><div class="pnl"><p class="ptitle">Acceleration</p><svg viewBox="0 0 300 200" role="img" aria-label="a-t: constant −9.81"><defs><marker id="gh5" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0,0 L10,5 L0,10 z"/></marker></defs><path class="k d" d="M34.0,155.2 L275.7,155.2"/><text class="t-s" x="74.3" y="147.2" text-anchor="start">−9.81</text><path class="ax" d="M34.0,16 L34.0,182.0"/><path class="ax" d="M34.0,62.0 L292.0,62.0"/><text class="t-axl" x="39.0" y="14" text-anchor="start">a</text><text class="t-axl" x="296.0" y="56.0" text-anchor="end">t</text><text class="t-ax" x="29.0" y="76.0" text-anchor="end">0</text><text class="t-dn" x="294" y="15" text-anchor="end" style="font-size:10.5px;font-weight:700;fill:var(--teal)">+ve ↑</text></svg></div><figcaption>Thrown up at 29.4 m s⁻¹ (up +). Velocity falls steadily through zero at the top; acceleration is −g throughout, even at the top.</figcaption></figure>
+<div class="note trap"><b>Trap</b>At the top of the flight \(v = 0\) but \(a = -9.81\) m s⁻², <b>not</b> zero.</div></div></section><section class="card" data-id="bounce" data-group="Definitions" data-title="Bouncing ball graphs" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">Definitions</span><span class="kind">Concept</span></div>
+<h2>Ball dropped and bouncing (down +)</h2>
+<ul>
+<li><b>v–t:</b> straight lines of gradient \(+g\) while falling; at each bounce v <b>jumps</b> from \(+v\) to a smaller \(-v\) almost instantly; then the same gradient \(+g\) again.</li>
+<li>Each rebound is <b>lower</b>: KE is lost to thermal energy and sound on impact.</li>
+<li><b>a–t:</b> constant \(+g\), with large spikes during the short contact times.</li>
+<li>The steep line at the bounce is the <b>change in momentum</b> over a short contact time ⇒ large force.</li>
+</ul>
+<div class="note tip"><b>State your direction</b>Always write "down positive" or "up positive" on the axis label. It flips every sign on the v–t graph.</div></div></section><section class="card" data-id="suvat" data-group="SUVAT" data-title="Equations of uniformly accelerated motion" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">SUVAT</span><span class="kind">Concept</span></div>
+<h2>The four equations (constant acceleration only)</h2>
+<div class="tw"><table>
+<tr><td class="k">no \(s\)</td><td>\(v = u + at\)</td></tr>
+<tr><td class="k">no \(a\)</td><td>\(s = \tfrac12(u + v)t\)</td></tr>
+<tr><td class="k">no \(v\)</td><td>\(s = ut + \tfrac12at^2\)</td></tr>
+<tr><td class="k">no \(t\)</td><td>\(v^2 = u^2 + 2as\)</td></tr>
+</table></div>
+<div class="def"><div class="lab">Derivation (asked for in Paper 2)</div>
+<p>\(a = \dfrac{v - u}{t} \Rightarrow v = u + at\)</p>
+<p>Area under v–t: \(s = \tfrac12(u+v)t\)</p>
+<p>Substitute \(v\): \(s = \tfrac12(2u + at)t = ut + \tfrac12at^2\)</p>
+<p>Substitute \(t = (v-u)/a\): \(2as = v^2 - u^2\)</p></div>
+<div class="note trap"><b>Only for constant a</b>Not valid with air resistance or a changing force.</div></div></section><section class="card" data-id="stop" data-group="SUVAT" data-title="Stopping distance" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">SUVAT</span><span class="kind">Concept</span></div>
+<h2>Thinking + braking</h2>
+<div class="formula">stopping distance = thinking distance + braking distance</div>
+<div class="tw"><table>
+<tr><td class="k">Thinking distance</td><td>travelled at <b>constant speed</b> during the reaction time: \(s = ut_r\)</td></tr>
+<tr><td class="k">Braking distance</td><td>while decelerating: \(0 = u^2 + 2as \Rightarrow s = \dfrac{u^2}{2|a|}\)</td></tr>
+</table></div>
+<div class="note link"><b>Speed matters twice</b>Thinking distance ∝ \(u\), but braking distance ∝ \(u^2\): doubling speed quadruples braking distance.</div>
+<div class="note tip"><b>Linking to forces</b>Braking force gives \(a = F/m\). Your notes: 1200 kg car, braking force 2400 N ⇒ \(a = -2\) m s⁻² ⇒ from 20 m s⁻¹, braking distance = 100 m.</div></div></section><section class="card" data-id="ff" data-group="Free fall" data-title="Free fall" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">Free fall</span><span class="kind">Concept</span></div>
+<h2>Acceleration of free fall, g</h2>
+<p>With no air resistance every object falls with the same acceleration \(g = 9.81\) m s⁻², whatever its mass.</p>
+<ul>
+<li>Released from rest (down +): \(s = \tfrac12gt^2\), \(v = gt\).</li>
+<li>s–t is a parabola; v–t a straight line through the origin with gradient \(g\); a–t flat at \(g\).</li>
+<li>Measuring \(g\): time a fall through measured heights, plot \(s\) against \(t^2\); gradient \(= g/2\).</li>
+</ul>
+<div class="note link"><b>From class (June 02 Q9)</b>Ball released from rest a distance \(x\) above marker M₁; reaches M₁ at \(t_1\), M₂ (a further \(h\) below) at \(t_2\). Then \(x = \tfrac12at_1^2\) and \(x + h = \tfrac12at_2^2\), so \(a = \dfrac{2h}{t_2^2 - t_1^2}\).</div>
+<div class="note tip"><b>g is not constant at large heights</b>It falls with distance from Earth. Near the surface (a few km) treat it as 9.81 m s⁻².</div></div></section><section class="card" data-id="term" data-group="Free fall" data-title="Air resistance and terminal velocity" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">Free fall</span><span class="kind">Concept</span></div>
+<h2>Falling with drag</h2>
+<figure class="dg" style="max-width:520px"><div class="pnl"><svg viewBox="0 0 310 200" role="img" aria-label="velocity-time with air resistance, curves to terminal velocity"><defs><marker id="gh6" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0,0 L10,5 L0,10 z"/></marker></defs><path class="k d" d="M34.0,176.0 L38.3,167.1 L42.7,158.9 L47.0,151.3 L51.3,144.2 L55.7,137.7 L60.0,131.6 L64.3,126.0 L68.7,120.7 L73.0,115.9 L77.3,111.4 L81.7,107.2 L86.0,103.4 L90.3,99.8 L94.7,96.5 L99.0,93.4 L103.3,90.6 L107.7,87.9 L112.0,85.5 L116.3,83.2 L120.7,81.1 L125.0,79.2 L129.3,77.4 L133.7,75.7 L138.0,74.1 L142.3,72.7 L146.7,71.4 L151.0,70.1 L155.3,69.0 L159.7,67.9 L164.0,66.9 L168.3,66.0 L172.7,65.2 L177.0,64.4 L181.3,63.7 L185.7,63.0 L190.0,62.4 L194.3,61.8 L198.7,61.2 L203.0,60.7 L207.3,60.3 L211.7,59.8 L216.0,59.4 L220.3,59.1 L224.7,58.7 L229.0,58.4 L233.3,58.1 L237.7,57.9 L242.0,57.6 L246.3,57.4 L250.7,57.2 L255.0,57.0 L259.3,56.8 L263.7,56.6 L268.0,56.4 L272.3,56.3 L276.7,56.1 L281.0,56.0 L285.3,55.9 L289.7,55.8 L294.0,55.7"/><path class="k s" d="M34.0,176.0 L91.2,54.4"/><path class="g" d="M34.0,54.4 L294.0,54.4"/><text class="t-s" x="97.2" y="58.4" text-anchor="start">gradient = g at t = 0</text><text class="t-s" x="216.0" y="46.4" text-anchor="middle">terminal velocity</text><path class="ax" d="M34.0,16 L34.0,176.0"/><path class="ax" d="M34.0,176.0 L302.0,176.0"/><text class="t-axl" x="39.0" y="14" text-anchor="start">v</text><text class="t-axl" x="306.0" y="192.0" text-anchor="end">t</text><text class="t-ax" x="29.0" y="190.0" text-anchor="end">0</text></svg></div><figcaption>As v rises, drag rises, so resultant force (W − D) and acceleration fall. At terminal velocity D = W and a = 0.</figcaption></figure>
+<div class="formula">\(a = \dfrac{W - D}{m}\)</div>
+<ol>
+<li>At release \(v = 0\), so \(D = 0\) and \(a = g\).</li>
+<li>As \(v\) increases, \(D\) increases, so the resultant force and \(a\) decrease.</li>
+<li>When \(D = W\): resultant force zero, \(a = 0\), constant <b>terminal velocity</b>.</li>
+</ol>
+<div class="note link"><b>Heavier objects</b>Same shape and area but larger mass ⇒ larger W ⇒ drag must be larger to balance ⇒ higher terminal velocity, reached later. Since \(D \propto v^2\), \(v_t \propto \sqrt W\).</div></div></section><section class="card" data-id="proj" data-group="Projectiles" data-title="Projectile motion" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">Projectiles</span><span class="kind">Concept</span></div>
+<h2>Two independent motions, one shared time</h2>
+<figure class="dg" style="max-width:520px"><div class="pnl"><svg viewBox="0 0 320 190" role="img" aria-label="projectile trajectory parabola with constant horizontal velocity and changing vertical velocity"><defs><marker id="gh7" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arh" d="M0,0 L10,5 L0,10 z"/></marker></defs><path class="k d" d="M34.0,166.0 L38.5,158.2 L43.0,150.6 L47.5,143.3 L52.0,136.3 L56.5,129.6 L61.0,123.1 L65.5,116.8 L70.0,110.9 L74.5,105.2 L79.0,99.7 L83.5,94.6 L88.0,89.7 L92.5,85.0 L97.0,80.6 L101.5,76.5 L106.0,72.7 L110.5,69.1 L115.0,65.8 L119.5,62.8 L124.0,60.0 L128.5,57.5 L133.0,55.2 L137.5,53.2 L142.0,51.5 L146.5,50.0 L151.0,48.8 L155.5,47.9 L160.0,47.3 L164.5,46.9 L169.0,46.7 L173.5,46.9 L178.0,47.3 L182.5,47.9 L187.0,48.8 L191.5,50.0 L196.0,51.5 L200.5,53.2 L205.0,55.2 L209.5,57.5 L214.0,60.0 L218.5,62.8 L223.0,65.8 L227.5,69.1 L232.0,72.7 L236.5,76.5 L241.0,80.6 L245.5,85.0 L250.0,89.7 L254.5,94.6 L259.0,99.7 L263.5,105.2 L268.0,110.9 L272.5,116.8 L277.0,123.1 L281.5,129.6 L286.0,136.3 L290.5,143.3 L295.0,150.6 L299.5,158.2 L304.0,166.0"/><line class="ar" x1="34.0" y1="166.0" x2="71.8" y2="109.2" marker-end="url(#gh7)"/><text class="t-s" x="46.9" y="120.6" text-anchor="end">u</text><line class="ar" x1="169.0" y1="46.7" x2="206.8" y2="46.7" marker-end="url(#gh7)"/><text class="t-s" x="187.9" y="40.7" text-anchor="middle">uₓ only</text><text class="t-s" x="169.0" y="180.0" text-anchor="middle">range</text><path class="ax" d="M34.0,16 L34.0,166.0"/><path class="ax" d="M34.0,166.0 L312.0,166.0"/><text class="t-axl" x="39.0" y="14" text-anchor="start">y</text><text class="t-axl" x="316.0" y="182.0" text-anchor="end">x</text><text class="t-ax" x="29.0" y="180.0" text-anchor="end">0</text></svg></div><figcaption>Horizontal: uₓ = u cos θ, constant (aₓ = 0). Vertical: u<sub>y</sub> = u sin θ, a<sub>y</sub> = −g. Link the two with the same time t.</figcaption></figure>
+<div class="tw"><table>
+<tr><th>Horizontal</th><th>Vertical</th></tr>
+<tr><td>\(u_x = u\cos\theta\), constant</td><td>\(u_y = u\sin\theta\)</td></tr>
+<tr><td>\(a_x = 0\)</td><td>\(a_y = -g\) (up +)</td></tr>
+<tr><td>\(s_x = u_xt\)</td><td>\(s_y = u_yt - \tfrac12gt^2\)</td></tr>
+</table></div>
+<div class="note tip"><b>Horizontal launch</b>\(u_y = 0\): find \(t\) from the drop height, \(t = \sqrt{2h/g}\), then range \(= u_xt\).</div></div></section><section class="card" data-id="range" data-group="Projectiles" data-title="Time of flight, range, maximum height" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">Projectiles</span><span class="kind">Concept</span></div>
+<h2>Launched from and landing on level ground</h2>
+<div class="tw"><table>
+<tr><td class="k">Time of flight</td><td>\(s_y = 0 \Rightarrow t = \dfrac{2u\sin\theta}{g}\)</td></tr>
+<tr><td class="k">Range</td><td>\(R = u\cos\theta\cdot\dfrac{2u\sin\theta}{g} = \dfrac{u^2\sin2\theta}{g}\)</td></tr>
+<tr><td class="k">Maximum height</td><td>\(v_y = 0 \Rightarrow H = \dfrac{(u\sin\theta)^2}{2g}\)</td></tr>
+</table></div>
+<p>Range is greatest when \(\sin2\theta = 1\), i.e. \(\theta = 45°\).</p>
+<div class="note trap"><b>At the top</b>Velocity is <b>not</b> zero: \(v = u_x\). Only the vertical component is zero.</div>
+<div class="note link"><b>Velocity after time t (June 03)</b>Vertical \(u\sin\alpha - gt\), horizontal \(u\cos\alpha\). The horizontal part never changes.</div></div></section><section class="card" data-id="we1" data-group="Worked examples" data-title="Example 1: stopping distance" data-kind="Worked example"><div class="ci"><div class="ch"><span class="sec">Worked examples</span><span class="kind">Worked example</span></div>
+<h2>Example 1 · Car at 20 m s⁻¹</h2>
+<p><b>Q:</b> A driver travelling at 20 m s⁻¹ has a reaction time of 0.20 s. The brakes give a deceleration of 10 m s⁻². Find the stopping distance.</p>
+<ol class="steps">
+<li><span class="tag">A1</span> Thinking: \(s = 20 \times 0.20 = 4.0\) m</li>
+<li><span class="tag">M1</span> Braking: \(0 = 20^2 + 2(-10)s\)</li>
+<li><span class="tag">A1</span> \(s = 20\) m</li>
+<li><span class="tag">A1</span> Stopping distance = 4.0 + 20 = 24 m</li>
+</ol></div></section><section class="card" data-id="we2" data-group="Worked examples" data-title="Example 2: ball hits a wall (Nov 11 P21)" data-kind="Worked example"><div class="ci"><div class="ch"><span class="sec">Worked examples</span><span class="kind">Worked example</span></div>
+<h2>Example 2 · Ball thrown at a wall</h2>
+<p><b>Q:</b> A ball is thrown from S at 15.0 m s⁻¹, 60.0° to the horizontal. The wall is 9.95 m away horizontally. Find (a) the components of the initial velocity, (b) the height at which it hits the wall.</p>
+<ol class="steps">
+<li><span class="tag">A1</span> \(u_x = 15.0\cos60° = 7.50\) m s⁻¹</li>
+<li><span class="tag">A1</span> \(u_y = 15.0\sin60° = 13.0\) m s⁻¹</li>
+<li><span class="tag">C1</span> Time to wall: \(t = 9.95/7.50 = 1.33\) s</li>
+<li><span class="tag">A1</span> \(s_y = 13.0(1.33) - \tfrac12(9.81)(1.33)^2 = 8.6\) m</li>
+</ol>
+<div class="note link"><b>Why it hits at right angles</b>At \(t = 1.33\) s, \(v_y = 13.0 - 9.81(1.33) \approx 0\): the ball is at the top of its path, moving horizontally.</div></div></section><section class="card" data-id="we3" data-group="Worked examples" data-title="Example 3: thrown downwards (June 12 P22)" data-kind="Worked example"><div class="ci"><div class="ch"><span class="sec">Worked examples</span><span class="kind">Worked example</span></div>
+<h2>Example 3 · Ball thrown down past A</h2>
+<p><b>Q:</b> A ball passes A, 5.0 m above the ground, moving down at 8.4 m s⁻¹. Calculate its speed on reaching the ground and show the time taken is 0.47 s.</p>
+<ol class="steps">
+<li><span class="tag">C1</span> Down +: \(v^2 = 8.4^2 + 2(9.81)(5.0)\)</li>
+<li><span class="tag">A1</span> \(v = 13\) m s⁻¹</li>
+<li><span class="tag">M1</span> \(v = u + at \Rightarrow 13.0 = 8.4 + 9.81t\)</li>
+<li><span class="tag">A1</span> \(t = 0.47\) s</li>
+</ol>
+<div class="note trap"><b>Sign check</b>With down +, \(u = +8.4\) and \(a = +9.81\). Mixing signs is the most common slip here.</div></div></section><section class="card" data-id="we4" data-group="Worked examples" data-title="Example 4: horizontal launch" data-kind="Worked example"><div class="ci"><div class="ch"><span class="sec">Worked examples</span><span class="kind">Worked example</span></div>
+<h2>Example 4 · Motorcycle stunt</h2>
+<p><b>Q:</b> A motorcyclist leaves a ramp horizontally 1.25 m above the ground and lands 10 m away. Find the take-off speed.</p>
+<ol class="steps">
+<li><span class="tag">C1</span> Vertical, \(u_y = 0\): \(1.25 = \tfrac12(9.81)t^2\)</li>
+<li><span class="tag">A1</span> \(t = 0.505\) s</li>
+<li><span class="tag">A1</span> \(u_x = 10/0.505 = 20\) m s⁻¹</li>
+</ol></div></section><section class="card" data-id="traps" data-group="Mistakes" data-title="Common mistakes" data-kind="Concept"><div class="ci"><div class="ch"><span class="sec">Mistakes</span><span class="kind">Concept</span></div>
+<h2>Where marks are lost</h2>
+<div class="note trap"><b>No positive direction</b>State "up +" or "down +" first; then g has one consistent sign.</div>
+<div class="note trap"><b>a = 0 at the top</b>Only v is zero; a = g all the way.</div>
+<div class="note trap"><b>SUVAT with drag</b>Only valid for constant acceleration.</div>
+<div class="note trap"><b>Projectile speed at the top = 0</b>It's \(u\cos\theta\).</div>
+<div class="note trap"><b>Using u (not uₓ) for range</b>Horizontal distance uses the horizontal component only.</div>
+<div class="note trap"><b>Distance from a v–t graph that crosses zero</b>Displacement = area above − area below; distance = sum of both.</div>
+<div class="note trap"><b>Vague terminal-velocity answers</b>Say what happens to drag, resultant force and acceleration, in that order.</div></div></section><section class="card" data-id="pr" data-group="Practice" data-title="Practice questions" data-kind="Practice"><div class="ci"><div class="ch"><span class="sec">Practice</span><span class="kind">Practice</span></div>
+<h2>Practice · Kinematics</h2>
+<div class="pq"><div class="qh"><span>Q1 · Horizontal launch</span><span class="mk">[3]</span></div>
+<p class="qt">A tiger leaps horizontally at 3.5 m s⁻¹ from a rock 6.5 m high. How far from the base of the rock does it land?</p>
+<div class="ans"><b>Answer</b>\(t = \sqrt{2(6.5)/9.81} = 1.15\) s; \(x = 3.5 \times 1.15 = 4.0\) m.</div></div>
+<div class="pq"><div class="qh"><span>Q2 · SUVAT</span><span class="mk">[2]</span></div>
+<p class="qt">A car passes marker posts 100 m apart at 10 m s⁻¹ and then 20 m s⁻¹, accelerating uniformly. Find its acceleration.</p>
+<div class="ans"><b>Answer</b>\(20^2 = 10^2 + 2a(100) \Rightarrow a = 1.5\) m s⁻².</div></div>
+<div class="pq"><div class="qh"><span>Q3 · Vertical throw</span><span class="mk">[3]</span></div>
+<p class="qt">A ball is thrown vertically up at 12 m s⁻¹. Find its maximum height and its total time in the air (returning to the same level).</p>
+<div class="ans"><b>Answer</b>\(H = 12^2/(2 \times 9.81) = 7.3\) m; \(t = 2(12)/9.81 = 2.4\) s.</div></div>
+<div class="pq"><div class="qh"><span>Q4 · Range</span><span class="mk">[2]</span></div>
+<p class="qt">A ball is kicked at 20 m s⁻¹. What angle gives the maximum range on level ground, and what is that range?</p>
+<div class="ans"><b>Answer</b>45°; \(R = u^2/g = 400/9.81 = 41\) m.</div></div>
+<div class="pq"><div class="qh"><span>Q5 · Rebound</span><span class="mk">[2]</span></div>
+<p class="qt">A ball rebounds vertically from the ground at 4.2 m s⁻¹. Find the maximum height it reaches.</p>
+<div class="ans"><b>Answer</b>\(h = 4.2^2/(2 \times 9.81) = 0.90\) m.</div></div>
+<div class="pq"><div class="qh"><span>Q6 · Explain</span><span class="mk">[3]</span></div>
+<p class="qt">A skydiver jumps from a plane. Explain why she reaches a terminal velocity.</p>
+<div class="ans"><b>Answer</b>Initially only weight acts, so a = g. As speed increases, air resistance increases, so the resultant force (W − D) decreases and acceleration decreases. When air resistance equals weight, resultant force is zero, a = 0, and she moves at constant (terminal) velocity.</div></div></div></section><section class="card" data-id="sheet" data-group="Summary" data-title="Formula card" data-kind="Summary"><div class="ci"><div class="ch"><span class="sec">Summary</span><span class="kind">Summary</span></div>
+<h2>Everything on one card</h2>
+<div class="tw"><table>
+<tr><td class="k">SUVAT</td><td>\(v = u + at\) · \(s = \tfrac12(u+v)t\) · \(s = ut + \tfrac12at^2\) · \(v^2 = u^2 + 2as\)</td></tr>
+<tr><td class="k">s–t</td><td>gradient = velocity</td></tr>
+<tr><td class="k">v–t</td><td>gradient = acceleration · area = displacement</td></tr>
+<tr><td class="k">Stopping</td><td>\(ut_r + u^2/2|a|\)</td></tr>
+<tr><td class="k">Free fall</td><td>\(a = g = 9.81\) m s⁻², independent of mass</td></tr>
+<tr><td class="k">Drag</td><td>\(a = (W - D)/m\); terminal when \(D = W\)</td></tr>
+<tr><td class="k">Projectile</td><td>\(u_x = u\cos\theta\) const; \(u_y = u\sin\theta\), \(a_y = -g\)</td></tr>
+<tr><td class="k">Flight</td><td>\(t = 2u\sin\theta/g\) · \(R = u^2\sin2\theta/g\) · \(H = u^2\sin^2\theta/2g\)</td></tr>
+</table></div></div></section></main>
+<footer class="bot">
+  <button class="ib" id="prevBtn" type="button" aria-label="Previous card"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+  <div class="prog"><div class="bar"><i id="barFill"></i></div><div class="cnt" id="cnt">1 / 18</div></div>
+  <button class="ib" id="nextBtn" type="button" aria-label="Next card"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+</footer>
+
+<div class="sheet" id="tocSheet" hidden>
+  <header class="top"><div class="ttl"><b>Contents</b><small>18 cards · tap to jump</small></div>
+  <button class="ib" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></header>
+  <div class="sbody"><div class="in" id="tocList"></div></div>
+</div>
+<div class="sheet" id="fcSheet" hidden>
+  <header class="top"><div class="ttl"><b>Flashcards</b><small>Tap the card to flip · Space flips on a keyboard</small></div>
+  <button class="ib" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></header>
+  <div class="sbody"><div class="in">
+    <div class="chips" id="fcChips"></div>
+    <div class="fc" id="fc"><div class="fc-in">
+      <div class="fc-f front"><div class="ft"><span id="fcT"></span><span>Question</span></div><div class="q" id="fcQ"></div></div>
+      <div class="fc-f back"><div class="ft"><span id="fcT2"></span><span>Answer</span></div><div id="fcA"></div></div>
+    </div></div>
+    <div class="fcrow"><button class="btn bad" id="fcAgain" type="button">Again</button><span class="cnt" id="fcN" style="align-self:center"></span><button class="btn good" id="fcGot" type="button">Got it</button></div>
+    <div class="fcrow" style="margin-top:8px"><button class="btn" id="fcPrev" type="button">← Prev</button><button class="btn" id="fcShuf" type="button">Shuffle</button><button class="btn" id="fcNext" type="button">Next →</button></div>
+    <p class="lede" style="font-size:14.5px;margin-top:14px">Tap several topics to mix them; tap All to reset. "Again" puts the card in the Again pile so you can drill only the ones you missed.</p>
+  </div></div>
+</div>
+<div class="sheet" id="qSheet" hidden>
+  <header class="top"><div class="ttl"><b>Kinematics quiz</b><small>Pick an answer to see the explanation</small></div>
+  <button class="ib" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></header>
+  <div class="sbody"><div class="in">
+    <div class="score"><span>Score <span class="num" id="qScore"></span></span><button class="btn" id="qReset" type="button">Reset</button></div>
+    <div id="qList"></div>
+  </div></div>
+</div>
+
+<div class="sheet" id="noteSheet" hidden>
+  <header class="top">
+    <div class="ttl"><b id="nTitle">Your working</b><small id="nSub">Saved on this device</small></div>
+    <button class="tl" id="nQ" type="button" aria-pressed="true" aria-label="Show question"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9.5 9.5a2.5 2.5 0 114 2c-1 .7-1.5 1.2-1.5 2.5M12 17h.01"/></svg></button>
+    <button class="tl" id="nUndo" type="button" aria-label="Undo"><svg viewBox="0 0 24 24"><path d="M9 7L4 12l5 5"/><path d="M4 12h11a5 5 0 010 10h-2"/></svg></button>
+    <button class="tl" id="nRedo" type="button" aria-label="Redo"><svg viewBox="0 0 24 24"><path d="M15 7l5 5-5 5"/><path d="M20 12H9a5 5 0 000 10h2"/></svg></button>
+    <button class="btn pri" id="nDone" type="button">Done</button>
+  </header>
+  <div class="ntools" role="toolbar" aria-label="Writing tools">
+    <button class="tl" data-tool="pen" type="button" aria-label="Pen" aria-pressed="true"><svg viewBox="0 0 24 24"><path d="M4 20l4-1 11-11-3-3L5 16l-1 4z"/><path d="M14 6l3 3"/></svg></button>
+    <button class="tl" data-tool="hl" type="button" aria-label="Highlighter" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M9 15l-3 5h6l1-2"/><path d="M9 15l7-11 4 3-7 11z"/></svg></button>
+    <button class="tl" data-tool="er" type="button" aria-label="Eraser" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M8 20h12"/><path d="M4.5 14.5l9-9 6 6-7.5 7.5H9z"/></svg></button>
+    <span class="sep"></span>
+    <button class="tl" data-col="ink" type="button" aria-label="Black ink" aria-pressed="true"><span class="dot" style="background:var(--fg)"></span></button>
+    <button class="tl" data-col="blue" type="button" aria-label="Blue ink" aria-pressed="false"><span class="dot" style="background:#3E7BFA"></span></button>
+    <button class="tl" data-col="red" type="button" aria-label="Red ink" aria-pressed="false"><span class="dot" style="background:#E5484D"></span></button>
+    <button class="tl" data-col="green" type="button" aria-label="Green ink" aria-pressed="false"><span class="dot" style="background:#2FA36B"></span></button>
+    <span class="sep"></span>
+    <button class="tl" data-size="1" type="button" aria-label="Fine" aria-pressed="false">S</button>
+    <button class="tl" data-size="2" type="button" aria-label="Medium" aria-pressed="true">M</button>
+    <button class="tl" data-size="3" type="button" aria-label="Thick" aria-pressed="false">L</button>
+    <span class="sep"></span>
+    <button class="tl" data-bg="lined" type="button" aria-label="Lined paper" aria-pressed="true">≡</button>
+    <button class="tl" data-bg="grid" type="button" aria-label="Grid paper" aria-pressed="false">#</button>
+    <button class="tl" data-bg="blank" type="button" aria-label="Blank paper" aria-pressed="false">□</button>
+    <span class="sep"></span>
+    <button class="tl" id="nFinger" type="button" aria-label="Draw with finger" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M9 11V5a1.5 1.5 0 013 0v6"/><path d="M12 10.5V9a1.5 1.5 0 013 0v2"/><path d="M15 11a1.5 1.5 0 013 0v3a6 6 0 01-6 6h-1a6 6 0 01-5-3l-2-3.5a1.5 1.5 0 012.5-1.6L9 13"/></svg></button>
+    <button class="tl" id="nZoom" type="button" aria-label="Zoom level, tap to reset" style="min-width:52px">100%</button>
+    <button class="tl" id="nAdd" type="button" aria-label="Add page"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M12 9v6M9 12h6"/></svg></button>
+    <button class="tl" id="nClear" type="button" aria-label="Clear this note"><svg viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button>
+  </div>
+  <div class="nq" id="nQBox"><div class="in" id="nQText"></div></div>
+  <div class="npages" id="nPages"></div>
+</div>
+
+<script>var DECK={"key": "deck-9702-ch2", "flash": [["Definitions", "Define displacement.", "Distance moved in a specified direction from a fixed point."], ["Definitions", "Define velocity.", "Rate of change of displacement."], ["Definitions", "Define acceleration.", "Rate of change of velocity."], ["Definitions", "Speed vs velocity?", "Speed: rate of change of distance (scalar). Velocity: rate of change of displacement (vector)."], ["Graphs", "Gradient of s–t?", "Velocity."], ["Graphs", "Gradient and area of v–t?", "Gradient = acceleration; area = displacement."], ["Graphs", "Area under a–t?", "Change in velocity."], ["Graphs", "v–t line crosses the time axis. Meaning?", "The object momentarily stops and reverses direction."], ["Graphs", "Velocity from a curved s–t graph?", "Gradient of the tangent at that instant."], ["SUVAT", "Which equation has no s?", "v = u + at."], ["SUVAT", "Which equation has no t?", "v² = u² + 2as."], ["SUVAT", "Which equation has no v?", "s = ut + ½at²."], ["SUVAT", "Condition for using SUVAT?", "Constant acceleration in a straight line."], ["SUVAT", "Thinking vs braking distance dependence on speed?", "Thinking ∝ u; braking ∝ u²."], ["Free fall", "Value and condition for g = 9.81 m s⁻²?", "Near Earth's surface, no air resistance; same for all masses."], ["Free fall", "Velocity and acceleration at the top of a vertical throw?", "v = 0, a = −9.81 m s⁻² (still g)."], ["Free fall", "Acceleration of a falling object with drag?", "a = (W − D)/m."], ["Free fall", "Condition for terminal velocity?", "Drag equals weight, resultant force zero, acceleration zero."], ["Free fall", "Same shape, heavier object: terminal velocity?", "Higher, because drag must grow larger to balance the larger weight."], ["Projectiles", "Horizontal motion of a projectile?", "Constant velocity u cos θ; zero acceleration."], ["Projectiles", "Vertical motion of a projectile?", "Initial u sin θ; acceleration −g."], ["Projectiles", "Velocity at the top of a projectile's path?", "u cos θ, horizontal."], ["Projectiles", "Range on level ground?", "R = u² sin 2θ / g, maximum at 45°."], ["Projectiles", "Time to fall height h from a horizontal launch?", "t = √(2h/g)."]], "quiz": [{"s": "Graphs", "q": "The area under a velocity–time graph gives:", "o": ["acceleration", "displacement", "speed", "force"], "c": 1, "e": "Area = displacement; gradient = acceleration."}, {"s": "SUVAT", "q": "A car speeds up from 10 m s⁻¹ to 20 m s⁻¹ over 100 m. Acceleration?", "o": ["0.67 m s⁻²", "1.5 m s⁻²", "2.5 m s⁻²", "6.0 m s⁻²"], "c": 1, "e": "v² = u² + 2as ⇒ 400 = 100 + 200a ⇒ a = 1.5."}, {"s": "Free fall", "q": "A ball thrown upwards is at its highest point. Which is true?", "o": ["v = 0, a = 0", "v = 0, a = g downwards", "v = max, a = 0", "v = g, a = 0"], "c": 1, "e": "Acceleration is g throughout the flight."}, {"s": "Free fall", "q": "A falling object has reached terminal velocity. The resultant force is:", "o": ["equal to its weight", "zero", "equal to drag", "decreasing"], "c": 1, "e": "Drag = weight, so resultant force = 0."}, {"s": "Projectiles", "q": "A projectile is fired at speed u, angle α. Its velocity components after time t are:", "o": ["u sin α, u cos α", "u sin α − gt, u cos α − gt", "u sin α − gt (vertical), u cos α (horizontal)", "u cos α (vertical), u sin α − gt (horizontal)"], "c": 2, "e": "Only the vertical component changes (June 03)."}, {"s": "Projectiles", "q": "A rider leaves a ramp horizontally 1.25 m up and lands 10 m away. Take-off speed?", "o": ["5 m s⁻¹", "10 m s⁻¹", "15 m s⁻¹", "20 m s⁻¹"], "c": 3, "e": "t = √(2×1.25/9.81) = 0.50 s; u = 10/0.50 = 20 m s⁻¹."}, {"s": "Free fall", "q": "Released from rest, a ball passes markers x and x + h below its start at times t₁ and t₂. Its acceleration is:", "o": ["2h/t₂²", "2h/(t₂ + t₁)", "2h/(t₂ − t₁)²", "2h/(t₂² − t₁²)"], "c": 3, "e": "x = ½at₁², x + h = ½at₂² ⇒ h = ½a(t₂² − t₁²) (June 02)."}, {"s": "SUVAT", "q": "Doubling a car's speed multiplies its braking distance by:", "o": ["√2", "2", "4", "8"], "c": 2, "e": "Braking distance = u²/2a ∝ u²."}]};</script>
+<script>
+(function(){
+var KEY=DECK.key, root=document.documentElement;
+function sget(k){try{return localStorage.getItem(KEY+':'+k)}catch(e){return null}}
+function sset(k,v){try{localStorage.setItem(KEY+':'+k,v)}catch(e){}}
+/* theme: dark by default, light on request */
+root.setAttribute('data-theme',sget('theme')||'dark');
+document.getElementById('themeBtn').addEventListener('click',function(){
+  var t=root.getAttribute('data-theme')==='dark'?'light':'dark';root.setAttribute('data-theme',t);sset('theme',t);});
+
+var track=document.getElementById('track'), cards=[].slice.call(track.querySelectorAll('.card'));
+var N=cards.length, cur=0, bar=document.getElementById('barFill'), cnt=document.getElementById('cnt');
+function width(){return track.clientWidth}
+function update(i){cur=i;bar.style.width=((i+1)/N*100)+'%';
+  cnt.textContent=(i+1)+' / '+N+' · '+cards[i].dataset.title;sset('pos',i);
+  document.getElementById('prevBtn').disabled=i===0;document.getElementById('nextBtn').disabled=i===N-1;}
+function go(i,smooth){i=Math.max(0,Math.min(N-1,i));
+  track.scrollTo({left:i*width(),behavior:smooth===false?'auto':'smooth'});update(i);}
+var t0;track.addEventListener('scroll',function(){clearTimeout(t0);t0=setTimeout(function(){
+  var i=Math.round(track.scrollLeft/width());if(i!==cur)update(i);},80);},{passive:true});
+window.addEventListener('resize',function(){track.scrollTo({left:cur*width(),behavior:'auto'});});
+document.getElementById('prevBtn').addEventListener('click',function(){go(cur-1)});
+document.getElementById('nextBtn').addEventListener('click',function(){go(cur+1)});
+document.addEventListener('keydown',function(e){
+  if(document.querySelector('.sheet:not([hidden])'))return;
+  if(e.key==='ArrowRight'||e.key==='PageDown'){go(cur+1);e.preventDefault();}
+  if(e.key==='ArrowLeft'||e.key==='PageUp'){go(cur-1);e.preventDefault();}});
+document.querySelectorAll('[data-goto]').forEach(function(b){b.addEventListener('click',function(){
+  var t=b.getAttribute('data-goto');for(var i=0;i<N;i++){if(cards[i].dataset.id===t){go(i);return;}}});});
+
+/* tap-to-reveal: worked-example steps */
+document.querySelectorAll('ol.steps').forEach(function(ol){
+  var li=[].slice.call(ol.children),shown=0;li.forEach(function(x){x.hidden=true});
+  var bar=document.createElement('div');bar.className='rvbar';
+  var nb=document.createElement('button');nb.className='btn pri';nb.type='button';
+  var ab=document.createElement('button');ab.className='btn';ab.type='button';ab.textContent='Show all';
+  function paint(){nb.textContent=shown<li.length?('Show step '+(shown+1)+' of '+li.length):'All steps shown';
+    nb.disabled=shown>=li.length;ab.hidden=shown>=li.length;}
+  nb.addEventListener('click',function(){if(shown<li.length){li[shown].hidden=false;shown++;paint();}});
+  ab.addEventListener('click',function(){li.forEach(function(x){x.hidden=false});shown=li.length;paint();});
+  bar.appendChild(nb);bar.appendChild(ab);ol.parentNode.insertBefore(bar,ol.nextSibling);paint();});
+/* tap-to-reveal: practice answers */
+document.querySelectorAll('.pq').forEach(function(q){
+  var a=q.querySelector('.ans');if(!a)return;a.hidden=true;
+  var b=document.createElement('button');b.className='btn';b.type='button';b.textContent='Show answer';
+  b.addEventListener('click',function(){a.hidden=!a.hidden;b.textContent=a.hidden?'Show answer':'Hide answer';});
+  q.insertBefore(b,a);});
+document.querySelectorAll('[data-revealall]').forEach(function(b){b.addEventListener('click',function(){
+  var c=b.closest('.card');c.querySelectorAll('.pq .ans').forEach(function(a){a.hidden=false});
+  c.querySelectorAll('.pq .btn').forEach(function(x){x.textContent='Hide answer'});});});
+
+/* sheets */
+function openSheet(id){document.getElementById(id).hidden=false;}
+function closeSheets(){document.querySelectorAll('.sheet').forEach(function(s){s.hidden=true});}
+document.querySelectorAll('[data-close]').forEach(function(b){b.addEventListener('click',closeSheets)});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeSheets();});
+
+/* contents */
+var toc=document.getElementById('tocList'),lastSec=null;
+cards.forEach(function(c,i){
+  var s=c.dataset.group;if(s!==lastSec){var g=document.createElement('div');g.className='tocgrp';g.textContent=s;toc.appendChild(g);lastSec=s;}
+  var b=document.createElement('button');b.className='tocitem';b.type='button';
+  b.innerHTML='<span class="no">'+(i+1)+'</span><span></span><span class="kd"></span>';
+  b.children[1].textContent=c.dataset.title;b.children[2].textContent=c.dataset.kind;
+  b.addEventListener('click',function(){closeSheets();go(i,false);});toc.appendChild(b);});
+document.getElementById('tocBtn').addEventListener('click',function(){
+  [].forEach.call(toc.querySelectorAll('.tocitem'),function(b,i){b.classList.toggle('cur',i===cur)});
+  openSheet('tocSheet');var c=toc.querySelector('.cur');if(c)c.scrollIntoView({block:'center'});});
+
+/* flashcards */
+var F=DECK.flash,topics=['All'];F.forEach(function(c){if(topics.indexOf(c[0])<0)topics.push(c[0])});topics.push('Again pile');
+var sel={},againMode=false,order=[],fi=0,again={};
+try{JSON.parse(sget('fcsel')||'[]').forEach(function(t){if(topics.indexOf(t)>0)sel[t]=1})}catch(e){}
+var chipBox=document.getElementById('fcChips'),fc=document.getElementById('fc');
+function paintChips(){var none=!Object.keys(sel).length;
+  [].forEach.call(chipBox.children,function(x){var t=x.textContent;
+    x.setAttribute('aria-pressed',(t==='Again pile'?againMode:t==='All'?(!againMode&&none):(!againMode&&!!sel[t]))?'true':'false')});}
+topics.forEach(function(t){var b=document.createElement('button');b.className='chip';b.type='button';b.textContent=t;
+  b.addEventListener('click',function(){
+    if(t==='Again pile'){againMode=!againMode;}
+    else{againMode=false;if(t==='All')sel={};else if(sel[t])delete sel[t];else sel[t]=1;sset('fcsel',JSON.stringify(Object.keys(sel)));}
+    paintChips();build();});
+  chipBox.appendChild(b);});
+function build(){var none=!Object.keys(sel).length;order=[];
+  F.forEach(function(c,i){if(againMode?again[i]:(none||sel[c[0]]))order.push(i)});fi=0;paintChips();show();}
+function show(){fc.classList.remove('flip');var q=document.getElementById('fcQ'),a=document.getElementById('fcA');
+  if(!order.length){q.textContent=againMode?'Nothing in the Again pile yet.':'No cards.';a.textContent='';document.getElementById('fcN').textContent='0 cards';return;}
+  var c=F[order[fi]];q.innerHTML=c[1];a.innerHTML=c[2];
+  document.getElementById('fcT').textContent=c[0];document.getElementById('fcT2').textContent=c[0];
+  document.getElementById('fcN').textContent=(fi+1)+' / '+order.length;}
+fc.addEventListener('click',function(){fc.classList.toggle('flip')});
+document.getElementById('fcPrev').addEventListener('click',function(){if(order.length){fi=(fi-1+order.length)%order.length;show();}});
+document.getElementById('fcNext').addEventListener('click',function(){if(order.length){fi=(fi+1)%order.length;show();}});
+document.getElementById('fcShuf').addEventListener('click',function(){for(var i=order.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=order[i];order[i]=order[j];order[j]=t;}fi=0;show();});
+document.getElementById('fcAgain').addEventListener('click',function(){if(order.length){again[order[fi]]=1;fi=(fi+1)%order.length;show();}});
+document.getElementById('fcGot').addEventListener('click',function(){if(!order.length)return;delete again[order[fi]];
+  if(againMode){order.splice(fi,1);if(fi>=order.length)fi=0;}else fi=(fi+1)%order.length;show();});
+document.addEventListener('keydown',function(e){if(document.getElementById('fcSheet').hidden)return;
+  if(e.key===' '){fc.classList.toggle('flip');e.preventDefault();}
+  if(e.key==='ArrowRight')document.getElementById('fcNext').click();
+  if(e.key==='ArrowLeft')document.getElementById('fcPrev').click();});
+document.getElementById('fcBtn').addEventListener('click',function(){openSheet('fcSheet');});
+build();
+
+/* quiz */
+var Q=DECK.quiz,list=document.getElementById('qList'),right=0,done=0;
+function renderQ(){list.innerHTML='';right=0;done=0;paintS();
+  Q.forEach(function(it,qi){var box=document.createElement('div');box.className='mcq';
+    box.innerHTML='<div class="qh"><span>Q'+(qi+1)+'</span><span></span></div><p class="qt"></p><div class="opts"></div>';
+    box.querySelector('.qh span:last-child').textContent=it.s;box.querySelector('.qt').innerHTML=it.q;
+    var opts=box.querySelector('.opts');
+    it.o.forEach(function(t,oi){var b=document.createElement('button');b.type='button';b.className='opt';
+      b.innerHTML='<b>'+'ABCD'[oi]+'</b><span></span>';b.querySelector('span').innerHTML=t;
+      b.addEventListener('click',function(){if(box.classList.contains('done'))return;box.classList.add('done');done++;
+        var ok=oi===it.c;if(ok)right++;b.classList.add(ok?'right':'wrong');opts.children[it.c].classList.add('right');
+        var ex=document.createElement('div');ex.className='ex';
+        ex.innerHTML='<b style="color:var('+(ok?'--good':'--bad')+')">'+(ok?'Correct. ':'Answer: '+'ABCD'[it.c]+'. ')+'</b>'+it.e;box.appendChild(ex);paintS();});
+      opts.appendChild(b);});
+    list.appendChild(box);});}
+function paintS(){document.getElementById('qScore').textContent=right+' / '+done+' answered of '+Q.length;}
+document.getElementById('qReset').addEventListener('click',function(){renderQ();list.parentNode.parentNode.scrollTop=0;});
+document.getElementById('qBtn').addEventListener('click',function(){openSheet('qSheet');});
+renderQ();
+
+
+/* ---------- handwriting notes ---------- */
+(function(){
+var NK=KEY+':note:', L=1000, PH=1414;              // logical page: 1000 × 1414 (A4)
+var COLS={blue:'#3E7BFA',red:'#E5484D',green:'#2FA36B'};
+var SIZES={1:2.2,2:3.6,3:6};
+var sheet=document.getElementById('noteSheet'), pagesBox=document.getElementById('nPages');
+var st={tool:'pen',col:'ink',size:2,finger:false}, note=null, nid=null, undo=[], redo=[], onSave=null;
+try{var s=JSON.parse(localStorage.getItem(KEY+':notetools')||'null');if(s)for(var k in s)st[k]=s[k];}catch(e){}
+function css(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
+function colOf(c){return c==='ink'?css('--fg'):(COLS[c]||c);}
+function load(id){try{var n=JSON.parse(localStorage.getItem(NK+id)||'null');if(n&&n.pages)return n;}catch(e){}return {bg:'lined',pages:[[]]};}
+function hasInk(n){return n.pages.some(function(p){return p.length;});}
+var saveT;
+function save(){clearTimeout(saveT);saveT=setTimeout(function(){
+  var sub=document.getElementById('nSub');
+  try{ if(hasInk(note)) localStorage.setItem(NK+nid,JSON.stringify(note)); else localStorage.removeItem(NK+nid);
+    sub.textContent='Saved on this device';
+  }catch(e){ sub.textContent='Storage full: clear an old note to keep saving'; }
+  if(onSave)onSave();},350);}
+function saveTools(){try{localStorage.setItem(KEY+':notetools',JSON.stringify(st));}catch(e){}}
+
+/* drawing */
+function paintBg(ctx,bg){
+  ctx.fillStyle=css('--surface');ctx.fillRect(0,0,L,PH);
+  ctx.strokeStyle=css('--line');ctx.lineWidth=1.2;ctx.beginPath();
+  if(bg==='lined'){for(var y=110;y<PH-40;y+=44){ctx.moveTo(40,y);ctx.lineTo(L-40,y);}}
+  if(bg==='grid'){for(var x=0;x<=L;x+=40){ctx.moveTo(x,0);ctx.lineTo(x,PH);}for(var y2=0;y2<=PH;y2+=40){ctx.moveTo(0,y2);ctx.lineTo(L,y2);}}
+  ctx.stroke();
+}
+function drawStroke(ctx,s){
+  var p=s.p;if(!p.length)return;
+  ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle=colOf(s.c);
+  if(s.t==='h'){ctx.globalAlpha=.32;ctx.lineWidth=s.w;ctx.beginPath();ctx.moveTo(p[0],p[1]);
+    for(var i=3;i<p.length;i+=3)ctx.lineTo(p[i],p[i+1]);if(p.length===3)ctx.lineTo(p[0]+.1,p[1]);ctx.stroke();ctx.globalAlpha=1;return;}
+  if(p.length===3){ctx.fillStyle=ctx.strokeStyle;ctx.beginPath();ctx.arc(p[0],p[1],s.w*(.35+p[2]/10)/2,0,7);ctx.fill();return;}
+  for(var j=3;j<p.length;j+=3){ctx.lineWidth=s.w*(.35+(p[j+2]+p[j-1])/20);ctx.beginPath();
+    var mx=(p[j-3]+p[j])/2,my=(p[j-2]+p[j+1])/2;
+    if(j>3){ctx.moveTo((p[j-6]+p[j-3])/2,(p[j-5]+p[j-2])/2);ctx.quadraticCurveTo(p[j-3],p[j-2],mx,my);}else{ctx.moveTo(p[0],p[1]);ctx.lineTo(mx,my);}
+    if(j===p.length-3)ctx.lineTo(p[j],p[j+1]);ctx.stroke();}
+}
+function render(ctx,page,bg){paintBg(ctx,bg);page.forEach(function(s){drawStroke(ctx,s);});}
+function fit(cv){var w=cv.clientWidth||cv.parentNode.clientWidth,d=window.devicePixelRatio||1;
+  cv.width=Math.round(w*d);cv.height=Math.round(w*PH/L*d);var ctx=cv.getContext('2d');ctx.setTransform(cv.width/L,0,0,cv.width/L,0,0);return ctx;}
+
+/* pages: one gesture handler on the whole paper area (pen draws; one finger pans; two fingers pinch-zoom) */
+var views=[], zoom=1, ZMIN=.5, ZMAX=4;
+try{zoom=+localStorage.getItem(KEY+':notezoom')||1;}catch(e){}
+function baseW(){return Math.max(240,Math.min(pagesBox.clientWidth-24,900));}
+function pageW(){return Math.round(baseW()*zoom);}
+function build(){pagesBox.innerHTML='';views=[];
+  note.pages.forEach(function(pg,i){
+    var wrap=document.createElement('div');wrap.className='npage';
+    var cv=document.createElement('canvas');cv.setAttribute('aria-label','Writing page '+(i+1));
+    var pn=document.createElement('span');pn.className='pn';pn.textContent=(i+1)+' / '+note.pages.length;
+    wrap.appendChild(cv);wrap.appendChild(pn);pagesBox.appendChild(wrap);
+    views.push({cv:cv,wrap:wrap,i:i});});
+  var h=document.createElement('p');h.className='nhint';
+  h.textContent=st.finger?'Finger draws. Pinch with two fingers to zoom.':'Write with Apple Pencil. One finger scrolls, two fingers pinch to zoom.';
+  pagesBox.appendChild(h);
+  layout();requestAnimationFrame(redrawAll);}
+function layout(){var w=pageW();views.forEach(function(v){v.wrap.style.width=w+'px';});paintZoom();}
+function fit(cv){var w=cv.clientWidth||pageW(),h=w*PH/L,d=window.devicePixelRatio||1;
+  d=Math.min(d,Math.sqrt(16e6/(w*h)));                      // iPad canvas memory limit
+  cv.width=Math.round(w*d);cv.height=Math.round(h*d);var ctx=cv.getContext('2d');ctx.setTransform(cv.width/L,0,0,cv.width/L,0,0);return ctx;}
+function redraw(v){v.ctx=fit(v.cv);render(v.ctx,note.pages[v.i],note.bg);}
+function redrawAll(){views.forEach(redraw);}
+window.addEventListener('resize',function(){if(!sheet.hidden){layout();redrawAll();}});
+function paintZoom(){var z=document.getElementById('nZoom');if(z)z.textContent=Math.round(zoom*100)+'%';}
+function setZoom(z,cx,cy){ // keep the point (cx,cy) in the paper area fixed on screen
+  z=Math.max(ZMIN,Math.min(ZMAX,z));var r=pagesBox.getBoundingClientRect(),ox=cx-r.left,oy=cy-r.top;
+  var ax=(pagesBox.scrollLeft+ox)/zoom,ay=(pagesBox.scrollTop+oy)/zoom;zoom=z;layout();
+  pagesBox.scrollLeft=ax*zoom-ox;pagesBox.scrollTop=ay*zoom-oy;}
+var zt;function zoomDone(){clearTimeout(zt);zt=setTimeout(function(){redrawAll();try{localStorage.setItem(KEY+':notezoom',zoom);}catch(e){}},120);}
+
+function viewAt(x,y){for(var i=0;i<views.length;i++){var r=views[i].cv.getBoundingClientRect();
+  if(x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom)return views[i];}return null;}
+function pos(v,e){var r=v.cv.getBoundingClientRect(),k=L/r.width;
+  var pr=e.pointerType==='pen'?(e.pressure||.5):.5;return [Math.round((e.clientX-r.left)*k*10)/10,Math.round((e.clientY-r.top)*k*10)/10,Math.round(pr*9)];}
+
+/* iOS: stop Safari treating pen or finger movement as scrolling, text selection or the callout menu.
+   Without this a quick vertical stroke after a horizontal one gets cancelled (the "+" problem). */
+['touchstart','touchmove'].forEach(function(t){pagesBox.addEventListener(t,function(e){if(e.cancelable)e.preventDefault();},{passive:false});});
+sheet.addEventListener('selectstart',function(e){e.preventDefault();});
+pagesBox.addEventListener('contextmenu',function(e){e.preventDefault();});
+
+var touches={},mode=null,cur=null,curV=null,drawPid=null,live=null,pan=null,pinch=null;
+function nTouch(){return Object.keys(touches).length;}
+function pinchInfo(){var k=Object.keys(touches),a=touches[k[0]],b=touches[k[1]];
+  return {d:Math.hypot(a.x-b.x,a.y-b.y)||1,x:(a.x+b.x)/2,y:(a.y+b.y)/2};}
+function startStroke(v,e){var p=pos(v,e);curV=v;
+  if(st.tool==='er'){cur={er:true,removed:[]};erase(v,p);return;}
+  cur={t:st.tool==='hl'?'h':'p',c:st.tool==='hl'?'#F5C400':st.col,w:st.tool==='hl'?SIZES[st.size]*5:SIZES[st.size],p:p.slice()};
+  if(cur.t==='h')live=note.pages[v.i].slice();
+  drawStroke(v.ctx,cur);}
+function moveStroke(e){var v=curV,evs=e.getCoalescedEvents?e.getCoalescedEvents():[e];if(!evs.length)evs=[e];
+  evs.forEach(function(ev){var p=pos(v,ev);
+    if(cur.er){erase(v,p);return;}
+    var q=cur.p,n=q.length;if(Math.abs(q[n-3]-p[0])+Math.abs(q[n-2]-p[1])<1.2)return;
+    q.push(p[0],p[1],p[2]);
+    if(cur.t==='p')drawStroke(v.ctx,{t:'p',c:cur.c,w:cur.w,p:q.slice(Math.max(0,q.length-9))});});
+  if(cur.t==='h'){render(v.ctx,live,note.bg);drawStroke(v.ctx,cur);}}
+function endStroke(keep){var v=curV;
+  if(cur&&keep!==false){
+    if(cur.er){if(cur.removed.length){undo.push({k:'er',i:v.i,items:cur.removed});redo=[];}}
+    else{note.pages[v.i].push(cur);undo.push({k:'add',i:v.i,s:cur});redo=[];}}
+  if(cur&&keep===false&&cur.er)cur.removed.slice().reverse().forEach(function(it){note.pages[v.i].splice(it.at,0,it.s);});
+  cur=null;live=null;curV=null;drawPid=null;mode=null;if(v)redraw(v);paintUR();save();}
+function erase(v,p){var pg=note.pages[v.i],r=14/Math.min(zoom,2)*1.2,hit=false;
+  for(var i=pg.length-1;i>=0;i--){var q=pg[i].p;
+    for(var j=0;j<q.length;j+=3){if(Math.abs(q[j]-p[0])<r&&Math.abs(q[j+1]-p[1])<r){cur.removed.push({s:pg[i],at:i});pg.splice(i,1);hit=true;break;}}}
+  if(hit)render(v.ctx,pg,note.bg);}
+
+pagesBox.addEventListener('pointerdown',function(e){
+  try{var sel=window.getSelection&&window.getSelection();if(sel&&sel.removeAllRanges)sel.removeAllRanges();}catch(x){}
+  if(e.pointerType==='pen'&&!st.penSeen){st.penSeen=true;saveTools();}
+  var isTouch=e.pointerType==='touch';
+  if(isTouch){
+    if(mode==='draw'&&!drawIsTouch)return;                       // palm resting while the pen writes
+    touches[e.pointerId]={x:e.clientX,y:e.clientY};try{pagesBox.setPointerCapture(e.pointerId);}catch(x){}
+    if(nTouch()===2){if(mode==='draw')endStroke(false);var pi=pinchInfo();pinch={d:pi.d,z:zoom};pan=null;mode='pinch';return;}
+    if(nTouch()>2)return;
+    if(st.penSeen&&!st.finger){mode='pan';pan={x:e.clientX,y:e.clientY,l:pagesBox.scrollLeft,t:pagesBox.scrollTop};return;}
+  }
+  if(mode==='draw')return;
+  var v=viewAt(e.clientX,e.clientY);if(!v)return;
+  if(mode==='pan')pan=null;
+  e.preventDefault();mode='draw';drawPid=e.pointerId;drawIsTouch=isTouch;
+  if(!isTouch){try{pagesBox.setPointerCapture(e.pointerId);}catch(x){}}
+  startStroke(v,e);});
+var drawIsTouch=false;
+pagesBox.addEventListener('pointermove',function(e){
+  if(touches[e.pointerId]){touches[e.pointerId]={x:e.clientX,y:e.clientY};
+    if(mode==='pinch'&&nTouch()>=2){var pi=pinchInfo();setZoom(pinch.z*pi.d/pinch.d,pi.x,pi.y);
+      if(pinch.mx!=null){pagesBox.scrollLeft-=pi.x-pinch.mx;pagesBox.scrollTop-=pi.y-pinch.my;}
+      pinch.mx=pi.x;pinch.my=pi.y;e.preventDefault();return;}
+    if(mode==='pan'&&pan){pagesBox.scrollLeft=pan.l-(e.clientX-pan.x);pagesBox.scrollTop=pan.t-(e.clientY-pan.y);return;}}
+  if(mode==='draw'&&e.pointerId===drawPid&&cur){e.preventDefault();moveStroke(e);}});
+function up(e){
+  if(touches[e.pointerId]){delete touches[e.pointerId];
+    if(mode==='pinch'){if(nTouch()<2){mode=nTouch()?'wait':null;pan=null;zoomDone();}return;}
+    if(mode==='wait'&&!nTouch())mode=null;
+    if(mode==='pan'){mode=null;pan=null;return;}}
+  if(mode==='draw'&&e.pointerId===drawPid)endStroke(true);}
+pagesBox.addEventListener('pointerup',up);pagesBox.addEventListener('pointercancel',up);
+pagesBox.addEventListener('wheel',function(e){if(!e.ctrlKey)return;e.preventDefault();setZoom(zoom*Math.exp(-e.deltaY/200),e.clientX,e.clientY);zoomDone();},{passive:false});
+function paintUR(){document.getElementById('nUndo').disabled=!undo.length;document.getElementById('nRedo').disabled=!redo.length;}
+document.getElementById('nUndo').addEventListener('click',function(){var a=undo.pop();if(!a)return;
+  if(a.k==='add'){var pg=note.pages[a.i],k=pg.lastIndexOf(a.s);if(k>=0)pg.splice(k,1);}
+  if(a.k==='er'){a.items.slice().reverse().forEach(function(it){note.pages[a.i].splice(it.at,0,it.s);});}
+  if(a.k==='clear'){note.pages=a.pages;build();}
+  if(a.k==='page'){note.pages.pop();build();}
+  redo.push(a);if(views[a.i])redraw(views[a.i]);paintUR();save();});
+document.getElementById('nRedo').addEventListener('click',function(){var a=redo.pop();if(!a)return;
+  if(a.k==='add')note.pages[a.i].push(a.s);
+  if(a.k==='er')a.items.forEach(function(it){var pg=note.pages[a.i],k=pg.indexOf(it.s);if(k>=0)pg.splice(k,1);});
+  if(a.k==='clear'){note.pages=[[]];build();}
+  if(a.k==='page'){note.pages.push([]);build();}
+  undo.push(a);if(views[a.i])redraw(views[a.i]);paintUR();save();});
+
+/* toolbar */
+function paintTools(){
+  sheet.querySelectorAll('[data-tool]').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.tool===st.tool);});
+  sheet.querySelectorAll('[data-col]').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.col===st.col);});
+  sheet.querySelectorAll('[data-size]').forEach(function(b){b.setAttribute('aria-pressed',+b.dataset.size===+st.size);});
+  sheet.querySelectorAll('[data-bg]').forEach(function(b){b.setAttribute('aria-pressed',note&&b.dataset.bg===note.bg);});
+  document.getElementById('nFinger').setAttribute('aria-pressed',!!st.finger);}
+sheet.querySelectorAll('[data-tool]').forEach(function(b){b.addEventListener('click',function(){st.tool=b.dataset.tool;paintTools();saveTools();});});
+sheet.querySelectorAll('[data-col]').forEach(function(b){b.addEventListener('click',function(){st.col=b.dataset.col;if(st.tool!=='pen')st.tool='pen';paintTools();saveTools();});});
+sheet.querySelectorAll('[data-size]').forEach(function(b){b.addEventListener('click',function(){st.size=+b.dataset.size;paintTools();saveTools();});});
+sheet.querySelectorAll('[data-bg]').forEach(function(b){b.addEventListener('click',function(){note.bg=b.dataset.bg;paintTools();redrawAll();save();});});
+document.getElementById('nZoom').addEventListener('click',function(){var r=pagesBox.getBoundingClientRect();setZoom(1,r.left+r.width/2,r.top);zoomDone();});
+document.getElementById('nFinger').addEventListener('click',function(){st.finger=!st.finger;paintTools();saveTools();build();});
+document.getElementById('nAdd').addEventListener('click',function(){note.pages.push([]);undo.push({k:'page',i:note.pages.length-1});redo=[];build();paintUR();save();
+  setTimeout(function(){pagesBox.scrollTop=pagesBox.scrollHeight;},60);});
+var clearArm=false,clearBtn=document.getElementById('nClear');
+clearBtn.addEventListener('click',function(){
+  if(!clearArm){clearArm=true;document.getElementById('nSub').textContent='Tap the bin again to clear every page';setTimeout(function(){clearArm=false;document.getElementById('nSub').textContent='Saved on this device';},3000);return;}
+  clearArm=false;undo.push({k:'clear',i:0,pages:note.pages});redo=[];note.pages=[[]];build();paintUR();save();});
+var qBtn=document.getElementById('nQ');
+qBtn.addEventListener('click',function(){var box=document.getElementById('nQBox');box.hidden=!box.hidden;qBtn.setAttribute('aria-pressed',!box.hidden);});
+
+/* open / close */
+function open(id,title,qNode,after){
+  nid=id;note=load(id);undo=[];redo=[];onSave=after;
+  document.getElementById('nTitle').textContent=title;document.getElementById('nSub').textContent='Saved on this device';
+  var qt=document.getElementById('nQText');qt.innerHTML='';
+  if(qNode){qNode.forEach(function(n){var c=n.cloneNode(true);c.querySelectorAll('button,.wrow,.ans,.rvbar').forEach(function(x){x.remove();});qt.appendChild(c);});}
+  document.getElementById('nQBox').hidden=!qNode;qBtn.setAttribute('aria-pressed',!!qNode);
+  sheet.hidden=false;paintTools();paintUR();build();pagesBox.scrollTop=0;
+  if(window.MathJax&&MathJax.typesetPromise)MathJax.typesetPromise([qt]).catch(function(){});}
+document.getElementById('nDone').addEventListener('click',function(){clearTimeout(saveT);
+  try{if(hasInk(note))localStorage.setItem(NK+nid,JSON.stringify(note));else localStorage.removeItem(NK+nid);}catch(e){}
+  sheet.hidden=true;if(onSave)onSave();});
+
+/* thumbnails + buttons on cards */
+function thumb(id){var n=load(id);if(!hasInk(n))return null;
+  var c=document.createElement('canvas');c.width=360;c.height=Math.round(360*PH/L);var ctx=c.getContext('2d');
+  ctx.setTransform(360/L,0,0,360/L,0,0);render(ctx,n.pages[0],n.bg);return {src:c.toDataURL('image/png'),pages:n.pages.length};}
+var PEN='<svg viewBox="0 0 24 24"><path d="M4 20l4-1 11-11-3-3L5 16l-1 4z"/><path d="M14 6l3 3"/></svg>';
+function attach(anchor,where,id,title,qNodes){
+  var row=document.createElement('div');row.className='wrow';
+  var b=document.createElement('button');b.type='button';b.className='btn write';
+  var img=document.createElement('img');img.className='wthumb';img.alt='Your handwritten working';
+  var meta=document.createElement('span');meta.className='wmeta';
+  row.appendChild(b);row.appendChild(meta);
+  function paint(){var t=thumb(id);
+    b.innerHTML=PEN+(t?'Edit your working':'Write your working');
+    if(t){img.src=t.src;meta.textContent=t.pages>1?t.pages+' pages':'';if(!img.parentNode)row.appendChild(img);}
+    else{if(img.parentNode)img.remove();meta.textContent='';}}
+  function go(){open(id,title,qNodes,paint);}
+  b.addEventListener('click',go);img.addEventListener('click',go);
+  if(where==='before')anchor.parentNode.insertBefore(row,anchor);else anchor.parentNode.insertBefore(row,anchor.nextSibling);
+  paint();}
+cards.forEach(function(c){
+  var title=c.dataset.title, cid=c.dataset.id;
+  if(c.dataset.kind==='Worked example'){
+    var ci=c.querySelector('.ci'),first=ci.querySelector('ol.steps');
+    if(first){var q=[].slice.call(ci.children).filter(function(n){return n.matches('p:not(.sec),.tw,figure,.formula');});
+      attach(first,'before',cid,title,q);}}
+  c.querySelectorAll('.pq').forEach(function(pq,i){var qt=pq.querySelector('.qt');if(!qt)return;
+    var lab=pq.querySelector('.qh span');attach(qt,'after',cid+'-q'+(i+1),(lab?lab.textContent:'Question '+(i+1)),[qt]);});
+});
+})();
+
+/* start where you left off */
+var start=parseInt(sget('pos')||'0',10);if(!(start>=0&&start<N))start=0;
+var h=(location.hash||'').slice(1);if(h){cards.forEach(function(c,i){if(c.dataset.id===h)start=i});}
+requestAnimationFrame(function(){go(start,false);});
+})();
+</script>
+
+<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(function(r){document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')r.update().catch(function(){});});}).catch(function(){});var had=!!navigator.serviceWorker.controller,done=false;navigator.serviceWorker.addEventListener('controllerchange',function(){if(had&&!done){done=true;location.reload();}});}</script>
+</body></html>

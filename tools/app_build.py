@@ -20,6 +20,11 @@ APP_DECKS = {
     "deck-phys-defs.html": "phys-defs.html",
     "deck-phys-graphs.html": "phys-graphs.html",
     "deck-phys-deformation.html": "phys-deformation.html",
+    "deck-phys-ch1.html": "phys-ch1.html",
+    "deck-phys-ch2.html": "phys-ch2.html",
+    "deck-phys-ch3.html": "phys-ch3.html",
+    "deck-phys-ch4.html": "phys-ch4.html",
+    "deck-phys-ch5.html": "phys-ch5.html",
 }
 
 TIMER = SRC / "data/timer-source.html"
